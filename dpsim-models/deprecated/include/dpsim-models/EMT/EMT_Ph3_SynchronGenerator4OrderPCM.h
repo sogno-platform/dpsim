@@ -9,20 +9,20 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
-#include <dpsim-models/DP/DP_Ph1_DPDQInterface.h>
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
 
 namespace CPS {
-namespace DP {
-namespace Ph1 {
+namespace EMT {
+namespace Ph3 {
 /// @brief 4 Order Synchronous generator model for transient stability analysis
 ///
 /// This model is based on Eremia section 2.1.6.
 /// Modeling approach: delayed current injection + predictor corrector method
 class SynchronGenerator4OrderPCM
-    : public Base::ReducedOrderSynchronGenerator<Complex>,
+    : public Base::ReducedOrderSynchronGenerator<Real>,
       public MNASyncGenInterface,
       public SharedFactory<SynchronGenerator4OrderPCM> {
+
 public:
   ///
   SynchronGenerator4OrderPCM(const String &uid, const String &name,
@@ -30,8 +30,6 @@ public:
   ///
   SynchronGenerator4OrderPCM(const String &name,
                              Logger::Level logLevel = Logger::Level::off);
-  ///
-  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General Functions ####
   ///
@@ -46,6 +44,10 @@ public:
   void updateVoltage(const Matrix &leftVector) override;
   ///
   bool requiresIteration() override;
+  ///
+  Matrix parkTransform(Real theta, const Matrix &abcVector);
+  ///
+  Matrix inverseParkTransform(Real theta, const Matrix &dq0Vector);
   ///
   void initializeResistanceMatrix() final{};
 
@@ -63,15 +65,12 @@ public:
   ///
   void mnaCompPostStep(const Matrix &leftVector) final;
   ///
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final;
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final{};
 
 protected:
-  /// Interface used to transform between DP and DQ vars
-  DPDQInterface mDomainInterface;
-
   // #### Model specific variables ####
   /// Transient emf
-  const Attribute<Matrix>::Ptr mEdq_t;
+  const Attribute<Matrix>::Ptr mEdq0_t;
 
   // Variables saving values for later use
   /// Trapedzoidal based state space matrix Ad
@@ -81,24 +80,21 @@ protected:
   /// Trapedzoidal based state space matrix Cd
   Matrix mCdTrapezoidal;
   /// Edqt at k
-  Matrix mEdqtPrevStep;
+  Matrix mEdq0tPrevStep;
   /// Idq at k
-  Matrix mIdqPrevStep;
+  Matrix mIdq0PrevStep;
   /// Vdq at k
-  Matrix mVdqPrevStep;
+  Matrix mVdq0PrevStep;
   /// Vdq at j-1
-  Matrix mVdqPrevIter;
+  Matrix mVdq0PrevIter;
 
   /// A matrix of continuous time state space model
-  Matrix mAStateSpace = Matrix::Zero(2, 2);
+  Matrix mAStateSpace = Matrix::Zero(3, 3);
   /// B matrix of continuous time state space model
-  Matrix mBStateSpace = Matrix::Zero(2, 2);
+  Matrix mBStateSpace = Matrix::Zero(3, 3);
   /// C matrix of continuous time state space model
-  Matrix mCStateSpace = Matrix::Zero(2, 1);
-
-  /// Constant Norton conductance used to stabilize the MNA coupling.
-  Matrix mConductanceMatrixConst = Matrix::Zero(2, 2);
+  Matrix mCStateSpace = Matrix::Zero(3, 1);
 };
-} // namespace Ph1
-} // namespace DP
+} // namespace Ph3
+} // namespace EMT
 } // namespace CPS

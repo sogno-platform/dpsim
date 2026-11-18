@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
   String simName = "DP_WSCC9bus_SGReducedOrderIter";
   Real timeStep = 1e-9;
   Real finalTime = 0.01;
-  String SGModel = "4PCM"; // 4PCM or 4TPM
+  String SGModel = "4TPM";
   Bool withFault = true;
   Real startTimeFault = 0.2;
   Real endTimeFault = 0.3;
@@ -110,10 +110,7 @@ int main(int argc, char *argv[]) {
 
   CPS::CIM::Reader reader2(simName, logLevel, logLevel);
   SystemTopology sys;
-  if (SGModel == "4PCM")
-    sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single,
-                          CPS::GeneratorType::SG4OrderPCM);
-  else if (SGModel == "4TPM")
+  if (SGModel == "4TPM")
     sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single,
                           CPS::GeneratorType::SG4OrderTPM);
   else

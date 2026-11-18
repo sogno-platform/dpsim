@@ -35,34 +35,16 @@ public:
   void initializeFromNodesAndTerminals(Real frequency) override;
 
 private:
-  using PhaseVector = Eigen::Matrix<Complex, 3, 1>;
-
   Matrix mSeriesResistanceHalf;
   Matrix mSeriesInductanceHalf;
-  MatrixComp mInductorAdmittance;
-  MatrixComp mSeriesSystemInverse;
-  MatrixComp mSeriesAdmittance;
-  MatrixComp mMagnetizingInductorAdmittance;
-  MatrixComp mMagnetizingConductance;
-  MatrixComp mMidpointInverse;
-  MatrixComp mPortAdmittance00;
-  MatrixComp mPortAdmittance01;
-  MatrixComp mPortAdmittance10;
-  MatrixComp mPortAdmittance11;
-  mutable MatrixComp mHistory0;
-  mutable MatrixComp mHistory1;
-  mutable MatrixComp mHistoryMagnetizing;
-  mutable MatrixComp mMidpointHistory;
-  mutable MatrixComp mSource0;
-  mutable MatrixComp mSource1;
   Matrix mMagnetizingResistance;
   Matrix mMagnetizingInductance;
-  Complex mPreviousCurrentFactor = Complex(1., 0.);
+  MatrixComp mInputTransform = MatrixComp::Identity(6, 6);
+  MatrixComp mOutputTransform = MatrixComp::Identity(6, 6);
   Real mNoLoadCurrent = 0.01;
   Real mNoLoadLoss = 1e-3;
   Bool mWithResistiveLosses = false;
   UInt mReferenceTerminal = 0;
-  Real mOrientationSign = 1.;
   Complex mRatioFromReference = Complex(1., 0.);
   WindingReference mReferenceWinding = WindingReference::Auto;
 
@@ -72,7 +54,11 @@ protected:
   void recomputeDiscreteModel(Real omega) override;
   MatrixComp calculateHistoryVector() const override;
   void updateHistoryVector(MatrixComp &history) override;
-  void updateState(const MatrixComp &uOld, const MatrixComp &uNew) override;
+  MatrixComp calculateSteadyStateStateFromInput(const MatrixComp &u,
+                                                Real omega) const override;
+  MatrixComp
+  calculateSteadyStateOutputFromInput(const MatrixComp &x,
+                                      const MatrixComp &u) const override;
 };
 
 } // namespace CPS::DP::Ph3::SSN

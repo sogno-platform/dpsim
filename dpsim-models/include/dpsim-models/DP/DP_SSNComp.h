@@ -30,6 +30,8 @@ protected:
   Matrix mB;
   Matrix mC;
   Matrix mD;
+  /// Feedthrough from the envelope derivative of the input, for capacitive ports.
+  Matrix mE;
 
   /// Complex envelope discrete operators (folded from the augmented model).
   MatrixComp mDiscreteA;
@@ -93,7 +95,7 @@ public:
   const Matrix &getC() const;
 
   void setParameters(const Matrix &A, const Matrix &B, const Matrix &C,
-                     const Matrix &D);
+                     const Matrix &D, const Matrix &E = Matrix());
 
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override final;

@@ -32,8 +32,7 @@ int main(int argc, char *argv[]) {
   Real H = syngenKundur.H;
   Real tolerance = defaultConfig.tolerance;
   int maxIter = defaultConfig.maxIter;
-  String SGModel = defaultConfig.sgType + "Iter";
-  SGModel = "4TPM"; // options: "4PCM", "4TPM", "6PCM"
+  String SGModel = "4TPM";
 
   // Command line args processing
   CommandLineArgs args(argc, argv);
@@ -187,8 +186,6 @@ int main(int argc, char *argv[]) {
   logger->logAttribute(genDP->name() + ".NIterations",
                        genDP->attribute("NIterations"));
   logger->logAttribute(genDP->name() + ".Edq_t", genDP->attribute("Edq_t"));
-  if (SGModel == "6PCM")
-    logger->logAttribute(genDP->name() + ".Edq_s", genDP->attribute("Edq_s"));
   logger->logAttribute(genDP->name() + ".Vdq0", genDP->attribute("Vdq0"));
   logger->logAttribute(genDP->name() + ".Idq0", genDP->attribute("Idq0"));
   logger->logAttribute(genDP->name() + ".omega", genDP->attribute("w_r"));

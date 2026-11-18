@@ -35,8 +35,6 @@ public:
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
 
 private:
-  using PhaseVector = Eigen::Matrix<Complex, 3, 1>;
-
   Real mActivePower = 0.;
   Real mReactivePower = 0.;
   Real mNominalVoltage = 0.;
@@ -45,20 +43,9 @@ private:
   Real mLoadConductance = 0.;
   Real mLoadInductance = 0.;
   Real mLoadCapacitance = 0.;
-  MatrixComp mNodalAdmittance;
-  MatrixComp mInductorAdmittance;
-  Complex mInductorPreviousCurrent = Complex(1., 0.);
-  MatrixComp mCapacitorAdmittance;
-  MatrixComp mCapacitorPreviousVoltage;
-  mutable MatrixComp mHistoryLoad;
-  mutable MatrixComp mHistoryShunt;
 
 protected:
   MatrixComp buildInitialInputFromNodes(Real frequency) override;
-  void recomputeDiscreteModel(Real omega) override;
-  MatrixComp calculateHistoryVector() const override;
-  void updateHistoryVector(MatrixComp &history) override;
-  void updateState(const MatrixComp &uOld, const MatrixComp &uNew) override;
 };
 
 } // namespace SSN

@@ -109,13 +109,11 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/DP_ReducedOrderSG_VBR_Load_Fault.cpp
 	Circuits/EMT_ReducedOrderSG_VBR_Load_Fault.cpp
-	Circuits/EMT_SynGen4OrderIter_SMIB_Fault.cpp
 
 	# SMIB Reduced Order - Load step
 	Circuits/SP_SMIB_ReducedOrderSG_LoadStep.cpp
 	Circuits/DP_SMIB_ReducedOrderSG_LoadStep.cpp
 	Circuits/EMT_SMIB_ReducedOrderSG_LoadStep.cpp
-	Circuits/EMT_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 	Circuits/DP_SMIB_ReducedOrderSGIterative_LoadStep.cpp
 
 	# 3Bus System
@@ -225,9 +223,6 @@ if(WITH_SUNDIALS)
 		Components/DP_EMT_SynGenDq7odODE_LoadStep.cpp
 	)
 
-	set(DAE_SOURCES
-		DAE/DAE_DP_test.cpp
-	)
 endif()
 
 if(WITH_RT)
@@ -316,7 +311,6 @@ foreach(SOURCE
 		${RT_SOURCES}
 		${CIM_SOURCES}
 		${CIM_SOURCES_POSIX}
-		${DAE_SOURCES}
 		${INVERTER_SOURCES}
 		${SSN_SOURCES}
 		${STATE_SPACE_SOURCES})
@@ -335,4 +329,3 @@ foreach(TEST_SOURCE ${TEST_SOURCES})
 endforeach()
 
 add_subdirectory(cim_graphviz)
-add_subdirectory(signals)

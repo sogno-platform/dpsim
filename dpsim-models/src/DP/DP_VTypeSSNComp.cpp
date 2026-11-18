@@ -29,6 +29,7 @@ void DP::VTypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
   MatrixComp uInit = buildInitialInputFromNodes(frequency);
   MatrixComp xInit = calculateSteadyStateStateFromInput(uInit, omega);
   MatrixComp yInit = calculateSteadyStateOutputFromInput(xInit, uInit);
+  yInit += Complex(0., omega) * mE.cast<Complex>() * uInit;
 
   **mX = xInit;
   **mIntfVoltage = uInit;

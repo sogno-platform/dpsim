@@ -74,8 +74,6 @@ model, so the table cannot fall behind the code. For the equations behind a mode
 | SynchronGenerator5OrderVBR | &check; | &ndash; | &check; | &ndash; | &ndash; | &check; |
 | SynchronGenerator6aOrderVBR | &check; | &ndash; | &check; | &ndash; | &ndash; | &check; |
 | SynchronGenerator6bOrderVBR | &check; | &ndash; | &check; | &ndash; | &ndash; | &check; |
-| SynchronGenerator4OrderPCM | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &check; |
-| SynchronGenerator6OrderPCM | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |
 | SynchronGenerator4OrderTPM | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |
 | SynchronGeneratorIdeal | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &check; |
 | SynchronGeneratorIter | &ndash; | &ndash; | &check; | &ndash; | &ndash; | &ndash; |

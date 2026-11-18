@@ -409,42 +409,6 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
       .def("connect", &CPS::DP::Ph1::SynchronGenerator4OrderTPM::connect);
 
-  py::class_<CPS::DP::Ph1::SynchronGenerator4OrderPCM,
-             std::shared_ptr<CPS::DP::Ph1::SynchronGenerator4OrderPCM>,
-             CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>,
-             CPS::MNASyncGenInterface>(mDPPh1, "SynchronGenerator4OrderPCM",
-                                       py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_operational_parameters_per_unit",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real>(
-               &CPS::DP::Ph1::SynchronGenerator4OrderPCM::
-                   setOperationalParametersPerUnit),
-           "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
-      .def("connect", &CPS::DP::Ph1::SynchronGenerator4OrderPCM::connect);
-
-  py::class_<CPS::DP::Ph1::SynchronGenerator6OrderPCM,
-             std::shared_ptr<CPS::DP::Ph1::SynchronGenerator6OrderPCM>,
-             CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>,
-             CPS::MNASyncGenInterface>(mDPPh1, "SynchronGenerator6OrderPCM",
-                                       py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_operational_parameters_per_unit",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real>(
-               &CPS::DP::Ph1::SynchronGenerator6OrderPCM::
-                   setOperationalParametersPerUnit),
-           "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a, "Ld_s"_a,
-           "Lq_s"_a, "Td0_s"_a, "Tq0_s"_a, "Taa"_a = 0)
-      .def("connect", &CPS::DP::Ph1::SynchronGenerator6OrderPCM::connect);
-
   py::class_<CPS::DP::Ph1::AvVoltageSourceInverterDQ,
              std::shared_ptr<CPS::DP::Ph1::AvVoltageSourceInverterDQ>,
              CPS::SimPowerComp<CPS::Complex>>(

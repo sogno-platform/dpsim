@@ -728,9 +728,7 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
         mGeneratorType == GeneratorType::SG6bOrderVBR ||
         mGeneratorType == GeneratorType::SG4OrderVBR ||
         mGeneratorType == GeneratorType::SG3OrderVBR ||
-        mGeneratorType == GeneratorType::SG4OrderPCM ||
-        mGeneratorType == GeneratorType::SG4OrderTPM ||
-        mGeneratorType == GeneratorType::SG6OrderPCM) {
+        mGeneratorType == GeneratorType::SG4OrderTPM) {
 
       Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
       Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
@@ -819,15 +817,6 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
                                                    mFrequency, H, Ld, Lq, Ll,
                                                    Ld_t, Td0_t);
               return gen;
-            } else if (mGeneratorType == GeneratorType::SG4OrderPCM) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator4OrderPCM.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator4OrderPCM>(
-                  machineRid, machineName, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
-                                                   mFrequency, H, Ld, Lq, Ll,
-                                                   Ld_t, Lq_t, Td0_t, Tq0_t);
-              return gen;
             } else if (mGeneratorType == GeneratorType::SG4OrderTPM) {
               SPDLOG_LOGGER_DEBUG(
                   mSLog, "    GeneratorType is SynchronGenerator4OrderTPM.");
@@ -836,15 +825,6 @@ Reader::mapSynchronousMachine(CIMPP::SynchronousMachine *machine) {
               gen->setOperationalParametersPerUnit(ratedPower, ratedVoltage,
                                                    mFrequency, H, Ld, Lq, Ll,
                                                    Ld_t, Lq_t, Td0_t, Tq0_t);
-              return gen;
-            } else if (mGeneratorType == GeneratorType::SG6OrderPCM) {
-              SPDLOG_LOGGER_DEBUG(
-                  mSLog, "    GeneratorType is SynchronGenerator6OrderPCM.");
-              auto gen = std::make_shared<DP::Ph1::SynchronGenerator6OrderPCM>(
-                  machineRid, machineName, mComponentLogLevel);
-              gen->setOperationalParametersPerUnit(
-                  ratedPower, ratedVoltage, mFrequency, H, Ld, Lq, Ll, Ld_t,
-                  Lq_t, Td0_t, Tq0_t, Ld_s, Lq_s, Td0_s, Tq0_s);
               return gen;
             }
           }

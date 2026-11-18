@@ -35,44 +35,18 @@ public:
   void initializeFromNodesAndTerminals(Real frequency) override;
 
 private:
-  using PhaseVector = Eigen::Matrix<Real, 3, 1>;
-
-  Matrix *mStateValue;
   Matrix mSeriesResistanceHalf;
   Matrix mSeriesInductanceHalf;
-  Matrix mInductorAdmittance;
-  Matrix mSeriesSystemInverse;
-  Matrix mSeriesAdmittance;
-  Matrix mMagnetizingInductorAdmittance;
-  Matrix mMagnetizingConductance;
-  Matrix mMidpointInverse;
-  Matrix mPortAdmittance00;
-  Matrix mPortAdmittance01;
-  Matrix mPortAdmittance10;
-  Matrix mPortAdmittance11;
-  mutable Matrix mHistory0;
-  mutable Matrix mHistory1;
-  mutable Matrix mHistoryMagnetizing;
-  mutable Matrix mMidpointHistory;
-  mutable Matrix mMidpointSource;
-  mutable Matrix mSource0;
-  mutable Matrix mSource1;
   Matrix mMagnetizingResistance;
   Matrix mMagnetizingInductance;
+  Complex mRatioFromReference = Complex(1., 0.);
   Real mNoLoadCurrent = 0.01;
   Real mNoLoadLoss = 1e-3;
   Bool mWithResistiveLosses = false;
   UInt mReferenceTerminal = 0;
-  Real mOrientationSign = 1.;
-  Complex mRatioFromReference = Complex(1., 0.);
   WindingReference mReferenceWinding = WindingReference::Auto;
 
   void resolveWindingRoles();
-
-protected:
-  void recomputeDiscreteModel() override;
-  void calculateHistoryVector(Matrix &history) const override;
-  void updateState(const Matrix &uOld, const Matrix &uNew) override;
 };
 
 } // namespace CPS::EMT::Ph3::SSN

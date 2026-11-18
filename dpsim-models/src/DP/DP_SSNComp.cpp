@@ -26,7 +26,8 @@ const MatrixComp &DP::SSNComp::getDiscreteB() const { return mDiscreteB; }
 const Matrix &DP::SSNComp::getC() const { return mC; }
 
 void DP::SSNComp::setParameters(const Matrix &A, const Matrix &B,
-                                const Matrix &C, const Matrix &D) {
+                                const Matrix &C, const Matrix &D,
+                                const Matrix &E) {
   mParametersSet = false;
 
   if (A.rows() != A.cols())
@@ -40,11 +41,14 @@ void DP::SSNComp::setParameters(const Matrix &A, const Matrix &B,
 
   if (D.rows() != mOutputSize || D.cols() != mInputSize)
     throw std::invalid_argument("D has invalid dimensions.");
+  if (E.size() != 0 && (E.rows() != mOutputSize || E.cols() != mInputSize))
+    throw std::invalid_argument("E has invalid dimensions.");
 
   mA = A;
   mB = B;
   mC = C;
   mD = D;
+  mE = E.size() == 0 ? Matrix::Zero(mOutputSize, mInputSize) : E;
 
   **mX = MatrixComp::Zero(mA.rows(), 1);
 
@@ -99,6 +103,7 @@ void DP::SSNComp::recomputeDiscreteModel(Real omega) {
       Complex(0., 1.) * dBaug.block(n, 0, n, mInputSize).cast<Complex>();
 
   mW = mC.cast<Complex>() * mDiscreteB + mD.cast<Complex>();
+  mW += Complex(2. / mTimeStep, omega) * mE.cast<Complex>();
 }
 
 MatrixComp DP::SSNComp::calculateHistoryVector() const {
@@ -111,6 +116,8 @@ void DP::SSNComp::updateHistoryVector(MatrixComp &history) {
   mHistoryInput.noalias() = mDiscreteB * (**inputAttribute());
   mHistoryState += mHistoryInput;
   history.noalias() = mComplexC * mHistoryState;
+  history.noalias() -=
+      (2. / mTimeStep) * mE.cast<Complex>() * (**inputAttribute());
 }
 
 MatrixComp DP::SSNComp::calculateSteadyStateStateFromInput(const MatrixComp &u,
