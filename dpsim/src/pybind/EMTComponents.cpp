@@ -23,7 +23,6 @@
 #include <dpsim-models/EMT/EMT_Ph3_SSN_Inductor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_PiLine.h>
 #include <dpsim-models/EMT/EMT_Ph3_SSN_Transformer.h>
-#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
 #include <dpsim-models/EMT/EMT_Ph3_VoltageSourceNorton.h>
 #include <dpsim-models/IdentifiedObject.h>
@@ -593,22 +592,6 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
             return voltageSource->mVoltageRef->get();
           });
 
-  py::class_<CPS::EMT::Ph3::SynchronGenerator4OrderPCM,
-             std::shared_ptr<CPS::EMT::Ph3::SynchronGenerator4OrderPCM>,
-             CPS::Base::ReducedOrderSynchronGenerator<CPS::Real>>(
-      mEMTPh3, "SynchronGenerator4OrderPCM", py::multiple_inheritance())
-      .def(py::init<std::string, CPS::Logger::Level>(), "name"_a,
-           "loglevel"_a = CPS::Logger::Level::off)
-      .def("set_operational_parameters_per_unit",
-           py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real, CPS::Real,
-                             CPS::Real, CPS::Real, CPS::Real>(
-               &CPS::Base::ReducedOrderSynchronGenerator<
-                   CPS::Real>::setOperationalParametersPerUnit),
-           "nom_power"_a, "nom_voltage"_a, "nom_frequency"_a, "H"_a, "Ld"_a,
-           "Lq"_a, "L0"_a, "Ld_t"_a, "Lq_t"_a, "Td0_t"_a, "Tq0_t"_a)
-      .def("connect", &CPS::EMT::Ph3::SynchronGenerator4OrderPCM::connect);
-
   py::class_<CPS::EMT::Ph3::SynchronGeneratorDQTrapez,
              std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>,
              CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQTrapez",
@@ -929,7 +912,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::EMT::Ph3::GenericTwoTerminalVTypeSSN::setParameters, "A"_a,
-           "B"_a, "C"_a, "D"_a)
+           "B"_a, "C"_a, "D"_a, "D1"_a = CPS::Matrix())
       .def("connect", &CPS::EMT::Ph3::GenericTwoTerminalVTypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
 
@@ -941,7 +924,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::EMT::Ph3::GenericTwoTerminalITypeSSN::setParameters, "A"_a,
-           "B"_a, "C"_a, "D"_a)
+           "B"_a, "C"_a, "D"_a, "D1"_a = CPS::Matrix())
       .def("connect", &CPS::EMT::Ph3::GenericTwoTerminalITypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
 
@@ -1251,7 +1234,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::EMT::Ph3::GenericFourTerminalVTypeSSN::setParameters, "A"_a,
-           "B"_a, "C"_a, "D"_a)
+           "B"_a, "C"_a, "D"_a, "D1"_a = CPS::Matrix())
       .def("connect", &CPS::EMT::Ph3::GenericFourTerminalVTypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::Matrix>("x"));
 }

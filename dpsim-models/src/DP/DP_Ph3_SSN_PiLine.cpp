@@ -41,11 +41,11 @@ void DP::Ph3::SSN::PiLine::setParameters(const Matrix &seriesResistance,
   Matrix d = Matrix::Zero(6, 6);
   d.block(0, 0, 3, 3) = parallelConductance / 2.;
   d.block(3, 3, 3, 3) = parallelConductance / 2.;
-  Matrix e = Matrix::Zero(6, 6);
-  e.block(0, 0, 3, 3) = parallelCapacitance / 2.;
-  e.block(3, 3, 3, 3) = parallelCapacitance / 2.;
+  Matrix d1 = Matrix::Zero(6, 6);
+  d1.block(0, 0, 3, 3) = parallelCapacitance / 2.;
+  d1.block(3, 3, 3, 3) = parallelCapacitance / 2.;
 
-  SSNComp::setParameters(a, b, c, d, e);
+  SSNComp::setParameters(a, b, c, d, d1);
 }
 
 void DP::Ph3::SSN::PiLine::initializeFromNodesAndTerminals(Real frequency) {
