@@ -31,13 +31,13 @@ protected:
   Matrix mC;
   Matrix mD;
   /// Feedthrough from the envelope derivative of the input, for capacitive ports.
-  Matrix mE;
+  Matrix mD1;
 
   /// Complex envelope discrete operators (folded from the augmented model).
   MatrixComp mDiscreteA;
   MatrixComp mDiscreteB;
 
-  /// Complex Norton matrix W = C dB + D.
+  /// Complex Norton matrix W = C dB + D + (2 / dt + j omega) D1.
   MatrixComp mW;
   /// Complex history term.
   MatrixComp mYHist;
@@ -95,7 +95,7 @@ public:
   const Matrix &getC() const;
 
   void setParameters(const Matrix &A, const Matrix &B, const Matrix &C,
-                     const Matrix &D, const Matrix &E = Matrix());
+                     const Matrix &D, const Matrix &D1 = Matrix());
 
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override final;

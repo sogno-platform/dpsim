@@ -38,7 +38,7 @@ const Matrix &EMT::SSNComp::getC() const { return mC; }
 
 void EMT::SSNComp::setParameters(const Matrix &A, const Matrix &B,
                                  const Matrix &C, const Matrix &D,
-                                 const Matrix &E) {
+                                 const Matrix &D1) {
   mParametersSet = false;
 
   if (A.rows() != A.cols())
@@ -52,14 +52,14 @@ void EMT::SSNComp::setParameters(const Matrix &A, const Matrix &B,
 
   if (D.rows() != mOutputSize || D.cols() != mInputSize)
     throw std::invalid_argument("D has invalid dimensions.");
-  if (E.size() != 0 && (E.rows() != mOutputSize || E.cols() != mInputSize))
-    throw std::invalid_argument("E has invalid dimensions.");
+  if (D1.size() != 0 && (D1.rows() != mOutputSize || D1.cols() != mInputSize))
+    throw std::invalid_argument("D1 has invalid dimensions.");
 
   mA = A;
   mB = B;
   mC = C;
   mD = D;
-  mE = E.size() == 0 ? Matrix::Zero(mOutputSize, mInputSize) : E;
+  mD1 = D1.size() == 0 ? Matrix::Zero(mOutputSize, mInputSize) : D1;
 
   **mX = Matrix::Zero(mA.rows(), 1);
 
@@ -77,7 +77,7 @@ void EMT::SSNComp::calculateHistoryVector(Matrix &history) const {
   // identically zero; feedthrough remains represented by mW = D and is
   // handled by the component's MNA stamp/update path.
   if (mA.rows() == 0) {
-    history.noalias() = -(2. / mTimeStep) * mE * inputValue();
+    history.noalias() = -(2. / mTimeStep) * mD1 * inputValue();
     return;
   }
 
@@ -85,7 +85,7 @@ void EMT::SSNComp::calculateHistoryVector(Matrix &history) const {
   mHistoryInput.noalias() = mdB * inputValue();
   mHistoryState += mHistoryInput;
   history.noalias() = mC * mHistoryState;
-  history.noalias() -= (2. / mTimeStep) * mE * inputValue();
+  history.noalias() -= (2. / mTimeStep) * mD1 * inputValue();
 }
 
 MatrixComp
@@ -118,7 +118,7 @@ void EMT::SSNComp::updateLogAttributes(const Matrix &) const {
 
 void EMT::SSNComp::recomputeDiscreteModel() {
   Math::calculateStateSpaceTrapezoidalMatrices(mA, mB, mTimeStep, mdA, mdB);
-  mW = mC * mdB + mD + (2. / mTimeStep) * mE;
+  mW = mC * mdB + mD + (2. / mTimeStep) * mD1;
 }
 
 void EMT::SSNComp::updateStateSpaceModel() {

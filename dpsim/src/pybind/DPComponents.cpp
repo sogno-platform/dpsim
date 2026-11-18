@@ -241,7 +241,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::DP::Ph1::GenericTwoTerminalVTypeSSN::setParameters, "A"_a,
-           "B"_a, "C"_a, "D"_a)
+           "B"_a, "C"_a, "D"_a, "D1"_a = CPS::Matrix())
       .def("connect", &CPS::DP::Ph1::GenericTwoTerminalVTypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
 
@@ -253,7 +253,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::DP::Ph1::GenericTwoTerminalITypeSSN::setParameters, "A"_a,
-           "B"_a, "C"_a, "D"_a)
+           "B"_a, "C"_a, "D"_a, "D1"_a = CPS::Matrix())
       .def("connect", &CPS::DP::Ph1::GenericTwoTerminalITypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
 
@@ -771,7 +771,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::DP::Ph3::GenericTwoTerminalVTypeSSN::setParameters, "A"_a,
-           "B"_a, "C"_a, "D"_a)
+           "B"_a, "C"_a, "D"_a, "D1"_a = CPS::Matrix())
       .def("connect", &CPS::DP::Ph3::GenericTwoTerminalVTypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
 
@@ -783,7 +783,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
       .def(py::init<std::string, CPS::Logger::Level>())
       .def("set_parameters",
            &CPS::DP::Ph3::GenericTwoTerminalITypeSSN::setParameters, "A"_a,
-           "B"_a, "C"_a, "D"_a)
+           "B"_a, "C"_a, "D"_a, "D1"_a = CPS::Matrix())
       .def("connect", &CPS::DP::Ph3::GenericTwoTerminalITypeSSN::connect)
       .def_property_readonly("x", createAttributeGetter<CPS::MatrixComp>("x"));
 }

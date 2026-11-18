@@ -40,7 +40,7 @@ protected:
   Matrix mC;
   Matrix mD;
   /// Feedthrough from the time derivative of the input, for capacitive ports.
-  Matrix mE;
+  Matrix mD1;
 
   Matrix mdA;
   Matrix mdB;
@@ -119,7 +119,7 @@ public:
   const Matrix &getC() const;
 
   void setParameters(const Matrix &A, const Matrix &B, const Matrix &C,
-                     const Matrix &D, const Matrix &E = Matrix());
+                     const Matrix &D, const Matrix &D1 = Matrix());
 
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override final;
