@@ -90,7 +90,6 @@ public:
 
   /// solution function for a right hand side
   Matrix solve(Matrix &rightSideVector) override;
-  void solveInPlace(Matrix &rightSideVector) override;
 
   /// Solve into caller-owned storage to avoid per-step matrix allocation.
   void solveInto(Matrix &rightSideVector, Matrix &solution) override;

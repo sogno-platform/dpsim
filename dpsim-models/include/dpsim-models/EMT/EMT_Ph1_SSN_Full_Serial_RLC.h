@@ -6,8 +6,7 @@
 #include <dpsim-models/Base/Base_Ph1_Capacitor.h>
 #include <dpsim-models/Base/Base_Ph1_Inductor.h>
 #include <dpsim-models/Base/Base_Ph1_Resistor.h>
-#include <dpsim-models/MNASimPowerComp.h>
-#include <dpsim-models/Solver/MNAInterface.h>
+#include <dpsim-models/EMT/EMT_VTypeSSNComp.h>
 
 namespace CPS {
 namespace EMT {
@@ -31,7 +30,7 @@ namespace SSN {
 /// {Mathematical model;Analytical models;Equations;Power system transients;
 /// Couplings;Switching circuits}
 
-class Full_Serial_RLC final : public MNASimPowerComp<Real>,
+class Full_Serial_RLC final : public VTypeSSNComp,
                               public SharedFactory<Full_Serial_RLC>,
                               public Base::Ph1::Resistor,
                               public Base::Ph1::Inductor,
@@ -47,53 +46,13 @@ public:
   SimPowerComp<Real>::Ptr clone(String name) override;
   void setParameters(Real resistance, Real inductance, Real capacitance);
 
-  // #### General ####
-  /// Initializes component from power flow data
-  void initializeFromNodesAndTerminals(Real frequency) override;
-
-  // #### MNA section ####
-  /// Initializes internal variables of the component
-  void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
-  /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  /// Stamps right side (source) vector
   void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
   Bool getRightVectorStampIndices(std::vector<UInt> &indices) override;
-  /// Update interface voltage from MNA system result
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
-  /// Update interface current from MNA system result
-  void mnaCompUpdateCurrent(const Matrix &leftVector) override;
-  /// MNA pre step operations
-  void mnaCompPreStep(Real time, Int timeStepCount) override;
-  /// MNA post step operations
-  void mnaCompPostStep(Real time, Int timeStepCount,
-                       Attribute<Matrix>::Ptr &leftVector) override;
-  /// Add MNA pre step dependencies
-  void mnaCompAddPreStepDependencies(
-      AttributeBase::List &prevStepDependencies,
-      AttributeBase::List &attributeDependencies,
-      AttributeBase::List &modifiedAttributes) override;
-  /// Add MNA post step dependencies
-  void
-  mnaCompAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
-                                 AttributeBase::List &attributeDependencies,
-                                 AttributeBase::List &modifiedAttributes,
-                                 Attribute<Matrix>::Ptr &leftVector) override;
 
 private:
-  Matrix mState = Matrix::Zero(2, 1);
-  Real mYHistory = 0;
-
-  Real mDufourUNT = 0;
-
-  Matrix mDufourAKHat = Matrix::Zero(2, 2);
-  Matrix mDufourBKHat = Matrix::Zero(2, 1);
-  Matrix mDufourBKNHat = Matrix::Zero(2, 1);
-  Real mDufourWKN = 0;
-  Matrix mDufourCKN = Matrix::Zero(1, 2);
-
-  void ssnUpdateState();
+  MatrixComp buildInitialInputFromNodes(Real frequency) override;
 };
 } // namespace SSN
 } // namespace Ph1

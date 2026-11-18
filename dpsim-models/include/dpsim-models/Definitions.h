@@ -126,9 +126,7 @@ enum class GeneratorType {
   SG5OrderVBR,
   SG4OrderVBR,
   SG3OrderVBR,
-  SG4OrderPCM,
   SG4OrderTPM,
-  SG6OrderPCM,
   None
 };
 enum class SGOrder { SG3Order, SG4Order, SG5Order, SG6aOrder, SG6bOrder };

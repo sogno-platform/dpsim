@@ -96,8 +96,6 @@ CATEGORIES = [
             "SynchronGenerator5OrderVBR",
             "SynchronGenerator6aOrderVBR",
             "SynchronGenerator6bOrderVBR",
-            "SynchronGenerator4OrderPCM",
-            "SynchronGenerator6OrderPCM",
             "SynchronGenerator4OrderTPM",
             "SynchronGeneratorIdeal",
             "SynchronGeneratorIter",
