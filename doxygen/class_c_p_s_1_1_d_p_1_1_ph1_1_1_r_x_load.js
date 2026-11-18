@@ -1,7 +1,9 @@
 var class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load =
 [
     [ "RXLoad", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a22c6104ebbbc44decbf36bc088c79b4c", null ],
+    [ "RXLoad", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a3511a11e9158104621273a49283ab3fb", null ],
     [ "RXLoad", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#acb5640960f885ace41906efaa23ad5f4", null ],
+    [ "RXLoad", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#ac9a362e2f6d15de222524ea5abb3302b", null ],
     [ "clone", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a2b9c0623722b43cab26851d7b08d3b64", null ],
     [ "createSubComponents", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#af104d35a2f803aa0177ae06e7d055e09", null ],
     [ "initializeParentFromNodesAndTerminals", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#ac04e5b265c90701794b89d199f003d82", null ],
@@ -9,11 +11,23 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load =
     [ "mnaCompUpdateVoltage", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#ad538a5add13de3f4c85fdb4570802525", null ],
     [ "mnaParentAddPostStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a60da8a1f49f98053a99f0874be9cf99b", null ],
     [ "mnaParentAddPreStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#abf08a94201458861202242b6d3065ad6", null ],
+    [ "mnaParentApplyRightSideVectorStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a165d842c5c9dda53da6a81baddd256b0", null ],
+    [ "mnaParentApplySystemMatrixStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#aa4a15c9cb671e353eaf4d4d665477ad1", null ],
+    [ "mnaParentInitialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a7357da4f86a348e6fd3085721d3f373f", null ],
     [ "mnaParentPostStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a32ca27702a4543a3865fbf6aa4fd6b23", null ],
     [ "mnaParentPreStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#ac09e839b89024b05606770f293338b85", null ],
     [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a9897d80991a57806d86d385feb0663c8", null ],
     [ "mActivePower", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a340e948998b756f63167629d7850e8d0", null ],
     [ "mCapacitance", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a6015ded3e97ac1624f037ed5feea3b3e", null ],
+    [ "mDirectBranchCurrent", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a516365e811102b064e58be063b2ed07f", null ],
+    [ "mDirectCapacitance", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a117d9b40895c2a4821487e7ef881a3ea", null ],
+    [ "mDirectConductance", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#adb5308ab1bcf80bc1cdfced7df772ae9", null ],
+    [ "mDirectEquivCond", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a9a8af0f19b94bdb765b2413da7836546", null ],
+    [ "mDirectHistory", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#aa4f75a01fb298d832c69b3b62b2b0182", null ],
+    [ "mDirectPrevCurrentFactor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#afce369d36cebc4b0aeb07f8541eb5f8b", null ],
+    [ "mDirectPrevVoltageFactor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a72f49f27656336e35f483a4785eb710f", null ],
+    [ "mDirectUseCapacitor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a84aa588ef82ec9d86176a000dbefe405", null ],
+    [ "mDirectUseInductor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a7ed6d1e612660c64e2dbbdb0999a1b09", null ],
     [ "mInductance", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a31fb1342d7792b12de7e48ac707fbe36", null ],
     [ "mNomVoltage", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a7f154c5a9b06f3fc87f3e8b1e3ddded4", null ],
     [ "mReactance", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a369c82338572784ca265809df1bcffa6", null ],
@@ -22,5 +36,6 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load =
     [ "mRightVectorStamps", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a6f7270aaaf697da51873e2a9bb6b10a3", null ],
     [ "mSubCapacitor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a674b4b54047b929af65dc264c68d9128", null ],
     [ "mSubInductor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#a078c72ed8a14dbede1a16dd3465ceff0", null ],
-    [ "mSubResistor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#aaf6602121e0d2dc7c48002f81feb13e9", null ]
+    [ "mSubResistor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#aaf6602121e0d2dc7c48002f81feb13e9", null ],
+    [ "mUseSubcomponents", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#aea848f4674ace57ace795df9132bd31e", null ]
 ];

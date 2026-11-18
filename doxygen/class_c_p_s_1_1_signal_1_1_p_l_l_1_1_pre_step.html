@@ -126,6 +126,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6e4219251f24641dc33eeeebaa3820c9 inherit pub_methods_class_c_p_s_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6516808c4a8f315d5f8a8263ec7053bc inherit pub_methods_class_c_p_s_1_1_task" id="r_a6516808c4a8f315d5f8a8263ec7053bc"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_task.html#a6516808c4a8f315d5f8a8263ec7053bc">~Task</a> ()</td></tr>
 <tr class="separator:a6516808c4a8f315d5f8a8263ec7053bc inherit pub_methods_class_c_p_s_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a344b6bc5007444c16898cbf7895da404 inherit pub_methods_class_c_p_s_1_1_task" id="r_a344b6bc5007444c16898cbf7895da404"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_task.html#a344b6bc5007444c16898cbf7895da404">executeFast</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount)</td></tr>
+<tr class="separator:a344b6bc5007444c16898cbf7895da404 inherit pub_methods_class_c_p_s_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd5b7db8e84bbfb23c0b3057cb5211f4 inherit pub_methods_class_c_p_s_1_1_task" id="r_afd5b7db8e84bbfb23c0b3057cb5211f4"><td class="memTemplParams" colspan="2">template&lt;typename TaskType, void(TaskType::*)(<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a>) Executor&gt; </td></tr>
+<tr class="memitem:afd5b7db8e84bbfb23c0b3057cb5211f4 inherit pub_methods_class_c_p_s_1_1_task"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_task.html#afd5b7db8e84bbfb23c0b3057cb5211f4">setFastExecutor</a> (TaskType *task)</td></tr>
+<tr class="separator:afd5b7db8e84bbfb23c0b3057cb5211f4 inherit pub_methods_class_c_p_s_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bc881406ad0c2d6d43b9c23d029722a inherit pub_methods_class_c_p_s_1_1_task" id="r_a3bc881406ad0c2d6d43b9c23d029722a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_task.html#a3bc881406ad0c2d6d43b9c23d029722a">toString</a> () const</td></tr>
 <tr class="separator:a3bc881406ad0c2d6d43b9c23d029722a inherit pub_methods_class_c_p_s_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2b4fd3477f6c08c886ce275a1c7d3a9 inherit pub_methods_class_c_p_s_1_1_task" id="r_ae2b4fd3477f6c08c886ce275a1c7d3a9"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_task.html#ae2b4fd3477f6c08c886ce275a1c7d3a9">getAttributeDependencies</a> ()</td></tr>
@@ -157,7 +162,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00082">82</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00085">85</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a67dfe1154ec55bd9f35964a905040ec3" name="a67dfe1154ec55bd9f35964a905040ec3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a67dfe1154ec55bd9f35964a905040ec3">&#9670;&#160;</a></span>PreStep()</h2>
@@ -182,7 +187,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00084">84</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00087">87</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>
@@ -216,7 +221,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_task.html#a6a5bc77010e802a4f42b969e581e06cc">CPS::Task</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00088">88</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00091">91</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>

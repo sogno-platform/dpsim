@@ -18,7 +18,7 @@ var class_c_p_s_1_1_system_topology =
     [ "component", "class_c_p_s_1_1_system_topology.html#a6b400a3ac9320f97a81736a26ad1610e", null ],
     [ "componentsAtNodeList", "class_c_p_s_1_1_system_topology.html#a728b7ca7c8216764146bf8e80a47c33c", null ],
     [ "connectComponentToNodes", "class_c_p_s_1_1_system_topology.html#aa490a261e78e12cb418e742393f46b9a", null ],
-    [ "initFrequency", "class_c_p_s_1_1_system_topology.html#a801bc0ea4ed56555f9c1faa7291ef6e9", null ],
+    [ "initFrequency", "class_c_p_s_1_1_system_topology.html#a258a95471d12ef1b25d99b54cfca0baf", null ],
     [ "initWithPowerflow", "class_c_p_s_1_1_system_topology.html#a42b136222d8ef2b4b9dcb521ca860ee9", null ],
     [ "listIdObjects", "class_c_p_s_1_1_system_topology.html#a576000d02276b7b57e149364b42dfacc", null ],
     [ "multiply", "class_c_p_s_1_1_system_topology.html#aca76db46611e3854d752f903d41c2f91", null ],

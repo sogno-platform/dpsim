@@ -1,8 +1,10 @@
 var class_c_p_s_1_1_math =
 [
+    [ "ScopedZeroSkipping", "class_c_p_s_1_1_math_1_1_scoped_zero_skipping.html", "class_c_p_s_1_1_math_1_1_scoped_zero_skipping" ],
     [ "DeriveFnPtr", "class_c_p_s_1_1_math.html#a9c3dbc3fcd1ce9eb3266db93b4966b58", null ],
     [ "abs", "class_c_p_s_1_1_math.html#ad778408f22b79894bf80a3b719c98b04", null ],
     [ "abs", "class_c_p_s_1_1_math.html#add459a3b840681bf42d4c6e2b614851c", null ],
+    [ "addToMatrixElement", "class_c_p_s_1_1_math.html#a79c913cc3a982dbbce2976d5b93005e3", null ],
     [ "addToMatrixElement", "class_c_p_s_1_1_math.html#ad98d7e8ddd1b77b37f273165e9109fc4", null ],
     [ "addToMatrixElement", "class_c_p_s_1_1_math.html#a8914e2fe1ae566ee360c6da692ebaf74", null ],
     [ "addToMatrixElement", "class_c_p_s_1_1_math.html#a8cb37d1d16c13279777b4e527aea259e", null ],
@@ -13,6 +15,7 @@ var class_c_p_s_1_1_math =
     [ "applyStateSpaceTrapezoidalMatrices", "class_c_p_s_1_1_math.html#ab4fbe7cafce1d49a7461a40dd0b67f04", null ],
     [ "calculateStateSpaceTrapezoidalMatrices", "class_c_p_s_1_1_math.html#a4d9024f94dbee45b8f0d947a225a6c69", null ],
     [ "calculateStateSpaceTrapezoidalMatrices", "class_c_p_s_1_1_math.html#a2cb29a26667767e426f3a8260a82b9c7", null ],
+    [ "clearSparseMatrixValueCache", "class_c_p_s_1_1_math.html#a0003aa3b7cd9e2986ab78fefa7076738", null ],
     [ "complexFromVectorElement", "class_c_p_s_1_1_math.html#a32bd53e58cb82f9dd16fccc7a858bf0a", null ],
     [ "degToRad", "class_c_p_s_1_1_math.html#a3635bac389d718d5a2379e19e82624df", null ],
     [ "elementwiseProduct", "class_c_p_s_1_1_math.html#a7aee9bf67780737a250b591ec9a978c5", null ],
@@ -30,6 +33,7 @@ var class_c_p_s_1_1_math =
     [ "phaseDeg", "class_c_p_s_1_1_math.html#a9ad2fde4fa185dcde2c973c5406f3142", null ],
     [ "polar", "class_c_p_s_1_1_math.html#a008cb55a3259abba4d234d7eeb9cb497", null ],
     [ "polarDeg", "class_c_p_s_1_1_math.html#a1b14583d157475ffbdba9a701a1104b9", null ],
+    [ "prepareSparseMatrixValueCache", "class_c_p_s_1_1_math.html#ac0e99736447bdc6e70bc25ea8b3e7a5a", null ],
     [ "radtoDeg", "class_c_p_s_1_1_math.html#afa004eafcd5d46b69897008d4f3fad86", null ],
     [ "realFromVectorElement", "class_c_p_s_1_1_math.html#a473ad66fcb23f3439e5ed4faa1e45c19", null ],
     [ "rotatingFrame2to1", "class_c_p_s_1_1_math.html#a755687ef7e29ec00960581b4b4644613", null ],
@@ -45,11 +49,20 @@ var class_c_p_s_1_1_math =
     [ "StateSpaceEuler", "class_c_p_s_1_1_math.html#a8bf97fb242df292f0b3791ef3f037f51", null ],
     [ "StateSpaceEuler", "class_c_p_s_1_1_math.html#ad6c825a537557ddadf275bd7e1546e3f", null ],
     [ "StateSpaceEuler", "class_c_p_s_1_1_math.html#ac1f76a2465003fe661d30997a7c1af64", null ],
+    [ "StateSpaceEulerNoCopy", "class_c_p_s_1_1_math.html#a875958ff44f51737cb6d77a01a48635f", null ],
+    [ "StateSpaceEulerNoCopy", "class_c_p_s_1_1_math.html#ab52e7226efbcf540846471589004c392", null ],
+    [ "StateSpaceEulerNoCopy", "class_c_p_s_1_1_math.html#a32753b53ebc361ccf9e00ac6c2ef031e", null ],
     [ "StateSpaceTrapezoidal", "class_c_p_s_1_1_math.html#a14df1b40d5149eca18dd5751ad9609bd", null ],
     [ "StateSpaceTrapezoidal", "class_c_p_s_1_1_math.html#a0c5fcdb26152e2f656c71df02dcb6faf", null ],
     [ "StateSpaceTrapezoidal", "class_c_p_s_1_1_math.html#ad93fe4fc808e2d1d54effb61bebe6cfc", null ],
     [ "StateSpaceTrapezoidal", "class_c_p_s_1_1_math.html#afcb0ad38959e35247f781f7db5b27d71", null ],
     [ "StateSpaceTrapezoidal", "class_c_p_s_1_1_math.html#ac003a250ea1f052af33885bd0649bfa9", null ],
     [ "StateSpaceTrapezoidal", "class_c_p_s_1_1_math.html#afb98ee5242e8e99514ffda67f2a66400", null ],
-    [ "StateSpaceTrapezoidal", "class_c_p_s_1_1_math.html#a1558030eb91c318959d84fe349a61b7a", null ]
+    [ "StateSpaceTrapezoidal", "class_c_p_s_1_1_math.html#a1558030eb91c318959d84fe349a61b7a", null ],
+    [ "StateSpaceTrapezoidalNoCopy", "class_c_p_s_1_1_math.html#a6566e8bc552671ed06c9742f597dfc7f", null ],
+    [ "StateSpaceTrapezoidalNoCopy", "class_c_p_s_1_1_math.html#a6cb2f3e5df4c427d036679d8f1ed316d", null ],
+    [ "StateSpaceTrapezoidalNoCopy", "class_c_p_s_1_1_math.html#ac446bba5d0ef8251ad46cb26d967df01", null ],
+    [ "StateSpaceTrapezoidalNoCopy", "class_c_p_s_1_1_math.html#a20a55c61cce3df9dd5dcf55597ce5ef1", null ],
+    [ "StateSpaceTrapezoidalNoCopy", "class_c_p_s_1_1_math.html#af052835d122050bdc9f592e29c1bf425", null ],
+    [ "zeroSkippingEnabled", "class_c_p_s_1_1_math.html#a690564bd74da307a37ceeec68eb3ef24", null ]
 ];

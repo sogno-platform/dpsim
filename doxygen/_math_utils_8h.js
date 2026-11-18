@@ -1,4 +1,5 @@
 var _math_utils_8h =
 [
-    [ "CPS::Math", "class_c_p_s_1_1_math.html", "class_c_p_s_1_1_math" ]
+    [ "CPS::Math", "class_c_p_s_1_1_math.html", "class_c_p_s_1_1_math" ],
+    [ "CPS::Math::ScopedZeroSkipping", "class_c_p_s_1_1_math_1_1_scoped_zero_skipping.html", "class_c_p_s_1_1_math_1_1_scoped_zero_skipping" ]
 ];

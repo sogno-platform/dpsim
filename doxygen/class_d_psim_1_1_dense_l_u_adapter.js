@@ -9,5 +9,9 @@ var class_d_psim_1_1_dense_l_u_adapter =
     [ "partialRefactorize", "class_d_psim_1_1_dense_l_u_adapter.html#a6f1368e72ccfa781d31bc9214191e131", null ],
     [ "preprocessing", "class_d_psim_1_1_dense_l_u_adapter.html#a853e59797375bf760f47acf1a68e8b31", null ],
     [ "refactorize", "class_d_psim_1_1_dense_l_u_adapter.html#a87c2b1102ed663b35838fed7c8154989", null ],
-    [ "solve", "class_d_psim_1_1_dense_l_u_adapter.html#aa026457a9d8bfd687b7c20e22483c7db", null ]
+    [ "setDetailedProfiling", "class_d_psim_1_1_dense_l_u_adapter.html#a41e97eb700632509ac74a5b14c6276b0", null ],
+    [ "solve", "class_d_psim_1_1_dense_l_u_adapter.html#aa026457a9d8bfd687b7c20e22483c7db", null ],
+    [ "solveInto", "class_d_psim_1_1_dense_l_u_adapter.html#a76960f0498abc1f40057d5b00a98576d", null ],
+    [ "writeDetailedDiagnostics", "class_d_psim_1_1_dense_l_u_adapter.html#a72acfcd6d78c0cf8b8a42d950c91404e", null ],
+    [ "writeDetailedProfile", "class_d_psim_1_1_dense_l_u_adapter.html#a3a82dae30276a6894eefef142dfbf6f6", null ]
 ];

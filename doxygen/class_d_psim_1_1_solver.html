@@ -160,6 +160,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9ad333c04d5e81c7d15c0a039e74e855"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e851429fec0ddfaf3b20be40ab4cad3" id="r_a8e851429fec0ddfaf3b20be40ab4cad3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e851429fec0ddfaf3b20be40ab4cad3">initialize</a> ()</td></tr>
 <tr class="separator:a8e851429fec0ddfaf3b20be40ab4cad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5984485a4955bb23824bd18821772ba" id="r_ad5984485a4955bb23824bd18821772ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5984485a4955bb23824bd18821772ba">setZeroSkipping</a> (<a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> enabled)</td></tr>
+<tr class="memdesc:ad5984485a4955bb23824bd18821772ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable skipping exact zero matrix contributions.  <br /></td></tr>
+<tr class="separator:ad5984485a4955bb23824bd18821772ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d66d729df64fcc192543748c297891f" id="r_a6d66d729df64fcc192543748c297891f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d66d729df64fcc192543748c297891f">getZeroSkipping</a> () const</td></tr>
+<tr class="separator:a6d66d729df64fcc192543748c297891f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67ae1b76aa257df267fd660c8c542813" id="r_a67ae1b76aa257df267fd660c8c542813"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67ae1b76aa257df267fd660c8c542813">doSteadyStateInit</a> (<a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> f)</td></tr>
 <tr class="memdesc:a67ae1b76aa257df267fd660c8c542813"><td class="mdescLeft">&#160;</td><td class="mdescRight">activate steady state initialization  <br /></td></tr>
 <tr class="separator:a67ae1b76aa257df267fd660c8c542813"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -244,6 +249,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a19bbb595644cc88dd6cd5cc653138a8b" id="r_a19bbb595644cc88dd6cd5cc653138a8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19bbb595644cc88dd6cd5cc653138a8b">mSystemMatrixRecomputationEnabled</a> = false</td></tr>
 <tr class="memdesc:a19bbb595644cc88dd6cd5cc653138a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effective system-matrix recomputation setting used by the solver.  <br /></td></tr>
 <tr class="separator:a19bbb595644cc88dd6cd5cc653138a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab67edf5e26448635f38b58ffb4cd2a41" id="r_ab67edf5e26448635f38b58ffb4cd2a41"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab67edf5e26448635f38b58ffb4cd2a41">mZeroSkipping</a> = true</td></tr>
+<tr class="memdesc:ab67edf5e26448635f38b58ffb4cd2a41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip exact zero contributions during matrix assembly (enabled by default).  <br /></td></tr>
+<tr class="separator:ab67edf5e26448635f38b58ffb4cd2a41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2978a74153340b65c3f3efd0a0617dda" id="r_a2978a74153340b65c3f3efd0a0617dda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#abf97ba7da8f4320061ac8101ef45cf2f">Behaviour</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2978a74153340b65c3f3efd0a0617dda">mBehaviour</a> = <a class="el" href="#abf97ba7da8f4320061ac8101ef45cf2fa0280f4fd824860a5c40d033b0395522d">Solver::Behaviour::Simulation</a></td></tr>
 <tr class="memdesc:a2978a74153340b65c3f3efd0a0617dda"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> behaviour initialization or simulation.  <br /></td></tr>
 <tr class="separator:a2978a74153340b65c3f3efd0a0617dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -366,7 +374,7 @@ Protected Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="abc3b0db5925f348e9a41093c1759919eacc4ebb23bd3d777fd82cb86283c1de28" name="abc3b0db5925f348e9a41093c1759919eacc4ebb23bd3d777fd82cb86283c1de28"></a>NRP&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00098">98</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00100">100</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -398,7 +406,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00088">88</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00090">90</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -425,7 +433,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00093">93</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00095">95</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -453,7 +461,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00102">102</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00104">104</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -482,7 +490,7 @@ Protected Attributes</h2></td></tr>
 
 <p>activate powerflow initialization </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00133">133</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00138">138</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -511,7 +519,7 @@ Protected Attributes</h2></td></tr>
 
 <p>activate steady state initialization </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00125">125</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00130">130</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -539,7 +547,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>DEPRECATED: Enable or disable system-matrix recomputation explicitly. This compatibility method maps true to Enabled and false to Disabled. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00113">113</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00115">115</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -572,6 +580,33 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6d66d729df64fcc192543748c297891f" name="a6d66d729df64fcc192543748c297891f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d66d729df64fcc192543748c297891f">&#9670;&#160;</a></span>getZeroSkipping()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> DPsim::Solver::getZeroSkipping </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00128">128</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
 <a id="a8e851429fec0ddfaf3b20be40ab4cad3" name="a8e851429fec0ddfaf3b20be40ab4cad3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8e851429fec0ddfaf3b20be40ab4cad3">&#9670;&#160;</a></span>initialize()</h2>
 
@@ -597,7 +632,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_d_a_e_solver.html#aab741458f52cae64ea769962d0ec5b2b">DPsim::DAESolver</a>, <a class="el" href="class_d_psim_1_1_mna_solver.html#a3b82eee1fafcde090d5beb801d1c6f96">DPsim::MnaSolver&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_mna_solver_plugin.html#afdb444e4c698ecac4fa68059cbf7624c">DPsim::MnaSolverPlugin&lt; VarType &gt;</a>, <a class="el" href="class_d_psim_1_1_o_d_e_solver.html#a7cd71791cadd3bc396fa5ec2a021b34a">DPsim::ODESolver</a>, and <a class="el" href="class_d_psim_1_1_p_f_solver.html#adf4f01bb9b1795b9bf944d16b720fb0b">DPsim::PFSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00123">123</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00125">125</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -632,7 +667,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_mna_solver.html#a5e1ed4449c74fcbfe4f68e8576aee3d4">DPsim::MnaSolver&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00148">148</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00153">153</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -663,7 +698,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_mna_solver_direct.html#ac0953629e479d736b912a29a6a4db188">DPsim::MnaSolverDirect&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00140">140</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00145">145</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -694,7 +729,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_mna_solver_direct.html#a6f08318fa3606f3bdeeb201a8f42c7a9">DPsim::MnaSolverDirect&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00136">136</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00141">141</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -721,7 +756,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00119">119</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00121">121</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -748,7 +783,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00152">152</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00157">157</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -779,7 +814,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_p_f_solver.html#acd0834f9a232d7d9aebda905d379c0a2">DPsim::PFSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00131">131</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00136">136</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -808,7 +843,7 @@ Protected Attributes</h2></td></tr>
 
 <p>set steady state initialization accuracy limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00129">129</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00134">134</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -837,7 +872,7 @@ Protected Attributes</h2></td></tr>
 
 <p>set steady state initialization time limit </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00127">127</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00132">132</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -866,7 +901,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_mna_solver.html#a04a2257153fd76d465b78131c73fd4f7">DPsim::MnaSolver&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00106">106</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00108">108</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -895,7 +930,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Set the system-matrix recomputation mode. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00108">108</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00110">110</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -922,7 +957,36 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00100">100</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00102">102</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="ad5984485a4955bb23824bd18821772ba" name="ad5984485a4955bb23824bd18821772ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5984485a4955bb23824bd18821772ba">&#9670;&#160;</a></span>setZeroSkipping()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::Solver::setZeroSkipping </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a></td>          <td class="paramname"><span class="paramname"><em>enabled</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable or disable skipping exact zero matrix contributions. </p>
+
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00127">127</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1001,7 +1065,7 @@ Protected Attributes</h2></td></tr>
 
 <p><a class="el" href="class_d_psim_1_1_solver.html" title="Base class for more specific solvers such as MNA, ODE or IDA.">Solver</a> behaviour initialization or simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00085">85</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00087">87</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1147,7 +1211,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <h3>SynGen <a class="el" href="class_d_psim_1_1_interface.html">Interface</a></h3>
 
-<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00151">151</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00156">156</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>
@@ -1359,6 +1423,32 @@ Protected Attributes</h2></td></tr>
 <p>Time step for fixed step solvers. </p>
 
 <p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00062">62</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
+
+</div>
+</div>
+<a id="ab67edf5e26448635f38b58ffb4cd2a41" name="ab67edf5e26448635f38b58ffb4cd2a41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab67edf5e26448635f38b58ffb4cd2a41">&#9670;&#160;</a></span>mZeroSkipping</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> DPsim::Solver::mZeroSkipping = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Skip exact zero contributions during matrix assembly (enabled by default). </p>
+
+<p class="definition">Definition at line <a class="el" href="_solver_8h_source.html#l00084">84</a> of file <a class="el" href="_solver_8h_source.html">Solver.h</a>.</p>
 
 </div>
 </div>

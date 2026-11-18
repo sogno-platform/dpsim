@@ -92,7 +92,13 @@ var namespace_d_psim =
       [ "CUDADense", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457aebe110fb34545ecd37c1cf88bc96688d", null ],
       [ "CUDASparse", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a533f9ea55a14b93c55fe398df9746ef4", null ],
       [ "CUDAMagma", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a81cc7f376aa3d27f27553ff770fd04be", null ],
-      [ "Plugin", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457af57a10e73c2af24c85f3d8f5c233a201", null ]
+      [ "MetalDense", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a693873f4a256edbb1237a1a5d36a615c", null ],
+      [ "MetalSparseBiCGSTAB", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457aae5fdcaef084d2f03e058cef562bab2e", null ],
+      [ "Plugin", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457af57a10e73c2af24c85f3d8f5c233a201", null ],
+      [ "HIPDense", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457ab19a3fc6b3453e1bee8b46b541bc0552", null ],
+      [ "HIPSparseBiCGStab", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457aac5f5e4da832f364d5c2af5d63a1aa5e", null ],
+      [ "HIPSparseLURefactor", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a130e420ef2f3de87e1ba18a94693c15f", null ],
+      [ "HIPSparseQR", "namespace_d_psim.html#ab7fe221419e28403d220d17a0013b457a2823f3549f41f0d45c61aab1be17e336", null ]
     ] ],
     [ "FILL_IN_REDUCTION_METHOD", "namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74", [
       [ "AMD", "namespace_d_psim.html#afb1a2956e105f204d9d5322e4800df74a48af4341f745163f945fa838eeabb062", null ],

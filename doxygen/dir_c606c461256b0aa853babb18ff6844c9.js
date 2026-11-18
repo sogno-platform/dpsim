@@ -2,6 +2,7 @@ var dir_c606c461256b0aa853babb18ff6844c9 =
 [
     [ "DAEInterface.h", "_d_a_e_interface_8h.html", "_d_a_e_interface_8h" ],
     [ "MNAInterface.h", "_m_n_a_interface_8h.html", "_m_n_a_interface_8h" ],
+    [ "MNANonlinearCompInterface.h", "_m_n_a_nonlinear_comp_interface_8h.html", "_m_n_a_nonlinear_comp_interface_8h" ],
     [ "MNASwitchInterface.h", "_m_n_a_switch_interface_8h.html", "_m_n_a_switch_interface_8h" ],
     [ "MNASyncGenInterface.h", "_m_n_a_sync_gen_interface_8h.html", "_m_n_a_sync_gen_interface_8h" ],
     [ "MNATearInterface.h", "_m_n_a_tear_interface_8h.html", "_m_n_a_tear_interface_8h" ],

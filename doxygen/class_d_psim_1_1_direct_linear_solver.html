@@ -155,6 +155,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac353d50f9d36dd934a75ae751ee03184" id="r_ac353d50f9d36dd934a75ae751ee03184"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac353d50f9d36dd934a75ae751ee03184">solve</a> (<a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector)=0</td></tr>
 <tr class="memdesc:ac353d50f9d36dd934a75ae751ee03184"><td class="mdescLeft">&#160;</td><td class="mdescRight">solution function for a right hand side  <br /></td></tr>
 <tr class="separator:ac353d50f9d36dd934a75ae751ee03184"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa681ff37453ec1de0b4e8b00f210c598" id="r_aa681ff37453ec1de0b4e8b00f210c598"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa681ff37453ec1de0b4e8b00f210c598">solveInto</a> (<a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector, <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;solution)</td></tr>
+<tr class="separator:aa681ff37453ec1de0b4e8b00f210c598"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba1fd03692134eef001154b5043e8760" id="r_aba1fd03692134eef001154b5043e8760"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba1fd03692134eef001154b5043e8760">setConfiguration</a> (<a class="el" href="class_d_psim_1_1_direct_linear_solver_configuration.html">DirectLinearSolverConfiguration</a> &amp;configuration)</td></tr>
 <tr class="separator:aba1fd03692134eef001154b5043e8760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -339,7 +341,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_k_l_u_adapter.html#a14883b8c2cd220468dfc0b8c8f999c89">DPsim::KLUAdapter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00080">80</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00086">86</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
 
 </div>
 </div>
@@ -544,7 +546,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00068">68</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00074">74</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
 
 </div>
 </div>
@@ -577,6 +579,40 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa681ff37453ec1de0b4e8b00f210c598" name="aa681ff37453ec1de0b4e8b00f210c598"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa681ff37453ec1de0b4e8b00f210c598">&#9670;&#160;</a></span>solveInto()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DPsim::DirectLinearSolver::solveInto </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rightSideVector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>solution</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Solve into caller-owned storage. Adapters can reuse this storage in the simulation loop; the default keeps existing adapter behavior. </p>
+
+<p>Reimplemented in <a class="el" href="class_d_psim_1_1_dense_l_u_adapter.html#a76960f0498abc1f40057d5b00a98576d">DPsim::DenseLUAdapter</a>, <a class="el" href="class_d_psim_1_1_k_l_u_adapter.html#a8181b5ca62803fb26450f21544e1bd87">DPsim::KLUAdapter</a>, and <a class="el" href="class_d_psim_1_1_sparse_l_u_adapter.html#a165b4116b55fe91997bbee88087c385b">DPsim::SparseLUAdapter</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00069">69</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a9f0386f35ad2c6219ba3fafefe40e541" name="a9f0386f35ad2c6219ba3fafefe40e541"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f0386f35ad2c6219ba3fafefe40e541">&#9670;&#160;</a></span>mConfiguration</h2>
@@ -600,7 +636,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Object that carries configuration options. </p>
 
-<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00078">78</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00084">84</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
 
 </div>
 </div>
@@ -626,7 +662,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Stores logger of solver class. </p>
 
-<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00075">75</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_direct_linear_solver_8h_source.html#l00081">81</a> of file <a class="el" href="_direct_linear_solver_8h_source.html">DirectLinearSolver.h</a>.</p>
 
 </div>
 </div>

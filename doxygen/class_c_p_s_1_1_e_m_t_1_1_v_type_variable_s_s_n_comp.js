@@ -1,7 +1,7 @@
 var class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp =
 [
     [ "VTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#a51be9f7737eddb6140c2d184b2d34a24", null ],
-    [ "calculateHistoryVector", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#a957547871bf0cebe91ae435c1ac3eac2", null ],
+    [ "calculateHistoryVector", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#a461189951b84f53aca74b4216da5219e", null ],
     [ "calculateSteadyStateOutputFromInput", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#ae6cec00a36465f7b2ef719cfedd5673e", null ],
     [ "calculateSteadyStateStateFromInput", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#ab7694e6a0cc646c1f89cf96b1521c471", null ],
     [ "hasParameterChanged", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html#a2d225cde7be20acf28fb7cddc16fd07a", null ],

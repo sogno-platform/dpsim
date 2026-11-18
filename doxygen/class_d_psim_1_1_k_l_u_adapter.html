@@ -142,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a227389e7c48ed266d97f365e9eb1f89b" id="r_a227389e7c48ed266d97f365e9eb1f89b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a227389e7c48ed266d97f365e9eb1f89b">solve</a> (<a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector) override</td></tr>
 <tr class="memdesc:a227389e7c48ed266d97f365e9eb1f89b"><td class="mdescLeft">&#160;</td><td class="mdescRight">solution function for a right hand side  <br /></td></tr>
 <tr class="separator:a227389e7c48ed266d97f365e9eb1f89b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8181b5ca62803fb26450f21544e1bd87" id="r_a8181b5ca62803fb26450f21544e1bd87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8181b5ca62803fb26450f21544e1bd87">solveInto</a> (<a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightSideVector, <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;solution) override</td></tr>
+<tr class="memdesc:a8181b5ca62803fb26450f21544e1bd87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve into caller-owned storage to avoid per-step matrix allocation.  <br /></td></tr>
+<tr class="separator:a8181b5ca62803fb26450f21544e1bd87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_d_psim_1_1_direct_linear_solver"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_d_psim_1_1_direct_linear_solver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DPsim::DirectLinearSolver</a></td></tr>
 <tr class="memitem:a2b121961736a57b6aa1622d373fe6019 inherit pub_methods_class_d_psim_1_1_direct_linear_solver" id="r_a2b121961736a57b6aa1622d373fe6019"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_direct_linear_solver.html#a2b121961736a57b6aa1622d373fe6019">DirectLinearSolver</a> ()=default</td></tr>
 <tr class="memdesc:a2b121961736a57b6aa1622d373fe6019 inherit pub_methods_class_d_psim_1_1_direct_linear_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
@@ -188,7 +191,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8h_source.html#l00028">28</a> of file <a class="el" href="_k_l_u_adapter_8h_source.html">KLUAdapter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8h_source.html#l00029">29</a> of file <a class="el" href="_k_l_u_adapter_8h_source.html">KLUAdapter.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac0a481a271301ec563224db0928b1592" name="ac0a481a271301ec563224db0928b1592"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac0a481a271301ec563224db0928b1592">&#9670;&#160;</a></span>~KLUAdapter()</h2>
@@ -289,7 +292,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_d_psim_1_1_direct_linear_solver.html#a9c464c753c4460154f10cab2e09d7cea">DPsim::DirectLinearSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00218">218</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00254">254</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
 
 </div>
 </div>
@@ -320,7 +323,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_direct_linear_solver.html#abaeed2ec1e0a01066de92bd326a977d3">DPsim::DirectLinearSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00088">88</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00116">116</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
 
 </div>
 </div>
@@ -355,7 +358,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_direct_linear_solver.html#a4e4a9d4cb4e45d8e93795e2c0c0ea6bb">DPsim::DirectLinearSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00134">134</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00162">162</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
 
 </div>
 </div>
@@ -423,7 +426,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Function to print matrix in MatrixMarket's coo format. </p>
 
-<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00193">193</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00229">229</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
 
 </div>
 </div>
@@ -454,7 +457,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_direct_linear_solver.html#a038b2194287e5838fcfd16a365fa2e9c">DPsim::DirectLinearSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00119">119</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00148">148</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
 
 </div>
 </div>
@@ -485,7 +488,42 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_direct_linear_solver.html#ac353d50f9d36dd934a75ae751ee03184">DPsim::DirectLinearSolver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00170">170</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00197">197</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a8181b5ca62803fb26450f21544e1bd87" name="a8181b5ca62803fb26450f21544e1bd87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8181b5ca62803fb26450f21544e1bd87">&#9670;&#160;</a></span>solveInto()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DPsim::KLUAdapter::solveInto </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rightSideVector</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>solution</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Solve into caller-owned storage to avoid per-step matrix allocation. </p>
+
+<p>Reimplemented from <a class="el" href="class_d_psim_1_1_direct_linear_solver.html#aa681ff37453ec1de0b4e8b00f210c598">DPsim::DirectLinearSolver</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_k_l_u_adapter_8cpp_source.html#l00203">203</a> of file <a class="el" href="_k_l_u_adapter_8cpp_source.html">KLUAdapter.cpp</a>.</p>
 
 </div>
 </div>

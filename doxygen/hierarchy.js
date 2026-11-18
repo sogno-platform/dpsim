@@ -148,6 +148,7 @@ var hierarchy =
     ] ],
     [ "DPsim::GpuDenseAdapter::GpuData", "struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html", null ],
     [ "std::hash< CPS::AttributePointer< T > >", "structstd_1_1hash_3_01_c_p_s_1_1_attribute_pointer_3_01_t_01_4_01_4.html", null ],
+    [ "CPS::EMT::Ph3::HipSG4State", "struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html", null ],
     [ "CPS::IdentifiedObject", "class_c_p_s_1_1_identified_object.html", [
       [ "CPS::TopologicalNode", "class_c_p_s_1_1_topological_node.html", [
         [ "CPS::SimNode< Complex >", "class_c_p_s_1_1_sim_node.html", null ],
@@ -225,13 +226,15 @@ var hierarchy =
             [ "CPS::DP::Ph3::CurrentSource", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_current_source.html", null ],
             [ "CPS::DP::Ph3::Inductor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html", null ],
             [ "CPS::DP::Ph3::MixedVTypeVariableSSNComp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html", [
-              [ "CPS::DP::Ph3::AvVoltSourceInverterStateSpace", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html", null ]
+              [ "CPS::DP::Ph3::AvVoltSourceInverterStateSpace", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html", null ],
+              [ "CPS::DP::Ph3::SSN::SynchronGenerator4Order", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_synchron_generator4_order.html", null ]
             ] ],
             [ "CPS::DP::Ph3::Resistor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html", null ],
             [ "CPS::DP::Ph3::SeriesResistor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html", null ],
             [ "CPS::DP::Ph3::SeriesSwitch", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html", null ],
             [ "CPS::DP::Ph3::Switch", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html", null ],
             [ "CPS::DP::Ph3::SynchronGeneratorDQ", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html", [
+              [ "CPS::DP::Ph3::SynchronGenerator4OrderVBR", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html", null ],
               [ "CPS::DP::Ph3::SynchronGeneratorDQODE", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html", null ],
               [ "CPS::DP::Ph3::SynchronGeneratorDQTrapez", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_trapez.html", null ]
             ] ],
@@ -250,6 +253,11 @@ var hierarchy =
                   [ "CPS::DP::Ph1::GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_generic_two_terminal_v_type_s_s_n.html", null ],
                   [ "CPS::DP::Ph1::SSN::Full_Serial_RLC", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html", null ]
                 ] ],
+                [ "CPS::DP::Ph3::MultiPortVTypeSSNComp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_multi_port_v_type_s_s_n_comp.html", [
+                  [ "CPS::DP::Ph3::SSN::PiLine", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_pi_line.html", null ],
+                  [ "CPS::DP::Ph3::SSN::Transformer", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_transformer.html", null ]
+                ] ],
+                [ "CPS::DP::Ph3::SSN::ImpedanceLoad", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_impedance_load.html", null ],
                 [ "CPS::DP::Ph3::TwoTerminalVTypeSSNComp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html", [
                   [ "CPS::DP::Ph3::GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", null ],
                   [ "CPS::DP::Ph3::SSN::Full_Serial_RLC", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html", null ]
@@ -355,6 +363,11 @@ var hierarchy =
                 [ "CPS::EMT::Ph3::FourTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::GenericFourTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_four_terminal_v_type_s_s_n.html", null ]
                 ] ],
+                [ "CPS::EMT::Ph3::MultiPortVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_multi_port_v_type_s_s_n_comp.html", [
+                  [ "CPS::EMT::Ph3::SSN::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_pi_line.html", null ],
+                  [ "CPS::EMT::Ph3::SSN::Transformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_transformer.html", null ]
+                ] ],
+                [ "CPS::EMT::Ph3::SSN::ImpedanceLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_impedance_load.html", null ],
                 [ "CPS::EMT::Ph3::TwoTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", null ],
                   [ "CPS::EMT::Ph3::SSN::Full_Serial_RLC", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html", null ],
@@ -369,6 +382,7 @@ var hierarchy =
                   [ "CPS::EMT::Ph3::TwoTerminalVTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_two_terminal_v_type_variable_s_s_n_comp.html", [
                     [ "CPS::EMT::Ph3::AvVoltSourceInverterStateSpace", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html", null ],
                     [ "CPS::EMT::Ph3::PiecewiseLinearInductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html", null ],
+                    [ "CPS::EMT::Ph3::SSN::SynchronGenerator4Order", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_synchron_generator4_order.html", null ],
                     [ "CPS::EMT::Ph3::SSN_GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_l.html", null ],
                     [ "CPS::EMT::Ph3::SSN_GFM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___g_f_m.html", null ],
                     [ "CPS::EMT::Ph3::SSN_InductionMotor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html", null ]
@@ -451,12 +465,14 @@ var hierarchy =
     [ "CPS::Logger", "class_c_p_s_1_1_logger.html", null ],
     [ "DPsim::Simulation::LoggerMapping", "struct_d_psim_1_1_simulation_1_1_logger_mapping.html", null ],
     [ "CPS::Math", "class_c_p_s_1_1_math.html", null ],
+    [ "CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData", "struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html", null ],
     [ "CPS::MNAInterface", "class_c_p_s_1_1_m_n_a_interface.html", [
       [ "CPS::MNASimPowerComp< Complex >", "class_c_p_s_1_1_m_n_a_sim_power_comp.html", null ],
       [ "CPS::MNASimPowerComp< Real >", "class_c_p_s_1_1_m_n_a_sim_power_comp.html", null ],
       [ "CPS::DP::Ph3::SynchronGeneratorVBR", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html", null ],
       [ "CPS::MNASimPowerComp< VarType >", "class_c_p_s_1_1_m_n_a_sim_power_comp.html", null ]
     ] ],
+    [ "CPS::MNANonlinearCompInterface", "class_c_p_s_1_1_m_n_a_nonlinear_comp_interface.html", null ],
     [ "DPsim::MnaSolverFactory", "class_d_psim_1_1_mna_solver_factory.html", null ],
     [ "CPS::MNAStampUtils", "class_c_p_s_1_1_m_n_a_stamp_utils.html", null ],
     [ "DPsim::MNAStateSpaceContributor", "class_d_psim_1_1_m_n_a_state_space_contributor.html", null ],
@@ -554,12 +570,15 @@ var hierarchy =
     ] ],
     [ "CPS::Base::Ph3::PiLine", "class_c_p_s_1_1_base_1_1_ph3_1_1_pi_line.html", [
       [ "CPS::DP::Ph3::PiLine", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html", null ],
+      [ "CPS::DP::Ph3::SSN::PiLine", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_pi_line.html", null ],
       [ "CPS::EMT::Ph3::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html", null ],
       [ "CPS::EMT::Ph3::RxLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html", null ],
+      [ "CPS::EMT::Ph3::SSN::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_pi_line.html", null ],
       [ "CPS::SP::Ph3::RxLine", "class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html", null ]
     ] ],
     [ "CPS::PowerProfile", "struct_c_p_s_1_1_power_profile.html", null ],
     [ "CPS::PQData", "struct_c_p_s_1_1_p_q_data.html", null ],
+    [ "DPsim::MnaSolverDirect< VarType >::ProfileMeasurement", "struct_d_psim_1_1_mna_solver_direct_1_1_profile_measurement.html", null ],
     [ "CPS::Base::PSS", "class_c_p_s_1_1_base_1_1_p_s_s.html", [
       [ "CPS::Signal::PSS1A", "class_c_p_s_1_1_signal_1_1_p_s_s1_a.html", null ]
     ] ],
@@ -584,6 +603,7 @@ var hierarchy =
       [ "CPS::SP::Ph3::Resistor", "class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html", null ]
     ] ],
     [ "CPS::Utils::Rgb", "struct_c_p_s_1_1_utils_1_1_rgb.html", null ],
+    [ "DPsim::MnaSolverDirect< VarType >::RightVectorStamp", "struct_d_psim_1_1_mna_solver_direct_1_1_right_vector_stamp.html", null ],
     [ "DPsim::Scheduler", "class_d_psim_1_1_scheduler.html", [
       [ "DPsim::OpenMPLevelScheduler", "class_d_psim_1_1_open_m_p_level_scheduler.html", null ],
       [ "DPsim::SequentialScheduler", "class_d_psim_1_1_sequential_scheduler.html", null ],
@@ -593,6 +613,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "DPsim::SchedulingException", "class_d_psim_1_1_scheduling_exception.html", null ],
+    [ "CPS::Math::ScopedZeroSkipping", "class_c_p_s_1_1_math_1_1_scoped_zero_skipping.html", null ],
     [ "SharedFactory< T >", "class_shared_factory.html", [
       [ "CPS::SimNode< Complex >", "class_c_p_s_1_1_sim_node.html", null ],
       [ "CPS::SimNode< Real >", "class_c_p_s_1_1_sim_node.html", null ]
@@ -751,6 +772,10 @@ var hierarchy =
     [ "SharedFactory< HydroTurbineParameters >", "class_shared_factory.html", [
       [ "CPS::Signal::HydroTurbineParameters", "class_c_p_s_1_1_signal_1_1_hydro_turbine_parameters.html", null ]
     ] ],
+    [ "SharedFactory< ImpedanceLoad >", "class_shared_factory.html", [
+      [ "CPS::DP::Ph3::SSN::ImpedanceLoad", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_impedance_load.html", null ],
+      [ "CPS::EMT::Ph3::SSN::ImpedanceLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_impedance_load.html", null ]
+    ] ],
     [ "SharedFactory< Inductor >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::Inductor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html", null ],
       [ "CPS::DP::Ph3::Inductor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html", null ],
@@ -804,9 +829,11 @@ var hierarchy =
     [ "SharedFactory< PiLine >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::PiLine", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html", null ],
       [ "CPS::DP::Ph3::PiLine", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html", null ],
+      [ "CPS::DP::Ph3::SSN::PiLine", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_pi_line.html", null ],
       [ "CPS::EMT::DC::PiLine", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line.html", null ],
       [ "CPS::EMT::Ph1::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html", null ],
       [ "CPS::EMT::Ph3::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html", null ],
+      [ "CPS::EMT::Ph3::SSN::PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_pi_line.html", null ],
       [ "CPS::SP::Ph1::PiLine", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html", null ]
     ] ],
     [ "SharedFactory< PLL >", "class_shared_factory.html", [
@@ -959,6 +986,7 @@ var hierarchy =
     ] ],
     [ "SharedFactory< SynchronGenerator4OrderVBR >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::SynchronGenerator4OrderVBR", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html", null ],
+      [ "CPS::DP::Ph3::SynchronGenerator4OrderVBR", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html", null ],
       [ "CPS::EMT::Ph3::SynchronGenerator4OrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html", null ],
       [ "CPS::SP::Ph1::SynchronGenerator4OrderVBR", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator4_order_v_b_r.html", null ]
     ] ],
@@ -1003,7 +1031,9 @@ var hierarchy =
     ] ],
     [ "SharedFactory< Transformer >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::Transformer", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html", null ],
+      [ "CPS::DP::Ph3::SSN::Transformer", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_transformer.html", null ],
       [ "CPS::DP::Ph3::Transformer", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_transformer.html", null ],
+      [ "CPS::EMT::Ph3::SSN::Transformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_transformer.html", null ],
       [ "CPS::EMT::Ph3::Transformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html", null ],
       [ "CPS::SP::Ph1::Transformer", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html", null ],
       [ "CPS::SP::Ph3::Transformer", "class_c_p_s_1_1_s_p_1_1_ph3_1_1_transformer.html", null ]
@@ -1186,7 +1216,9 @@ var hierarchy =
       [ "CPS::SP::Ph1::Transformer", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html", null ]
     ] ],
     [ "CPS::Base::Ph3::Transformer", "class_c_p_s_1_1_base_1_1_ph3_1_1_transformer.html", [
+      [ "CPS::DP::Ph3::SSN::Transformer", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_transformer.html", null ],
       [ "CPS::DP::Ph3::Transformer", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_transformer.html", null ],
+      [ "CPS::EMT::Ph3::SSN::Transformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_transformer.html", null ],
       [ "CPS::EMT::Ph3::Transformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html", null ],
       [ "CPS::SP::Ph3::Transformer", "class_c_p_s_1_1_s_p_1_1_ph3_1_1_transformer.html", null ]
     ] ],

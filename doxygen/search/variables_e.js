@@ -11,7 +11,9 @@ var searchData=
   ['pmin_8',['Pmin',['../class_c_p_s_1_1_signal_1_1_hydro_governor_parameters.html#a96bcbb3c30b29086b98f862782c66946',1,'CPS::Signal::HydroGovernorParameters::Pmin'],['../class_c_p_s_1_1_signal_1_1_steam_governor_parameters.html#a120b05fc00a4075f1c0a3f935e28f52e',1,'CPS::Signal::SteamGovernorParameters::Pmin']]],
   ['positional_9',['positional',['../class_d_psim_1_1_command_line_args.html#a1b6c36d53a8ca2fd02f19e26b6447d97',1,'DPsim::CommandLineArgs']]],
   ['pqdata_10',['pqData',['../struct_c_p_s_1_1_power_profile.html#ad8e4e2b4c0394b7ee1f5cd8258200b88',1,'CPS::PowerProfile']]],
-  ['probdim_11',['ProbDim',['../class_d_psim_1_1_o_d_eint_solver.html#a7cb88da0437f01c68d1e2ff5760ff974',1,'DPsim::ODEintSolver']]],
-  ['psm_5fin_12',['Psm_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a42019ed831becddcebd7fe837378fc22',1,'CPS::Signal::TurbineGovernor']]],
-  ['psr_5fin_13',['Psr_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#af38ae623671ed8b50b2e4f6f5104e389',1,'CPS::Signal::TurbineGovernor']]]
+  ['previousfieldvoltage_11',['previousFieldVoltage',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html#a4cd490a1688946302b39aa1050f427c0',1,'CPS::EMT::Ph3::HipSG4State::previousFieldVoltage'],['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html#ac616d75164db07434daebdabe0547cc9',1,'CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData::previousFieldVoltage']]],
+  ['previousmechanicaltorque_12',['previousMechanicalTorque',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html#a08964cb6ebad39ad4069c270db589d56',1,'CPS::EMT::Ph3::HipSG4State::previousMechanicalTorque'],['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html#ad8234476b2f4f178efa97d655ca6de64',1,'CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData::previousMechanicalTorque']]],
+  ['probdim_13',['ProbDim',['../class_d_psim_1_1_o_d_eint_solver.html#a7cb88da0437f01c68d1e2ff5760ff974',1,'DPsim::ODEintSolver']]],
+  ['psm_5fin_14',['Psm_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#a42019ed831becddcebd7fe837378fc22',1,'CPS::Signal::TurbineGovernor']]],
+  ['psr_5fin_15',['Psr_in',['../class_c_p_s_1_1_signal_1_1_turbine_governor.html#af38ae623671ed8b50b2e4f6f5104e389',1,'CPS::Signal::TurbineGovernor']]]
 ];

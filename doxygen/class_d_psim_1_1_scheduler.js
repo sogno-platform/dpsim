@@ -12,6 +12,7 @@ var class_d_psim_1_1_scheduler =
     [ "levelSchedule", "class_d_psim_1_1_scheduler.html#a304b12334e137a6f5bb79156c28ce0f5", null ],
     [ "readMeasurements", "class_d_psim_1_1_scheduler.html#a51cc3480e6e15a64e9b750ac430f40de", null ],
     [ "resolveDeps", "class_d_psim_1_1_scheduler.html#a0d839869a3f6ab4025773c3b5da9e347", null ],
+    [ "runSimulation", "class_d_psim_1_1_scheduler.html#a1c585fc72439182ea33e66d9f2c5b743", null ],
     [ "step", "class_d_psim_1_1_scheduler.html#a9b7001e111fdc39a28d8c412461c8729", null ],
     [ "stop", "class_d_psim_1_1_scheduler.html#ab9673cae47bf8de7670836da81d75ccf", null ],
     [ "topologicalSort", "class_d_psim_1_1_scheduler.html#a2c00afdc1af0b39557ddd852a42a7215", null ],

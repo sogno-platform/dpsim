@@ -12,5 +12,6 @@ var class_d_psim_1_1_real_time_data_logger =
     [ "mCurrentAttribute", "class_d_psim_1_1_real_time_data_logger.html#a2b21f2c37fc061b1e161594dc3b02acc", null ],
     [ "mCurrentRow", "class_d_psim_1_1_real_time_data_logger.html#a0c64ed82a5942c14a29a89dcdfe9ce42", null ],
     [ "mFilename", "class_d_psim_1_1_real_time_data_logger.html#ab0e14a2a29cdbc9ada29e28a4d84c7e8", null ],
-    [ "mRowNumber", "class_d_psim_1_1_real_time_data_logger.html#ad50065ba65a0709fc856a406118cd921", null ]
+    [ "mRowNumber", "class_d_psim_1_1_real_time_data_logger.html#ad50065ba65a0709fc856a406118cd921", null ],
+    [ "mRowsWritten", "class_d_psim_1_1_real_time_data_logger.html#aec1b080e7a463f14cf6e47e866e82c53", null ]
 ];

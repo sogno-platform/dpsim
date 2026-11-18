@@ -4,6 +4,7 @@ var class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r =
     [ "ReducedOrderSynchronGeneratorVBR", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#a7c91c8b7b01cd1c2d1b0edccc2e9582e", null ],
     [ "calculateResistanceMatrix", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#a8a584a47b70fe9c1ae9b0b7a11dade79", null ],
     [ "get_DqToComplexATransformMatrix", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#ab8ec0b0196366c83f7a8ad08fb7d49ae", null ],
+    [ "hasContinuouslyChangingSystemMatrix", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#ac975381a40e1b12b90c0f61b6b6dd697", null ],
     [ "hasParameterChanged", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#a6bea2013eb0ad44caea828b93bb73a7e", null ],
     [ "initializeResistanceMatrix", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#a5fdb366afdb2d80155869301faab7567", null ],
     [ "mnaCompApplyRightSideVectorStamp", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html#a9c8013a8911c648cdde31805df4b3e35", null ],

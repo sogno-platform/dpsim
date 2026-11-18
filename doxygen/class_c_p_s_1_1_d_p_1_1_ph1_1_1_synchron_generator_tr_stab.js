@@ -2,7 +2,9 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab =
 [
     [ "AddBStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step.html", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab_1_1_add_b_step" ],
     [ "SynchronGeneratorTrStab", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ab0dae83437789b988decd997e4535dea", null ],
+    [ "SynchronGeneratorTrStab", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a0549808b4ab7d4b99adde1eeb1829c8e", null ],
     [ "SynchronGeneratorTrStab", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a180584c1bbfca7b89d8f710d9aa16648", null ],
+    [ "SynchronGeneratorTrStab", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a79d72a0c1310688f99aa3775c40d3796", null ],
     [ "clone", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a6a8747576ee1cf0caa6e415aa0d219a1", null ],
     [ "createSubComponents", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#aac75ff5b7c201e84d65dbb247cdf2abc", null ],
     [ "initializeParentFromNodesAndTerminals", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ab73fedb0074a9b8b3fe488d31605bc8c", null ],
@@ -10,6 +12,8 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab =
     [ "mnaCompUpdateVoltage", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ad7d333888c5a5ee17b8051d633da58ae", null ],
     [ "mnaParentAddPostStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a3fb031b7a39f189052e1288958228cf4", null ],
     [ "mnaParentAddPreStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a549031246d6d3fea33bef7b0499087ce", null ],
+    [ "mnaParentApplyRightSideVectorStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a3c2bf89406d0b1d3647bb39e518d9f31", null ],
+    [ "mnaParentApplySystemMatrixStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#add1fb34d5b5f20609d3828d1ff95e216", null ],
     [ "mnaParentInitialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a86cb6ef0514985bbb1dbbae696be6bcb", null ],
     [ "mnaParentPostStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a01a945532ce5e4c07c8ad0cabf595f25", null ],
     [ "mnaParentPreStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#acbd96d67f42eca9f5ad546441597c7fc", null ],
@@ -22,6 +26,11 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab =
     [ "step", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a46a946ebfdfb4dec3afee34225f00293", null ],
     [ "mConvertWithOmegaMech", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#aa0fbab2566711bd041c0ae5076c40046", null ],
     [ "mDelta_p", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a7da01a20c3b68e61d6599ddca3d2c819", null ],
+    [ "mDirectAdmittance", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#aa85e16339c052791810d766a8b72091f", null ],
+    [ "mDirectCurrent", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a408e63df8cb4a7cf250d1df27fe25ae5", null ],
+    [ "mDirectHistory", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a27c741414214bad9d1c2fc32558ca0aa", null ],
+    [ "mDirectPreviousCurrentFactor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#acc5abeb0eaae3cc863b0356aaeedfd87", null ],
+    [ "mDirectVoltage", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ab4617a66a4ce9527b26684a1dd80b05c", null ],
     [ "mEp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a54155d5c93e7e6a7296a381378d8369d", null ],
     [ "mEp_abs", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ac31da92345493c6e860a90711c72d62a", null ],
     [ "mEp_phase", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a6129a757308b1cd8de170a72c0276ed6", null ],
@@ -34,5 +43,6 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab =
     [ "mSubInductor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a0da40baaae98a2f4e460f19d3de2618e", null ],
     [ "mSubVoltageSource", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#abaffef7d0d4086973ef7c220dbbbe2ec", null ],
     [ "mUseOmegaRef", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#aa6643c819f18537da11c725aeccb227a", null ],
+    [ "mUseSubcomponents", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#ab0e2ed2eb2ef9c8e485a77f8e313c0e8", null ],
     [ "mXpd", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a9d0bf2c6dea51c4444698c24c92be148", null ]
 ];

@@ -120,7 +120,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A barrier is used to synchronize threads. Threads running into the barrier have to wait until the barrier state is released when a defined number of threads reaches the barrier. </p>
 
-<p class="definition">Definition at line <a class="el" href="_scheduler_8h_source.html#l00118">118</a> of file <a class="el" href="_scheduler_8h_source.html">Scheduler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scheduler_8h_source.html#l00127">127</a> of file <a class="el" href="_scheduler_8h_source.html">Scheduler.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a790d2f16f23a55628d88dfd18a3c3b66" name="a790d2f16f23a55628d88dfd18a3c3b66"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a790d2f16f23a55628d88dfd18a3c3b66">&#9670;&#160;</a></span>Barrier() <span class="overload">[1/2]</span></h2>
@@ -177,7 +177,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Limit sets the number of threads that need to reach the barrier to release it. </p>
 
-<p class="definition">Definition at line <a class="el" href="_scheduler_8h_source.html#l00124">124</a> of file <a class="el" href="_scheduler_8h_source.html">Scheduler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scheduler_8h_source.html#l00133">133</a> of file <a class="el" href="_scheduler_8h_source.html">Scheduler.h</a>.</p>
 
 </div>
 </div>
@@ -206,7 +206,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Increases the barrier counter like wait does, but does not wait for it to reach the limit (so this does not provide any synchronization with other threads). Can be used to eliminate unnecessary waits if multiple barriers are used in sequence. </p>
 
-<p class="definition">Definition at line <a class="el" href="_scheduler_8h_source.html#l00165">165</a> of file <a class="el" href="_scheduler_8h_source.html">Scheduler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scheduler_8h_source.html#l00174">174</a> of file <a class="el" href="_scheduler_8h_source.html">Scheduler.h</a>.</p>
 
 </div>
 </div>
@@ -234,7 +234,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Blocks until |limit| calls have been made, at which point all threads return. Provides synchronization, i.e. all writes from before this call are visible in all threads after this call. </p>
 
-<p class="definition">Definition at line <a class="el" href="_scheduler_8h_source.html#l00130">130</a> of file <a class="el" href="_scheduler_8h_source.html">Scheduler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_scheduler_8h_source.html#l00139">139</a> of file <a class="el" href="_scheduler_8h_source.html">Scheduler.h</a>.</p>
 
 </div>
 </div>

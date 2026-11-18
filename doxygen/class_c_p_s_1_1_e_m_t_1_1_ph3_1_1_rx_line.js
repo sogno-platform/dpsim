@@ -1,17 +1,32 @@
 var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line =
 [
     [ "RxLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a676431a600764ccdc754ab56cf0a178d", null ],
+    [ "RxLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#af0b3c74c621ce328224d6ab4372ac11a", null ],
+    [ "RxLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a028c2d5981cd5dc5c50cdbca37f314fa", null ],
     [ "RxLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a3504a01fd90aa6efcecb5c7e30b62807", null ],
+    [ "cacheDirectMatrixIndices", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a0005e2095b88ef1d03cd7c8ea6d6d601", null ],
     [ "clone", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#abd61ca674b5d2eab967c091757859318", null ],
     [ "createSubComponents", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#ac29da6211a1d77de29c35757950a8d59", null ],
     [ "initializeParentFromNodesAndTerminals", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#af54e7d257d4f0a624551ee687b351cdf", null ],
+    [ "mnaAddCompactRightSideVectorStamp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#ac8900b684fc8a6d1ae6a69f22b8bf781", null ],
     [ "mnaCompUpdateCurrent", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a5b395f2fa6b5dcb3c087f270ba26f898", null ],
     [ "mnaCompUpdateVoltage", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a54c96616b1e548c2c0982406d20c9c13", null ],
+    [ "mnaHasCompactRightSideVectorStamp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a49a7e3a5d7f42220576497b1bfc11910", null ],
     [ "mnaParentAddPostStepDependencies", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#ab6e0e754e57e8d8f0912bb0c637c4135", null ],
     [ "mnaParentAddPreStepDependencies", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a30dc4e0aa82bb3989beb41097f36dd74", null ],
+    [ "mnaParentApplyRightSideVectorStamp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a9fdfba92ebc3052aff63415fa34d19e0", null ],
+    [ "mnaParentApplySystemMatrixStamp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#aee0ea30341ccc481864ae43947794ffc", null ],
+    [ "mnaParentInitialize", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#ae81aa33df9ce6fab6766681b3269fdf0", null ],
     [ "mnaParentPostStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a156318abdb2941dfcf86154d479fabd1", null ],
     [ "mnaParentPreStep", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#abb803fb5217433710bc210cfcbfdd578", null ],
+    [ "mDirectHistory", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a997b7f908d310211a2ff83a0e6819400", null ],
+    [ "mDirectInductorAdmittance", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a400573121572d245c260eddba34e3b4b", null ],
+    [ "mDirectMidpointIndices", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a59a26513abdd3db4b1f92bb82191afaf", null ],
+    [ "mDirectState", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a0ec06be3df10594afced337a0f2f4b33", null ],
+    [ "mDirectTerminalConnected", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a05c6e8964277c869484f6d3ffba69b47", null ],
+    [ "mDirectTerminalIndices", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#afd28aa5c1262225b3d60fa98e3bd4c66", null ],
     [ "mInitialResistor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#ac29e135c7bdb2507eb98b6adb8dba144", null ],
     [ "mSubInductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a2ea3b59882411b58de9bc18c8714ef7b", null ],
-    [ "mSubResistor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a2957140ee9991728e87a6f1babe9148a", null ]
+    [ "mSubResistor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a2957140ee9991728e87a6f1babe9148a", null ],
+    [ "mUseSubcomponents", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a0728502a2896ecb1220f68825022b7ce", null ]
 ];

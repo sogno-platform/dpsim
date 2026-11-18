@@ -46,6 +46,7 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter =
     [ "mPhasorFreqs", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#aec7d2ff47f169c988f6ac92af981d42e", null ],
     [ "mPhasorMags", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a913f11bf041a57b1e83f1ef17f2bc066", null ],
     [ "mPhasorPhases", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a4f65fea1156aedda8cb070ead04e6b0f", null ],
+    [ "mPhasorsDirty", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#aa3c842a19f947138dea88873f1d534c3", null ],
     [ "mVfund", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#af66790ec2f880159bbc0cb3aca90d3b1", null ],
     [ "mVin", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html#a918b46b6f6b0badbc1f90a61ca490433", null ]
 ];

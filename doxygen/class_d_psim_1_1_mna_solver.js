@@ -49,12 +49,14 @@ var class_d_psim_1_1_mna_solver =
     [ "mLastLogTimeStep", "class_d_psim_1_1_mna_solver.html#a80658ee3632e9c2b7920a93494070d2c", null ],
     [ "mLeftSideVector", "class_d_psim_1_1_mna_solver.html#ac7391680fc7fe4e66903ce6633fa7a26", null ],
     [ "mLeftSideVectorHarm", "class_d_psim_1_1_mna_solver.html#a458a12ef21f13823af1919caa3a94e75", null ],
+    [ "mLeftSideVectorValue", "class_d_psim_1_1_mna_solver.html#a31bf5611450f819aa4abb5eda5607562", null ],
     [ "mLeftVectorLog", "class_d_psim_1_1_mna_solver.html#aa2a928865e7e49e981fa5c96699cc71e", null ],
     [ "mListVariableSystemMatrixEntries", "class_d_psim_1_1_mna_solver.html#a85c387ebdd9f35c08f85d8e90f4aa801", null ],
     [ "mMNAComponents", "class_d_psim_1_1_mna_solver.html#a9cc686c467592cea1e3bdca53bd7c204", null ],
     [ "mMNAIntfSwitches", "class_d_psim_1_1_mna_solver.html#a6487775095e366f311ae4130837c23b0", null ],
     [ "mMNAIntfVariableComps", "class_d_psim_1_1_mna_solver.html#a4d82f975a2bd257deddcbcf034015579", null ],
     [ "mNodes", "class_d_psim_1_1_mna_solver.html#af5f35946af4775752ccbf343c6435f65", null ],
+    [ "mNonlinearComps", "class_d_psim_1_1_mna_solver.html#aa9b049bd1b1d76d87b7ffab71bc2782c", null ],
     [ "mNumHarmMatrixNodeIndices", "class_d_psim_1_1_mna_solver.html#ab458c9ca26dd6264e1d79cc2324705bc", null ],
     [ "mNumMatrixNodeIndices", "class_d_psim_1_1_mna_solver.html#aa46b3329ad2cc52899540ae6b193b70c", null ],
     [ "mNumNetMatrixNodeIndices", "class_d_psim_1_1_mna_solver.html#a50b3be3fbaee6da6fd22885fae8a8cda", null ],
@@ -78,5 +80,6 @@ var class_d_psim_1_1_mna_solver =
     [ "mSwitchTimeIndex", "class_d_psim_1_1_mna_solver.html#a6a8be8b5d1fc96ec711742d348139764", null ],
     [ "mSyncGen", "class_d_psim_1_1_mna_solver.html#a640ee78c6e1a5c2237702c4dfc9d41fb", null ],
     [ "mSystem", "class_d_psim_1_1_mna_solver.html#a27f136ea59231eb91018f0c3f69661c3", null ],
+    [ "mVariableCompAlwaysDirty", "class_d_psim_1_1_mna_solver.html#a330dd3c3dd7b6dcaf1527290a7134f6d", null ],
     [ "mVariableComps", "class_d_psim_1_1_mna_solver.html#a89871661065c310cb04d19b3d7983f7a", null ]
 ];

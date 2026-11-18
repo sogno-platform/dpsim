@@ -19,11 +19,13 @@ var class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t =
     [ "mCur2", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#ac8884fb2fb05d182f3e8f4435a54b383", null ],
     [ "mDelay", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#ae0ab53925f7f5f0ca44ad9d85d787c8f", null ],
     [ "mInductance", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a68ad41630e57694f56486300c662df02", null ],
+    [ "mInitialSourceImpedanceInverse", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a6d6655e07c8c9bd1819146ac351cec76", null ],
     [ "mNode1", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#ae7ce694123f3191a171531e7bb3954ab", null ],
     [ "mNode2", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a2c653c9add1d8b19972c9f3445df0998", null ],
     [ "mRes1", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a9c9d7fb353dd966117f9990e958d4d64", null ],
     [ "mRes2", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a7ae2f65696eed00ff7f28be9f1db2810", null ],
     [ "mResistance", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#abe21aa891303a901aa2587b3db2258e8", null ],
+    [ "mResistanceCurrentCoefficient", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a29057fcb9aed20f7b542eb6ea507a922", null ],
     [ "mSrc1", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#ae594f995277fdee433d596c3b3ccab05", null ],
     [ "mSrc2", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#abd90aacc03047f06f0296239c56e17c5", null ],
     [ "mSrcCur1", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#ac26cf62d256883f2221dee4bd25be208", null ],
@@ -31,7 +33,9 @@ var class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t =
     [ "mSrcCur2", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a76038abfbbdef1d64e38f9ce5188301c", null ],
     [ "mSrcCur2Ref", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#ace5c63c2c098c9d1eca053173b8f462c", null ],
     [ "mStates", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#af6caabbba0c7ebb77e23e3838d2ad628", null ],
+    [ "mSurgeCurrentCoefficient", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a74770e89c73c2233acd6317465809fe2", null ],
     [ "mSurgeImpedance", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a8b2548da305df0490470c8b93f099bce", null ],
+    [ "mSurgeMinusResistanceQuarter", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a450125e16ca3b06e8d285cf236222e72", null ],
     [ "mVolt1", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#ab49b422b714363ae5882d68e30c5ed05", null ],
     [ "mVolt2", "class_c_p_s_1_1_signal_1_1_decoupling_line_e_m_t.html#a24f9c26a24dbccddd153a04ff26aa4a3", null ]
 ];

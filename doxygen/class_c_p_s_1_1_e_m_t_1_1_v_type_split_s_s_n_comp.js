@@ -3,7 +3,7 @@ var class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp =
     [ "VTypeSplitSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a7742f381e76869f4abf4f8ba81dbe43f", null ],
     [ "buildControllerMeasurement", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a20f448e02f5066719d1dd24fec3f589b", null ],
     [ "buildControllerStateSpaceModel", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a53bccd06b9403cbd5a6b2d5f6883e8f9", null ],
-    [ "calculateHistoryVector", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#adc4ed49811d491745c2e492060190708", null ],
+    [ "calculateHistoryVector", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a05c40b03e3535b2f4759f8d2657d0a63", null ],
     [ "evaluateControllerOutput", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a76407c7c99fb59426a3d78318bdf3b58", null ],
     [ "getControllerDiscreteA", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#adf9376415437beb8e2009b7d24e2d57c", null ],
     [ "getControllerDiscreteB", "class_c_p_s_1_1_e_m_t_1_1_v_type_split_s_s_n_comp.html#a0a44b9cf3b31b7336c8b590d9fc9adee", null ],

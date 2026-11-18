@@ -11,8 +11,10 @@ var searchData=
   ['reltol_8',['reltol',['../class_d_psim_1_1_o_d_e_solver.html#adb557bbc3bcc190c1f95d15fe7054582',1,'DPsim::ODESolver']]],
   ['reseval_9',['resEval',['../class_d_psim_1_1_d_a_e_solver.html#a2dee8dc20f9cb3d8e32961a93e5b19f0',1,'DPsim::DAESolver']]],
   ['rhs_5fbuffer_10',['rhs_buffer',['../structdps__magma__data.html#aad414273ee6c89cd18d549fdf713563c',1,'dps_magma_data']]],
-  ['row_11',['row',['../struct_d_psim_1_1cuda_1_1_cuda_matrix.html#a05d73683113accca9ba6663654e5b0aa',1,'DPsim::cuda::CudaMatrix']]],
-  ['row_5fnumber_12',['row_number',['../structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7',1,'dpsim_csr_matrix']]],
-  ['rowindex_13',['rowIndex',['../structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da',1,'dpsim_csr_matrix']]],
-  ['rtol_14',['rtol',['../class_d_psim_1_1_d_a_e_solver.html#aa59e5c0bd44bac11e3f4b4f187de1a5c',1,'DPsim::DAESolver']]]
+  ['rotorangle_11',['rotorAngle',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html#a2fe944e029ed08260e8cf1c130788a90',1,'CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData']]],
+  ['rotorspeed_12',['rotorSpeed',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html#aa61b48abe5001f6b14eb738cb11cd782',1,'CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData']]],
+  ['row_13',['row',['../struct_d_psim_1_1cuda_1_1_cuda_matrix.html#a05d73683113accca9ba6663654e5b0aa',1,'DPsim::cuda::CudaMatrix']]],
+  ['row_5fnumber_14',['row_number',['../structdpsim__csr__matrix.html#a945d159011e85b5a9a44937cb9f1bec7',1,'dpsim_csr_matrix']]],
+  ['rowindex_15',['rowIndex',['../structdpsim__csr__matrix.html#a5d6df5f643539aaaeafab636423913da',1,'dpsim_csr_matrix']]],
+  ['rtol_16',['rtol',['../class_d_psim_1_1_d_a_e_solver.html#aa59e5c0bd44bac11e3f4b4f187de1a5c',1,'DPsim::DAESolver']]]
 ];

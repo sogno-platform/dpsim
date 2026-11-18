@@ -16,6 +16,8 @@ var class_c_p_s_1_1_signal_1_1_p_l_l =
     [ "mB", "class_c_p_s_1_1_signal_1_1_p_l_l.html#a82f5fc1274c25b6b72317d19b084a342", null ],
     [ "mC", "class_c_p_s_1_1_signal_1_1_p_l_l.html#a69800f2d05fd07d3a98c35ed4caf3958", null ],
     [ "mD", "class_c_p_s_1_1_signal_1_1_p_l_l.html#a3ced2aa86d51cbd93d416066ec098838", null ],
+    [ "mDiscreteA", "class_c_p_s_1_1_signal_1_1_p_l_l.html#abd3ac6d47ae51902cccd7ba8d29f23ed", null ],
+    [ "mDiscreteB", "class_c_p_s_1_1_signal_1_1_p_l_l.html#af420e6341befbfd2eb45e98f1310bd5b", null ],
     [ "mInputCurr", "class_c_p_s_1_1_signal_1_1_p_l_l.html#a5b5b559ddbaa11dd8db390d7f4fb1aee", null ],
     [ "mInputPrev", "class_c_p_s_1_1_signal_1_1_p_l_l.html#ad2a15e3f8b12498ca0a64e1be71c51ad", null ],
     [ "mInputRef", "class_c_p_s_1_1_signal_1_1_p_l_l.html#a4f96886229c352eab0417c938814fb26", null ],

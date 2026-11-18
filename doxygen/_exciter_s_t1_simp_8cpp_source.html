@@ -160,7 +160,7 @@ $(function(){initNavTree('_exciter_s_t1_simp_8cpp_source.html',''); initResizabl
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  mVr = mVh;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  mVref = mVr - mEf / mParameters-&gt;Ka;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  mVref = mVr + mEf / mParameters-&gt;Ka;</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  SPDLOG_LOGGER_INFO(<a class="code hl_variable" href="class_c_p_s_1_1_topological_signal_comp.html#af317515bcc0e823009d2cb9a816d7dfa">mSLog</a>,</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                     <span class="stringliteral">&quot;Actually applied excitation system initial values:&quot;</span></div>
@@ -185,7 +185,7 @@ $(function(){initNavTree('_exciter_s_t1_simp_8cpp_source.html',''); initResizabl
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  mVr = mVr_prev + dt / mParameters-&gt;Tr * (mVh - mVr_prev);</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="comment">// Exciter output</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  mEf = (mVr + Vpss - mVref) * mParameters-&gt;Ka;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  mEf = (mVref + Vpss - mVr) * mParameters-&gt;Ka;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordflow">return</span> mEf;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>

@@ -16,5 +16,11 @@ var searchData=
   ['cliloglevel_13',['cliLogLevel',['../class_d_psim_1_1_command_line_args.html#a0447f969e045b2a4894c5b115493b31b',1,'DPsim::CommandLineArgs']]],
   ['col_14',['col',['../struct_d_psim_1_1cuda_1_1_cuda_matrix.html#aa302db41f991c73f6596af20beea7d50',1,'DPsim::cuda::CudaMatrix']]],
   ['colindex_15',['colIndex',['../structdpsim__csr__matrix.html#a8812963f59d5cbbb82e969669fe1edc7',1,'dpsim_csr_matrix']]],
-  ['cursolution_16',['curSolution',['../class_d_psim_1_1_o_d_eint_solver.html#af35efd5f5f1555f58e11a5e81f3535df',1,'DPsim::ODEintSolver']]]
+  ['compact_16',['compact',['../struct_d_psim_1_1_mna_solver_direct_1_1_right_vector_stamp.html#ae2c3415f1dde2b0e5280e986e8867f2c',1,'DPsim::MnaSolverDirect::RightVectorStamp']]],
+  ['conductanceabc_17',['conductanceAbc',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html#acda5cff5cff9cda183ca65edf209ca45',1,'CPS::EMT::Ph3::HipSG4State::conductanceAbc'],['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html#a5e4402ed0b9bc6055f204902abec9816',1,'CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData::conductanceAbc']]],
+  ['conductancedq0_18',['conductanceDq0',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html#af67b54f876f3ff9d7b3592e7b8399356',1,'CPS::EMT::Ph3::HipSG4State::conductanceDq0'],['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html#a4d44851cfabe9b545370e809af058767',1,'CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData::conductanceDq0']]],
+  ['count_19',['count',['../struct_d_psim_1_1_mna_solver_direct_1_1_profile_measurement.html#a08adc30057d5f6a3825ce5ad8a9c742c',1,'DPsim::MnaSolverDirect::ProfileMeasurement']]],
+  ['currentdq0_20',['currentDq0',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html#ae145b2c9566e16464a1a82253ade8fc4',1,'CPS::EMT::Ph3::HipSG4State::currentDq0'],['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html#ae5145cad3d4f6279ac320d23c7ec6939',1,'CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData::currentDq0']]],
+  ['currentsourceabc_21',['currentSourceAbc',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html#aa0975b3b53d7dab203ff1719721581f5',1,'CPS::EMT::Ph3::HipSG4State']]],
+  ['cursolution_22',['curSolution',['../class_d_psim_1_1_o_d_eint_solver.html#af35efd5f5f1555f58e11a5e81f3535df',1,'DPsim::ODEintSolver']]]
 ];

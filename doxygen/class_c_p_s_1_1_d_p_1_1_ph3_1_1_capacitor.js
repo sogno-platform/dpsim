@@ -5,6 +5,7 @@ var class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor =
     [ "clone", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#aacde69f7b97248636b2fb6238858c696", null ],
     [ "initializeFromNodesAndTerminals", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#ad1f1b9403ba9c3bbc090fd19c32c5531", null ],
     [ "initVars", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#af53a79970c0132b34cac9e4700f3c9c3", null ],
+    [ "mnaAddCompactRightSideVectorStamp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#a5a0dd7a049f01239ad505afb08b2a406", null ],
     [ "mnaCompAddPostStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#aedc24b78071ce2596809ad268f57f5ae", null ],
     [ "mnaCompAddPreStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#ab8c99f178e1f221588bd56228ad643ca", null ],
     [ "mnaCompApplyRightSideVectorStamp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#ae40e0c0fc3db92e775979bf68dc6a2c7", null ],
@@ -14,6 +15,7 @@ var class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor =
     [ "mnaCompPreStep", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#ae037263fb5cea615c597d786fc505e73", null ],
     [ "mnaCompUpdateCurrent", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#a7c4889325197adf9bcfe3652e2521672", null ],
     [ "mnaCompUpdateVoltage", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#a65627829a9d5f0d6d6b2923af4e572b2", null ],
+    [ "mnaHasCompactRightSideVectorStamp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#a70fa9bf64b6031b3eb8a1534987b342a", null ],
     [ "mEquivCond", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#ac19d623ee1c7d990dae1c7f7d767cdd3", null ],
     [ "mEquivCurrent", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#afa946f99bcc169831b89ac4c0b7c9ef8", null ],
     [ "mPrevVoltCoeff", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#ad8eab71fa2667870a725eceeb20a992a", null ]

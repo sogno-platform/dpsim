@@ -128,6 +128,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6516808c4a8f315d5f8a8263ec7053bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a5bc77010e802a4f42b969e581e06cc" id="r_a6a5bc77010e802a4f42b969e581e06cc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a5bc77010e802a4f42b969e581e06cc">execute</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount)=0</td></tr>
 <tr class="separator:a6a5bc77010e802a4f42b969e581e06cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a344b6bc5007444c16898cbf7895da404" id="r_a344b6bc5007444c16898cbf7895da404"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a344b6bc5007444c16898cbf7895da404">executeFast</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount)</td></tr>
+<tr class="separator:a344b6bc5007444c16898cbf7895da404"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd5b7db8e84bbfb23c0b3057cb5211f4" id="r_afd5b7db8e84bbfb23c0b3057cb5211f4"><td class="memTemplParams" colspan="2">template&lt;typename TaskType, void(TaskType::*)(<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a>) Executor&gt; </td></tr>
+<tr class="memitem:afd5b7db8e84bbfb23c0b3057cb5211f4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#afd5b7db8e84bbfb23c0b3057cb5211f4">setFastExecutor</a> (TaskType *task)</td></tr>
+<tr class="separator:afd5b7db8e84bbfb23c0b3057cb5211f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bc881406ad0c2d6d43b9c23d029722a" id="r_a3bc881406ad0c2d6d43b9c23d029722a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bc881406ad0c2d6d43b9c23d029722a">toString</a> () const</td></tr>
 <tr class="separator:a3bc881406ad0c2d6d43b9c23d029722a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2b4fd3477f6c08c886ce275a1c7d3a9" id="r_ae2b4fd3477f6c08c886ce275a1c7d3a9"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2b4fd3477f6c08c886ce275a1c7d3a9">getAttributeDependencies</a> ()</td></tr>
@@ -269,7 +274,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00050">50</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00067">67</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
 
 </div>
 </div>
@@ -305,6 +310,38 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a344b6bc5007444c16898cbf7895da404" name="a344b6bc5007444c16898cbf7895da404"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a344b6bc5007444c16898cbf7895da404">&#9670;&#160;</a></span>executeFast()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CPS::Task::executeFast </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>time</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a></td>          <td class="paramname"><span class="paramname"><em>timeStepCount</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Execute through a setup-time compiled function pointer when available. The virtual <a class="el" href="#a6a5bc77010e802a4f42b969e581e06cc">execute()</a> API remains the compatibility fallback. </p>
+
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00037">37</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+
+</div>
+</div>
 <a id="ae2b4fd3477f6c08c886ce275a1c7d3a9" name="ae2b4fd3477f6c08c886ce275a1c7d3a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae2b4fd3477f6c08c886ce275a1c7d3a9">&#9670;&#160;</a></span>getAttributeDependencies()</h2>
 
@@ -328,7 +365,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00037">37</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00054">54</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
 
 </div>
 </div>
@@ -355,7 +392,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00041">41</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00058">58</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
 
 </div>
 </div>
@@ -372,6 +409,35 @@ Protected Attributes</h2></td></tr>
           <td class="memname">const std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute_base.html#af06cf61c74c46ce667c58f124d69a679">AttributeBase::Ptr</a> &gt; &amp; CPS::Task::getPrevStepDependencies </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00062">62</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+
+</div>
+</div>
+<a id="afd5b7db8e84bbfb23c0b3057cb5211f4" name="afd5b7db8e84bbfb23c0b3057cb5211f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd5b7db8e84bbfb23c0b3057cb5211f4">&#9670;&#160;</a></span>setFastExecutor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename TaskType, void(TaskType::*)(<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a>) Executor&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CPS::Task::setFastExecutor </td>
+          <td>(</td>
+          <td class="paramtype">TaskType *</td>          <td class="paramname"><span class="paramname"><em>task</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -409,7 +475,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00035">35</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00052">52</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
 
 </div>
 </div>
@@ -434,7 +500,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00052">52</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00069">69</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
 
 </div>
 </div>
@@ -458,7 +524,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00053">53</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00070">70</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
 
 </div>
 </div>
@@ -482,7 +548,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00051">51</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00068">68</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
 
 </div>
 </div>
@@ -506,7 +572,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00054">54</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_task_8h_source.html#l00071">71</a> of file <a class="el" href="_task_8h_source.html">Task.h</a>.</p>
 
 </div>
 </div>

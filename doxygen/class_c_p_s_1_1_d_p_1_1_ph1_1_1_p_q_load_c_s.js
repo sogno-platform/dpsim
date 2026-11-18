@@ -1,7 +1,9 @@
 var class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s =
 [
     [ "PQLoadCS", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a192f50a3e264ffd7c10221b78b1106ae", null ],
+    [ "PQLoadCS", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ac7907269e5b4c62ac2e81aea4085e085", null ],
     [ "PQLoadCS", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a4dee55f96e10436dc4536b5552d5c495", null ],
+    [ "PQLoadCS", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a2d0d93f41933e87d2ee91f2003326d90", null ],
     [ "PQLoadCS", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ae7a9ae2c42709ac5cc9ef01aa98f0b61", null ],
     [ "PQLoadCS", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a98aaced699477343c8370c43bdefee1d", null ],
     [ "clone", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a6982fb80a1fa2da2663fcfd4e5b50683", null ],
@@ -9,13 +11,18 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s =
     [ "initializeParentFromNodesAndTerminals", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a2467c1b6dd7a6e3ee862339dff5e2c98", null ],
     [ "mnaParentAddPostStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#adb2046bef19f4a4d9d0e20b455a8fbd7", null ],
     [ "mnaParentAddPreStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a26cd5109b802bbb131d97dadaf78ee70", null ],
+    [ "mnaParentApplyRightSideVectorStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ae506332dc8d6a2d3c5a44bec37f19bd6", null ],
+    [ "mnaParentApplySystemMatrixStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ade10ade19ac3d3ae931b2e54e1724e60", null ],
+    [ "mnaParentInitialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a62e3317ab01c8cf1ac544e6411c884af", null ],
     [ "mnaParentPostStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a5e25ed14dfdea89eb6637296c68524c6", null ],
     [ "mnaParentPreStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a5381bbb0a0be7033362868556ea7c8bf", null ],
     [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ad9fea8ef67ebbca8646b6ff1bf70195d", null ],
     [ "updateIntfValues", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ae4fe47f96f76af74ea7832679804a2f3", null ],
     [ "updateSetPoint", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a9a6d97b55b157d88d516ccc366f9426e", null ],
     [ "mActivePower", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ab0521fb6d14451598b12635a32dff461", null ],
+    [ "mDirectCurrentRef", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ac0b4492939ec84e9a0977953d339b62d", null ],
     [ "mNomVoltage", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#aef53dc2b8a5d25c3d9a06805a548e16d", null ],
     [ "mReactivePower", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ae311161f48d057e14779bc4569926238", null ],
-    [ "mSubCurrentSource", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ad2f22d3e0fdf0ca5533e96a360ef00e9", null ]
+    [ "mSubCurrentSource", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ad2f22d3e0fdf0ca5533e96a360ef00e9", null ],
+    [ "mUseSubcomponents", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#ac06e342d589fadbd62734fa46764014a", null ]
 ];

@@ -99,6 +99,7 @@ $(function(){initNavTree('class_c_p_s_1_1_system_topology.html',''); initResizab
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="class_c_p_s_1_1_system_topology-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">CPS::SystemTopology Class Reference</div></div>
@@ -127,8 +128,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab5c8b9916ccf45ce98dff2c7c2abec0f" id="r_ab5c8b9916ccf45ce98dff2c7c2abec0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5c8b9916ccf45ce98dff2c7c2abec0f">SystemTopology</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency, <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> frequencies, <a class="el" href="class_c_p_s_1_1_topological_node.html#a0cbcf37d0706078e9d2fa5fab180faea">TopologicalNode::List</a> nodes, <a class="el" href="class_c_p_s_1_1_identified_object.html#a981a607f5a619bbc40c916fcf7048a24">IdentifiedObject::List</a> components)</td></tr>
 <tr class="memdesc:ab5c8b9916ccf45ce98dff2c7c2abec0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard constructor for multi frequency simulations.  <br /></td></tr>
 <tr class="separator:ab5c8b9916ccf45ce98dff2c7c2abec0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a801bc0ea4ed56555f9c1faa7291ef6e9" id="r_a801bc0ea4ed56555f9c1faa7291ef6e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a801bc0ea4ed56555f9c1faa7291ef6e9">initFrequency</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) const</td></tr>
-<tr class="separator:a801bc0ea4ed56555f9c1faa7291ef6e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c4eabd16dd938e7ec9e037be28d9361" id="r_a8c4eabd16dd938e7ec9e037be28d9361"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c4eabd16dd938e7ec9e037be28d9361">reset</a> ()</td></tr>
 <tr class="memdesc:a8c4eabd16dd938e7ec9e037be28d9361"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset state of components.  <br /></td></tr>
 <tr class="separator:a8c4eabd16dd938e7ec9e037be28d9361"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,6 +196,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac76856ae936856fd6fec55728018529c" id="r_ac76856ae936856fd6fec55728018529c"><td class="memTemplParams" colspan="2">template&lt;typename VarType&gt; </td></tr>
 <tr class="memitem:ac76856ae936856fd6fec55728018529c"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac76856ae936856fd6fec55728018529c">checkTopologySubnets</a> (std::unordered_map&lt; typename <a class="el" href="class_c_p_s_1_1_sim_node.html">SimNode</a>&lt; VarType &gt;<a class="el" href="#a88c173381cf3eea1a18b39a48d514e94">::Ptr</a>, int &gt; &amp;subnet)</td></tr>
 <tr class="separator:ac76856ae936856fd6fec55728018529c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a258a95471d12ef1b25d99b54cfca0baf" id="r_a258a95471d12ef1b25d99b54cfca0baf"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a258a95471d12ef1b25d99b54cfca0baf">initFrequency</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency)</td></tr>
+<tr class="separator:a258a95471d12ef1b25d99b54cfca0baf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -681,19 +685,27 @@ template&lt;typename VarType&gt; </div>
 
 </div>
 </div>
-<a id="a801bc0ea4ed56555f9c1faa7291ef6e9" name="a801bc0ea4ed56555f9c1faa7291ef6e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a801bc0ea4ed56555f9c1faa7291ef6e9">&#9670;&#160;</a></span>initFrequency()</h2>
+<a id="a258a95471d12ef1b25d99b54cfca0baf" name="a258a95471d12ef1b25d99b54cfca0baf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a258a95471d12ef1b25d99b54cfca0baf">&#9670;&#160;</a></span>initFrequency()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> SystemTopology::initFrequency </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a></td>          <td class="paramname"><span class="paramname"><em>frequency</em></span></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_system_topology_8cpp_source.html#l00023">23</a> of file <a class="el" href="_system_topology_8cpp_source.html">SystemTopology.cpp</a>.</p>

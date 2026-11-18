@@ -1,10 +1,17 @@
 var class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp =
 [
     [ "VoltageSourceRamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#afa8b9a2a84545038ef0f80a1803aa9de", null ],
+    [ "VoltageSourceRamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a736f29f8a5fea9c6f965c922d69415ca", null ],
     [ "VoltageSourceRamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#aa5e43e15f67bdaad468e76b58fe3c870", null ],
+    [ "VoltageSourceRamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#afc57d59740619cc693b38a5fd32136eb", null ],
     [ "clone", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a9be0ae2d70313ca94c78876ab04780be", null ],
     [ "initialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#ad8dbbe8d8cb7ae08b14b2b70e3bc43a9", null ],
     [ "initializeParentFromNodesAndTerminals", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#aaaba9a0562977636a7bbf1db9ec08e64", null ],
+    [ "mnaParentAddPostStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#acba591ef2a43d67feb113b5fcf3c3e66", null ],
+    [ "mnaParentApplyRightSideVectorStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a09c1f576496c05f50737194d1aefa77b", null ],
+    [ "mnaParentApplySystemMatrixStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a7bf91b53ce81218bbe6f2c094149a4d7", null ],
+    [ "mnaParentInitialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a7c20bccf55be68793eaa38ea757563d6", null ],
+    [ "mnaParentPostStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#ac39e145c31fb308ab5b0c57c166d5b87", null ],
     [ "mnaParentPreStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#ae0b487febdd3701099034fe5f7aa0816", null ],
     [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a74c172734cec803329affff20fe837ff", null ],
     [ "updateState", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a71351d5f09623103cb5368d6bb024100", null ],
@@ -14,5 +21,6 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp =
     [ "mSrcFreq", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#ae367530b9cdb7ce0e6bf44e00a16db44", null ],
     [ "mSubVoltageSource", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a8cd28e2264b0c9e9136ff2bf77fa2f22", null ],
     [ "mSwitchTime", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#ac3445682ed5649f794b21e526a718c0c", null ],
+    [ "mUseSubcomponents", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a709e792d5979dc9f70cb7ebc065311fa", null ],
     [ "mVoltageRef", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source_ramp.html#a5bfecd284de32fd9710897eeee89d8b1", null ]
 ];

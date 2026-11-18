@@ -1,11 +1,15 @@
 <map id="CPS::Base::Ph3::PiLine" name="CPS::Base::Ph3::PiLine">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,85,165,115"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,157,165,187"/>
 <area shape="rect" id="Node000002" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="219,5,366,35"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,76,212,44,243,33,245,38,214,49,136,81"/>
-<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="215,59,370,88"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,85,214,81,214,86,180,91"/>
-<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="213,112,372,142"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,110,213,114,212,119,180,115"/>
-<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="218,165,366,195"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="136,119,214,151,245,162,243,167,212,156,134,124"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,143,151,93,180,67,211,45,234,33,236,38,214,49,183,71,154,97,109,147"/>
+<area shape="rect" id="Node000003" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_pi_line.html" title=" " alt="" coords="221,58,364,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,148,233,105,235,110,136,153"/>
+<area shape="rect" id="Node000004" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="215,131,370,160"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="179,157,214,153,214,158,180,163"/>
+<area shape="rect" id="Node000005" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="213,184,372,214"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="180,182,213,186,212,191,180,187"/>
+<area shape="rect" id="Node000006" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_pi_line.html" title=" " alt="" coords="221,237,364,286"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="136,191,235,234,233,239,134,196"/>
+<area shape="rect" id="Node000007" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html" title=" " alt="" coords="218,309,366,339"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="109,197,154,247,183,273,214,295,236,306,234,311,211,300,180,277,151,251,105,201"/>
 </map>

@@ -31,6 +31,7 @@ var namespace_c_p_s =
     [ "Logger", "class_c_p_s_1_1_logger.html", "class_c_p_s_1_1_logger" ],
     [ "Math", "class_c_p_s_1_1_math.html", "class_c_p_s_1_1_math" ],
     [ "MNAInterface", "class_c_p_s_1_1_m_n_a_interface.html", "class_c_p_s_1_1_m_n_a_interface" ],
+    [ "MNANonlinearCompInterface", "class_c_p_s_1_1_m_n_a_nonlinear_comp_interface.html", "class_c_p_s_1_1_m_n_a_nonlinear_comp_interface" ],
     [ "MNASimPowerComp", "class_c_p_s_1_1_m_n_a_sim_power_comp.html", "class_c_p_s_1_1_m_n_a_sim_power_comp" ],
     [ "MNAStampUtils", "class_c_p_s_1_1_m_n_a_stamp_utils.html", "class_c_p_s_1_1_m_n_a_stamp_utils" ],
     [ "MNASwitchInterface", "class_c_p_s_1_1_m_n_a_switch_interface.html", "class_c_p_s_1_1_m_n_a_switch_interface" ],

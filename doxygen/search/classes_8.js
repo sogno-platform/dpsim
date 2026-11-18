@@ -1,18 +1,19 @@
 var searchData=
 [
   ['identifiedobject_0',['IdentifiedObject',['../class_c_p_s_1_1_identified_object.html',1,'CPS']]],
-  ['inductor_1',['Inductor',['../class_c_p_s_1_1_base_1_1_ph1_1_1_inductor.html',1,'CPS::Base::Ph1::Inductor'],['../class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html',1,'CPS::Base::Ph3::Inductor'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html',1,'CPS::DP::Ph1::Inductor'],['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html',1,'CPS::DP::Ph3::Inductor'],['../class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor.html',1,'CPS::EMT::DC::Inductor'],['../class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html',1,'CPS::EMT::Ph1::Inductor'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html',1,'CPS::EMT::Ph3::Inductor'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html',1,'CPS::EMT::Ph3::SSN::Inductor'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html',1,'CPS::SP::Ph1::Inductor'],['../class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html',1,'CPS::SP::Ph3::Inductor']]],
-  ['integrator_2',['Integrator',['../class_c_p_s_1_1_signal_1_1_integrator.html',1,'CPS::Signal']]],
-  ['interface_3',['Interface',['../class_d_psim_1_1_interface.html',1,'DPsim']]],
-  ['interfacequeued_4',['InterfaceQueued',['../class_d_psim_1_1_interface_queued.html',1,'DPsim']]],
-  ['interfacevillas_5',['InterfaceVillas',['../class_d_psim_1_1_interface_villas.html',1,'DPsim']]],
-  ['interfacevillasqueueless_6',['InterfaceVillasQueueless',['../class_d_psim_1_1_interface_villas_queueless.html',1,'DPsim']]],
-  ['interfaceworker_7',['InterfaceWorker',['../class_d_psim_1_1_interface_worker.html',1,'DPsim']]],
-  ['interfaceworkervillas_8',['InterfaceWorkerVillas',['../class_d_psim_1_1_interface_worker_villas.html',1,'DPsim']]],
-  ['invalidargumentexception_9',['InvalidArgumentException',['../class_c_p_s_1_1_invalid_argument_exception.html',1,'CPS']]],
-  ['invalidattributeexception_10',['InvalidAttributeException',['../class_c_p_s_1_1_invalid_attribute_exception.html',1,'CPS']]],
-  ['invalidtopology_11',['InvalidTopology',['../class_c_p_s_1_1_c_i_m_1_1_invalid_topology.html',1,'CPS::CIM']]],
-  ['inverter_12',['Inverter',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html',1,'CPS::DP::Ph1']]],
-  ['iterator_13',['iterator',['../class_d_psim_1_1cuda_1_1_vector_1_1iterator.html',1,'DPsim::cuda::Vector']]],
-  ['itypessncomp_14',['ITypeSSNComp',['../class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html',1,'CPS::DP::ITypeSSNComp'],['../class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html',1,'CPS::EMT::ITypeSSNComp']]]
+  ['impedanceload_1',['ImpedanceLoad',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_impedance_load.html',1,'CPS::DP::Ph3::SSN::ImpedanceLoad'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_impedance_load.html',1,'CPS::EMT::Ph3::SSN::ImpedanceLoad']]],
+  ['inductor_2',['Inductor',['../class_c_p_s_1_1_base_1_1_ph1_1_1_inductor.html',1,'CPS::Base::Ph1::Inductor'],['../class_c_p_s_1_1_base_1_1_ph3_1_1_inductor.html',1,'CPS::Base::Ph3::Inductor'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html',1,'CPS::DP::Ph1::Inductor'],['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html',1,'CPS::DP::Ph3::Inductor'],['../class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor.html',1,'CPS::EMT::DC::Inductor'],['../class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html',1,'CPS::EMT::Ph1::Inductor'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html',1,'CPS::EMT::Ph3::Inductor'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html',1,'CPS::EMT::Ph3::SSN::Inductor'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html',1,'CPS::SP::Ph1::Inductor'],['../class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html',1,'CPS::SP::Ph3::Inductor']]],
+  ['integrator_3',['Integrator',['../class_c_p_s_1_1_signal_1_1_integrator.html',1,'CPS::Signal']]],
+  ['interface_4',['Interface',['../class_d_psim_1_1_interface.html',1,'DPsim']]],
+  ['interfacequeued_5',['InterfaceQueued',['../class_d_psim_1_1_interface_queued.html',1,'DPsim']]],
+  ['interfacevillas_6',['InterfaceVillas',['../class_d_psim_1_1_interface_villas.html',1,'DPsim']]],
+  ['interfacevillasqueueless_7',['InterfaceVillasQueueless',['../class_d_psim_1_1_interface_villas_queueless.html',1,'DPsim']]],
+  ['interfaceworker_8',['InterfaceWorker',['../class_d_psim_1_1_interface_worker.html',1,'DPsim']]],
+  ['interfaceworkervillas_9',['InterfaceWorkerVillas',['../class_d_psim_1_1_interface_worker_villas.html',1,'DPsim']]],
+  ['invalidargumentexception_10',['InvalidArgumentException',['../class_c_p_s_1_1_invalid_argument_exception.html',1,'CPS']]],
+  ['invalidattributeexception_11',['InvalidAttributeException',['../class_c_p_s_1_1_invalid_attribute_exception.html',1,'CPS']]],
+  ['invalidtopology_12',['InvalidTopology',['../class_c_p_s_1_1_c_i_m_1_1_invalid_topology.html',1,'CPS::CIM']]],
+  ['inverter_13',['Inverter',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_inverter.html',1,'CPS::DP::Ph1']]],
+  ['iterator_14',['iterator',['../class_d_psim_1_1cuda_1_1_vector_1_1iterator.html',1,'DPsim::cuda::Vector']]],
+  ['itypessncomp_15',['ITypeSSNComp',['../class_c_p_s_1_1_d_p_1_1_i_type_s_s_n_comp.html',1,'CPS::DP::ITypeSSNComp'],['../class_c_p_s_1_1_e_m_t_1_1_i_type_s_s_n_comp.html',1,'CPS::EMT::ITypeSSNComp']]]
 ];

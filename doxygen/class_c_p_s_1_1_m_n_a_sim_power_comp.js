@@ -38,5 +38,6 @@ var class_c_p_s_1_1_m_n_a_sim_power_comp =
     [ "mnaUpdateCurrent", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a74965a538a6185bcd6aad4ee31cfd835", null ],
     [ "mnaUpdateVoltage", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a81c668cf843c9deaa789bd2f0a4be038", null ],
     [ "mMnaTasks", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a33660cd957a580e2a6c7687dfdcb8ff5", null ],
-    [ "mRightVector", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e", null ]
+    [ "mRightVector", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac70d8c6733b49d5d5565ba21c28b372e", null ],
+    [ "mRightVectorValue", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a4f42f0e550b55b7bfe3598ab963612e5", null ]
 ];

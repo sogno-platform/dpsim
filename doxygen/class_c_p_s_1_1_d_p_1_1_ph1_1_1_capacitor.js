@@ -23,6 +23,7 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor =
     [ "mnaCompUpdateCurrentHarm", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html#a1d24cfdafb0c94d246dec5c9a2d4db1f", null ],
     [ "mnaCompUpdateVoltage", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html#ab98a9ee9f2e706e2312d67d4a024fe27", null ],
     [ "mnaCompUpdateVoltageHarm", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html#a1b400df9ab110b3763f8fd74f9e78666", null ],
+    [ "updateCapacitance", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html#a1082372722e80a66b3087ee60acf48f5", null ],
     [ "mEquivCond", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html#ad212407c93a0fe7a3a34bebbca1c6cd1", null ],
     [ "mEquivCurrent", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html#a72213c63d1bb06d9c363b982092e34ae", null ],
     [ "mPrevVoltCoeff", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_capacitor.html#a60c1acc75ee5a3b28dba108127962d9e", null ]

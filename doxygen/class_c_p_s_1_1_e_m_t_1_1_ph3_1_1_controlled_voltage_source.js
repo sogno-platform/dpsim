@@ -14,5 +14,6 @@ var class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source =
     [ "mnaCompUpdateCurrent", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html#a3e0b444a278a2e455390949eadc6230c", null ],
     [ "setParameters", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html#aab032f74eca63a1024ade7a34962c075", null ],
     [ "updateVoltage", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html#a49d9bf258d1febbe9951e96072704f4d", null ],
+    [ "mVirtualNodeRows", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html#afa730da408a2b80d9eda60dd44237a0b", null ],
     [ "mVoltageRef", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_controlled_voltage_source.html#a14f08ce017700feff368b03d13cdd106", null ]
 ];

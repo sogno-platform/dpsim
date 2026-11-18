@@ -18,11 +18,14 @@ var class_c_p_s_1_1_signal_1_1_power_controller_v_s_i =
     [ "mB", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#afd8cd7bb271eb8aaa85788ef0cf9d3ca", null ],
     [ "mC", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a46ff4b3ac1bb3d30b35130dde764c6e8", null ],
     [ "mD", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a42113eac1d25229f961cb258837fe3ae", null ],
+    [ "mDiscreteA", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a3e4c221226e27b73c0def5369a8b86eb", null ],
+    [ "mF2Inverse", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#ab13d58c23732d531c262978216b1f430", null ],
     [ "mGamma_dInit", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a2515af13656be41bac93f07f8d857eeb", null ],
     [ "mGamma_qInit", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a38d5120702de4613ca908b58355e8b8f", null ],
     [ "mInitialStatesExplicit", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#ab0ef166bcbcb2c2a920830e3949de8af", null ],
     [ "mInputCurr", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#ac4b0656aacf616bac73175ca02cb307e", null ],
     [ "mInputPrev", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a0da20f433a713e7b9676d8cfe1d6c7e4", null ],
+    [ "mInputSum", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a7064719d3662f3366cffad47acca9e11", null ],
     [ "mIrc_d", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#afd7746eb4c8702055dd3e0e918b9ad37", null ],
     [ "mIrc_q", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a783ff7efdfb719e03d0647f94074c934", null ],
     [ "mKiCurrCtrld", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a34e4a23848f324a80540fd179c6abd01", null ],
@@ -45,6 +48,7 @@ var class_c_p_s_1_1_signal_1_1_power_controller_v_s_i =
     [ "mStateCurr", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a81192389902dd8724c517b17c32d8093", null ],
     [ "mStatePrev", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#ac55e77969ca5cd9827c47dd21d379aa3", null ],
     [ "mTimeStep", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a008bcf9179cfcffebdb7400a5cbda806", null ],
+    [ "mTransformedB", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#aaefa2b472096a1d1fd0a914d80bc1b4e", null ],
     [ "mVc_d", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#aa6113d4ee5e6d6d13a310dc27956d1be", null ],
     [ "mVc_q", "class_c_p_s_1_1_signal_1_1_power_controller_v_s_i.html#a6c061bc2e420820ef4ce4360e8334368", null ]
 ];

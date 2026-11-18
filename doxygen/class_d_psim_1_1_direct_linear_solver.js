@@ -14,6 +14,7 @@ var class_d_psim_1_1_direct_linear_solver =
     [ "refactorize", "class_d_psim_1_1_direct_linear_solver.html#a038b2194287e5838fcfd16a365fa2e9c", null ],
     [ "setConfiguration", "class_d_psim_1_1_direct_linear_solver.html#aba1fd03692134eef001154b5043e8760", null ],
     [ "solve", "class_d_psim_1_1_direct_linear_solver.html#ac353d50f9d36dd934a75ae751ee03184", null ],
+    [ "solveInto", "class_d_psim_1_1_direct_linear_solver.html#aa681ff37453ec1de0b4e8b00f210c598", null ],
     [ "mConfiguration", "class_d_psim_1_1_direct_linear_solver.html#a9f0386f35ad2c6219ba3fafefe40e541", null ],
     [ "mSLog", "class_d_psim_1_1_direct_linear_solver.html#aafeb18cf0ebae9f0255e62dc74d938c9", null ]
 ];

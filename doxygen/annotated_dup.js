@@ -93,7 +93,11 @@ var annotated_dup =
         ] ],
         [ "Ph3", "namespace_c_p_s_1_1_d_p_1_1_ph3.html", [
           [ "SSN", "namespace_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n.html", [
-            [ "Full_Serial_RLC", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c" ]
+            [ "Full_Serial_RLC", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c" ],
+            [ "ImpedanceLoad", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_impedance_load.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_impedance_load" ],
+            [ "PiLine", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_pi_line.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_pi_line" ],
+            [ "SynchronGenerator4Order", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_synchron_generator4_order.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_synchron_generator4_order" ],
+            [ "Transformer", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_transformer.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_s_s_n_1_1_transformer" ]
           ] ],
           [ "AvVoltSourceInverterStateSpace", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_av_volt_source_inverter_state_space" ],
           [ "Capacitor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor" ],
@@ -102,12 +106,14 @@ var annotated_dup =
           [ "GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n" ],
           [ "Inductor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor" ],
           [ "MixedVTypeVariableSSNComp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_mixed_v_type_variable_s_s_n_comp" ],
+          [ "MultiPortVTypeSSNComp", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_multi_port_v_type_s_s_n_comp.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_multi_port_v_type_s_s_n_comp" ],
           [ "NetworkInjection", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_network_injection.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_network_injection" ],
           [ "PiLine", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line" ],
           [ "Resistor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor" ],
           [ "SeriesResistor", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor" ],
           [ "SeriesSwitch", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_switch" ],
           [ "Switch", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_switch" ],
+          [ "SynchronGenerator4OrderVBR", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator4_order_v_b_r" ],
           [ "SynchronGeneratorDQ", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q" ],
           [ "SynchronGeneratorDQODE", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e" ],
           [ "SynchronGeneratorDQTrapez", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_trapez.html", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_trapez" ],
@@ -152,7 +158,11 @@ var annotated_dup =
           [ "SSN", "namespace_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n.html", [
             [ "Capacitor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_capacitor" ],
             [ "Full_Serial_RLC", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_full___serial___r_l_c" ],
-            [ "Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor" ]
+            [ "ImpedanceLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_impedance_load.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_impedance_load" ],
+            [ "Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_inductor" ],
+            [ "PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_pi_line.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_pi_line" ],
+            [ "SynchronGenerator4Order", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_synchron_generator4_order.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_synchron_generator4_order" ],
+            [ "Transformer", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_transformer.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n_1_1_transformer" ]
           ] ],
           [ "AvVoltageSourceInverterDQ", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q" ],
           [ "AvVoltSourceInverterStateSpace", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_volt_source_inverter_state_space" ],
@@ -166,7 +176,9 @@ var annotated_dup =
           [ "GenericTwoTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_two_terminal_v_type_s_s_n" ],
           [ "GFL", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_g_f_l" ],
           [ "HalfDecouplingLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_half_decoupling_line.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_half_decoupling_line" ],
+          [ "HipSG4State", "struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html", "struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state" ],
           [ "Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_inductor" ],
+          [ "MultiPortVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_multi_port_v_type_s_s_n_comp.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_multi_port_v_type_s_s_n_comp" ],
           [ "NetworkInjection", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection" ],
           [ "PiecewiseLinearInductor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_piecewise_linear_inductor" ],
           [ "PiLine", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line" ],
@@ -324,6 +336,7 @@ var annotated_dup =
       [ "Logger", "class_c_p_s_1_1_logger.html", "class_c_p_s_1_1_logger" ],
       [ "Math", "class_c_p_s_1_1_math.html", "class_c_p_s_1_1_math" ],
       [ "MNAInterface", "class_c_p_s_1_1_m_n_a_interface.html", "class_c_p_s_1_1_m_n_a_interface" ],
+      [ "MNANonlinearCompInterface", "class_c_p_s_1_1_m_n_a_nonlinear_comp_interface.html", "class_c_p_s_1_1_m_n_a_nonlinear_comp_interface" ],
       [ "MNASimPowerComp", "class_c_p_s_1_1_m_n_a_sim_power_comp.html", "class_c_p_s_1_1_m_n_a_sim_power_comp" ],
       [ "MNAStampUtils", "class_c_p_s_1_1_m_n_a_stamp_utils.html", "class_c_p_s_1_1_m_n_a_stamp_utils" ],
       [ "MNASwitchInterface", "class_c_p_s_1_1_m_n_a_switch_interface.html", "class_c_p_s_1_1_m_n_a_switch_interface" ],

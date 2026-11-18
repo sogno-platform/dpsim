@@ -490,9 +490,15 @@
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.connect">(SSN_GFM method)</a>
 </li>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_ImpedanceLoad.connect">(SSN_ImpedanceLoad method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SSN_ImpedanceLoad.connect">[1]</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_InductionMotor.connect">(SSN_InductionMotor method)</a>
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Inductor.connect">(SSN_Inductor method)</a>
+</li>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_PiLine.connect">(SSN_PiLine method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SSN_PiLine.connect">[1]</a>
+</li>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_Transformer.connect">(SSN_Transformer method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Transformer.connect">[1]</a>
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph1.SSNTypeI2T.connect">(SSNTypeI2T method)</a>
 </li>
@@ -508,7 +514,7 @@
 </li>
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.SynchronGenerator4OrderTPM.connect">(SynchronGenerator4OrderTPM method)</a>
 </li>
-        <li><a href="reference/dp.html#dpsimpy.dp.ph1.SynchronGenerator4OrderVBR.connect">(SynchronGenerator4OrderVBR method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGenerator4OrderVBR.connect">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.SynchronGenerator4OrderVBR.connect">[2]</a>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph1.SynchronGenerator4OrderVBR.connect">(SynchronGenerator4OrderVBR method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.SynchronGenerator4OrderVBR.connect">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGenerator4OrderVBR.connect">[2]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.SynchronGenerator4OrderVBR.connect">[3]</a>
 </li>
         <li><a href="reference/dp.html#dpsimpy.dp.ph1.SynchronGenerator5OrderVBR.connect">(SynchronGenerator5OrderVBR method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGenerator5OrderVBR.connect">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.SynchronGenerator5OrderVBR.connect">[2]</a>
 </li>
@@ -1029,6 +1035,8 @@
         <li><a href="reference/signal.html#dpsimpy.signal.DecouplingIdealTransformer_SP_Ph1.get_virtual_node">(DecouplingIdealTransformer_SP_Ph1 method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/core.html#dpsimpy.Simulation.get_zero_skipping">get_zero_skipping() (Simulation method)</a>
+</li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.GFL">GFL (class in dpsimpy.emt.ph3)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.StateSpaceAnalysisFrame.GlobalDQ0">GlobalDQ0 (StateSpaceAnalysisFrame attribute)</a>
@@ -1244,6 +1252,8 @@
       <li><a href="reference/core.html#dpsimpy.Simulation.log_idobj_attribute">log_idobj_attribute() (Simulation method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.Simulation.log_lu_times">log_lu_times() (Simulation method)</a>
+</li>
+      <li><a href="reference/core.html#dpsimpy.Simulation.log_step_times">log_step_times() (Simulation method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.StateSpacePoleMapping.Logarithmic">Logarithmic (StateSpacePoleMapping attribute)</a>
 </li>
@@ -1730,6 +1740,8 @@
       </ul></li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.HalfDecouplingLine.set_coupling_source">set_coupling_source() (HalfDecouplingLine method)</a>
 </li>
+      <li><a href="reference/dp.html#dpsimpy.dp.ph1.SynchronGenerator4OrderVBR.set_damping">set_damping() (SynchronGenerator4OrderVBR method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGenerator4OrderVBR.set_damping">[1]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.SynchronGenerator4OrderVBR.set_damping">[2]</a>
+</li>
       <li><a href="reference/core.html#dpsimpy.Simulation.set_direct_linear_solver_configuration">set_direct_linear_solver_configuration() (Simulation method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.Simulation.set_direct_solver_implementation">set_direct_solver_implementation() (Simulation method)</a>
@@ -1802,10 +1814,16 @@
       </ul></li>
       <li><a href="reference/core.html#dpsimpy.Logger.set_log_dir">set_log_dir() (Logger static method)</a>
 </li>
+      <li><a href="reference/core.html#dpsimpy.Simulation.set_log_step_times">set_log_step_times() (Simulation method)</a>
+</li>
       <li><a href="reference/dp.html#dpsimpy.dp.ph3.SynchronGeneratorDQTrapez.set_machine_parameters_fundamental_per_unit">set_machine_parameters_fundamental_per_unit() (SynchronGeneratorDQTrapez method)</a>
 </li>
-      <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.set_magnetizing_branch">set_magnetizing_branch() (Transformer method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.Transformer.set_magnetizing_branch">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.set_magnetizing_branch">[2]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.set_magnetizing_branch">[3]</a>, <a href="reference/sp.html#dpsimpy.sp.ph3.Transformer.set_magnetizing_branch">[4]</a>
+      <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_Transformer.set_magnetizing_branch">set_magnetizing_branch() (SSN_Transformer method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Transformer.set_magnetizing_branch">[1]</a>
+
+      <ul>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.set_magnetizing_branch">(Transformer method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.Transformer.set_magnetizing_branch">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.set_magnetizing_branch">[2]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.set_magnetizing_branch">[3]</a>, <a href="reference/sp.html#dpsimpy.sp.ph3.Transformer.set_magnetizing_branch">[4]</a>
 </li>
+      </ul></li>
       <li><a href="reference/core.html#dpsimpy.base.MNASyncGenInterface.set_max_iterations">set_max_iterations() (MNASyncGenInterface method)</a>
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_InductionMotor.set_mechanical_torque">set_mechanical_torque() (SSN_InductionMotor method)</a>
@@ -1925,9 +1943,15 @@
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.set_parameters">(SSN_GFM method)</a>
 </li>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_ImpedanceLoad.set_parameters">(SSN_ImpedanceLoad method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SSN_ImpedanceLoad.set_parameters">[1]</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_InductionMotor.set_parameters">(SSN_InductionMotor method)</a>
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Inductor.set_parameters">(SSN_Inductor method)</a>
+</li>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_PiLine.set_parameters">(SSN_PiLine method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SSN_PiLine.set_parameters">[1]</a>
+</li>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_Transformer.set_parameters">(SSN_Transformer method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Transformer.set_parameters">[1]</a>
 </li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph1.SSNTypeI2T.set_parameters">(SSNTypeI2T method)</a>
 </li>
@@ -1962,9 +1986,11 @@
         <li><a href="reference/dp.html#dpsimpy.dp.ph3.SynchronGeneratorDQTrapez.set_parameters_fundamental_per_unit">(SynchronGeneratorDQTrapez method)</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGeneratorDQTrapez.set_parameters_fundamental_per_unit">[1]</a>
 </li>
       </ul></li>
-      <li><a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGeneratorDQODE.set_parameters_operational_per_unit">set_parameters_operational_per_unit() (SynchronGeneratorDQODE method)</a>
+      <li><a href="reference/dp.html#dpsimpy.dp.ph3.SynchronGenerator4OrderVBR.set_parameters_operational_per_unit">set_parameters_operational_per_unit() (SynchronGenerator4OrderVBR method)</a>
 
       <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGeneratorDQODE.set_parameters_operational_per_unit">(SynchronGeneratorDQODE method)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGeneratorDQTrapez.set_parameters_operational_per_unit">(SynchronGeneratorDQTrapez method)</a>
 </li>
       </ul></li>
@@ -2007,6 +2033,8 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.Transformer.set_reference_winding">set_reference_winding() (Transformer method)</a>, <a href="reference/dp.html#dpsimpy.dp.ph3.Transformer.set_reference_winding">[1]</a>, <a href="reference/emt.html#dpsimpy.emt.ph3.Transformer.set_reference_winding">[2]</a>, <a href="reference/sp.html#dpsimpy.sp.ph1.Transformer.set_reference_winding">[3]</a>, <a href="reference/sp.html#dpsimpy.sp.ph3.Transformer.set_reference_winding">[4]</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.DirectLinearSolverConfiguration.set_scaling_method">set_scaling_method() (DirectLinearSolverConfiguration method)</a>
+</li>
+      <li><a href="reference/core.html#dpsimpy.Simulation.set_sequential_scheduler">set_sequential_scheduler() (Simulation method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.RealTimeSimulation.set_solver">set_solver() (RealTimeSimulation method)</a>
 
@@ -2051,6 +2079,8 @@
 </li>
       </ul></li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM.set_virtual_impedance">set_virtual_impedance() (SSN_GFM method)</a>
+</li>
+      <li><a href="reference/core.html#dpsimpy.Simulation.set_zero_skipping">set_zero_skipping() (Simulation method)</a>
 </li>
       <li><a href="reference/core.html#dpsimpy.GeneratorType.SG3OrderVBR">SG3OrderVBR (GeneratorType attribute)</a>
 </li>
@@ -2120,10 +2150,28 @@
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_GFM">SSN_GFM (class in dpsimpy.emt.ph3)</a>
 </li>
+      <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_ImpedanceLoad">SSN_ImpedanceLoad (class in dpsimpy.dp.ph3)</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_ImpedanceLoad">(class in dpsimpy.emt.ph3)</a>
+</li>
+      </ul></li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_InductionMotor">SSN_InductionMotor (class in dpsimpy.emt.ph3)</a>
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Inductor">SSN_Inductor (class in dpsimpy.emt.ph3)</a>
 </li>
+      <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_PiLine">SSN_PiLine (class in dpsimpy.dp.ph3)</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_PiLine">(class in dpsimpy.emt.ph3)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/dp.html#dpsimpy.dp.ph3.SSN_Transformer">SSN_Transformer (class in dpsimpy.dp.ph3)</a>
+
+      <ul>
+        <li><a href="reference/emt.html#dpsimpy.emt.ph3.SSN_Transformer">(class in dpsimpy.emt.ph3)</a>
+</li>
+      </ul></li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph1.SSNTypeI2T">SSNTypeI2T (class in dpsimpy.emt.ph1)</a>
 </li>
       <li><a href="reference/emt.html#dpsimpy.emt.ph1.SSNTypeV2T">SSNTypeV2T (class in dpsimpy.emt.ph1)</a>
@@ -2189,6 +2237,8 @@
       <li><a href="reference/dp.html#dpsimpy.dp.ph1.SynchronGenerator4OrderVBR">SynchronGenerator4OrderVBR (class in dpsimpy.dp.ph1)</a>
 
       <ul>
+        <li><a href="reference/dp.html#dpsimpy.dp.ph3.SynchronGenerator4OrderVBR">(class in dpsimpy.dp.ph3)</a>
+</li>
         <li><a href="reference/emt.html#dpsimpy.emt.ph3.SynchronGenerator4OrderVBR">(class in dpsimpy.emt.ph3)</a>
 </li>
         <li><a href="reference/sp.html#dpsimpy.sp.ph1.SynchronGenerator4OrderVBR">(class in dpsimpy.sp.ph1)</a>

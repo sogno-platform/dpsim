@@ -152,6 +152,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a957b0d30a4c149374cb84f9fe1885f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25aa8419118c371cbcc1222edabf0351" id="r_a25aa8419118c371cbcc1222edabf0351"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25aa8419118c371cbcc1222edabf0351">mnaCompApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override</td></tr>
 <tr class="separator:a25aa8419118c371cbcc1222edabf0351"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee380f9458f6840d88553f49dffc336e" id="r_aee380f9458f6840d88553f49dffc336e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee380f9458f6840d88553f49dffc336e">mnaHasCompactRightSideVectorStamp</a> () const override</td></tr>
+<tr class="separator:aee380f9458f6840d88553f49dffc336e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13d63a8c0ef36be31cf6e96471271304" id="r_a13d63a8c0ef36be31cf6e96471271304"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13d63a8c0ef36be31cf6e96471271304">mnaAddCompactRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override</td></tr>
+<tr class="separator:a13d63a8c0ef36be31cf6e96471271304"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85f50a29a4ceff09deba16873f326548" id="r_a85f50a29a4ceff09deba16873f326548"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85f50a29a4ceff09deba16873f326548">mnaCompUpdateVoltage</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) override</td></tr>
 <tr class="separator:a85f50a29a4ceff09deba16873f326548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e9170dae7076bd541352f7e2403f43e" id="r_a2e9170dae7076bd541352f7e2403f43e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e9170dae7076bd541352f7e2403f43e">mnaCompPreStep</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount) override</td></tr>
@@ -384,6 +388,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a780dfe2d2caa891938f3e4e9796cca1d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa583b6d80d2ff9a01dab0446698a8cad inherit pub_methods_class_c_p_s_1_1_m_n_a_interface" id="r_aa583b6d80d2ff9a01dab0446698a8cad"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#aa583b6d80d2ff9a01dab0446698a8cad">mnaInitialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> leftVector)=0</td></tr>
 <tr class="separator:aa583b6d80d2ff9a01dab0446698a8cad inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd49b4fa045f84364d3ac9da8f5ad61b inherit pub_methods_class_c_p_s_1_1_m_n_a_interface" id="r_afd49b4fa045f84364d3ac9da8f5ad61b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#afd49b4fa045f84364d3ac9da8f5ad61b">mnaWriteProfile</a> (std::ostream &amp;) const</td></tr>
+<tr class="memdesc:afd49b4fa045f84364d3ac9da8f5ad61b inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write optional component-internal timing rows into the solver profile.  <br /></td></tr>
+<tr class="separator:afd49b4fa045f84364d3ac9da8f5ad61b inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23b816adf7872d4724cbb86ba0d85df3 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface" id="r_a23b816adf7872d4724cbb86ba0d85df3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a23b816adf7872d4724cbb86ba0d85df3">mnaPostStep</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> &amp;leftVector)=0</td></tr>
 <tr class="memdesc:a23b816adf7872d4724cbb86ba0d85df3 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA post step operations.  <br /></td></tr>
 <tr class="separator:a23b816adf7872d4724cbb86ba0d85df3 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -443,9 +450,9 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:af2fb53171408f41e5cf93d2a0d58a3d5" id="r_af2fb53171408f41e5cf93d2a0d58a3d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af2fb53171408f41e5cf93d2a0d58a3d5">calculateCurrent</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;voltage) const</td></tr>
-<tr class="memdesc:af2fb53171408f41e5cf93d2a0d58a3d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the load current for a given instantaneous abc voltage.  <br /></td></tr>
-<tr class="separator:af2fb53171408f41e5cf93d2a0d58a3d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8408f4add27b69eef828eb7ccbccbb1" id="r_ac8408f4add27b69eef828eb7ccbccbb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">MatrixFixedSize</a>&lt; 3, 1 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac8408f4add27b69eef828eb7ccbccbb1">calculateCurrent</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;voltage) const</td></tr>
+<tr class="memdesc:ac8408f4add27b69eef828eb7ccbccbb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the load current for a given instantaneous abc voltage.  <br /></td></tr>
+<tr class="separator:ac8408f4add27b69eef828eb7ccbccbb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30c312a596292a9076a19ed8f6af9f8a" id="r_a30c312a596292a9076a19ed8f6af9f8a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30c312a596292a9076a19ed8f6af9f8a">updateMeasuredPower</a> ()</td></tr>
 <tr class="memdesc:a30c312a596292a9076a19ed8f6af9f8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the instantaneous measured powers.  <br /></td></tr>
 <tr class="separator:a30c312a596292a9076a19ed8f6af9f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -504,6 +511,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_static_methods_class_shared_factory"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_methods_class_shared_factory')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="class_shared_factory.html">SharedFactory&lt; PQLoad &gt;</a></td></tr>
 <tr class="memitem:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory" id="r_a2ffdfd3b547bb9cb777f33e1bf6ec7ef"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; PQLoad &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shared_factory.html#a2ffdfd3b547bb9cb777f33e1bf6ec7ef">make</a> (Args &amp;&amp;...args)</td></tr>
 <tr class="separator:a2ffdfd3b547bb9cb777f33e1bf6ec7ef inherit pub_static_methods_class_shared_factory"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a></td></tr>
+<tr class="memitem:a4f42f0e550b55b7bfe3598ab963612e5 inherit pro_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a4f42f0e550b55b7bfe3598ab963612e5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a4f42f0e550b55b7bfe3598ab963612e5">mRightVectorValue</a></td></tr>
+<tr class="separator:a4f42f0e550b55b7bfe3598ab963612e5 inherit pro_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Real &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">List</a> of Terminals.  <br /></td></tr>
@@ -527,6 +537,10 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a25a262fe9867ddbea21ccca38a33b723 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a25a262fe9867ddbea21ccca38a33b723"><td class="memItemLeft" align="right" valign="top">std::vector&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a25a262fe9867ddbea21ccca38a33b723">mMatrixNodeIndexIsGround</a></td></tr>
 <tr class="memdesc:a25a262fe9867ddbea21ccca38a33b723 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Cached" flags for whether the connected nodes are grounded  <br /></td></tr>
 <tr class="separator:a25a262fe9867ddbea21ccca38a33b723 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cbdad368438684843d7b07bb51d5e20 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a5cbdad368438684843d7b07bb51d5e20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">MatrixVar</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a5cbdad368438684843d7b07bb51d5e20">mIntfVoltageValue</a></td></tr>
+<tr class="separator:a5cbdad368438684843d7b07bb51d5e20 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e0f3ea92c891593226ce4fcaf7abdf9 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a8e0f3ea92c891593226ce4fcaf7abdf9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">MatrixVar</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a8e0f3ea92c891593226ce4fcaf7abdf9">mIntfCurrentValue</a></td></tr>
+<tr class="separator:a8e0f3ea92c891593226ce4fcaf7abdf9 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_topological_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_topological_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a></td></tr>
 <tr class="memitem:a08af609bcbb999d112eb786ca14f2dce inherit pro_attribs_class_c_p_s_1_1_topological_power_comp" id="r_a08af609bcbb999d112eb786ca14f2dce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a08af609bcbb999d112eb786ca14f2dce">mNumTerminals</a> = 0</td></tr>
 <tr class="memdesc:a08af609bcbb999d112eb786ca14f2dce inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the number of Terminals which can be connected to network Nodes.  <br /></td></tr>
@@ -589,7 +603,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines UID, name and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00024">24</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00022">22</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -614,7 +628,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00042">42</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00040">40</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -654,7 +668,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name, component parameters and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00045">45</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00043">43</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -699,13 +713,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines UID, name, component parameters and logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00050">50</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00048">48</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af2fb53171408f41e5cf93d2a0d58a3d5" name="af2fb53171408f41e5cf93d2a0d58a3d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2fb53171408f41e5cf93d2a0d58a3d5">&#9670;&#160;</a></span>calculateCurrent()</h2>
+<a id="ac8408f4add27b69eef828eb7ccbccbb1" name="ac8408f4add27b69eef828eb7ccbccbb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8408f4add27b69eef828eb7ccbccbb1">&#9670;&#160;</a></span>calculateCurrent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -714,7 +728,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> EMT::Ph3::PQLoad::calculateCurrent </td>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a3d9c5de95b4ef7cdaa753155ab3a762c">MatrixFixedSize</a>&lt; 3, 1 &gt; EMT::Ph3::PQLoad::calculateCurrent </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>voltage</em></span></td><td>)</td>
           <td> const</td>
@@ -729,7 +743,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculates the load current for a given instantaneous abc voltage. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00104">104</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00103">103</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -760,7 +774,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#aece14c8b452b060e0c959432d2e11cb9">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00083">83</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00081">81</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -789,7 +803,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a2c68ba119680d791d76178222113520a">CPS::MNASyncGenInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00240">240</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00269">269</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -849,7 +863,37 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a4401f844a3f389e07a37ef1716d84dcd">CPS::SimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00132">132</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00154">154</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a13d63a8c0ef36be31cf6e96471271304" name="a13d63a8c0ef36be31cf6e96471271304"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13d63a8c0ef36be31cf6e96471271304">&#9670;&#160;</a></span>mnaAddCompactRightSideVectorStamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::PQLoad::mnaAddCompactRightSideVectorStamp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Add this component's current RHS contribution to the global vector. Only called when <a class="el" href="#aee380f9458f6840d88553f49dffc336e">mnaHasCompactRightSideVectorStamp()</a> is true. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a8bca306b3f5f06abcba7a173ca65c442">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00212">212</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -890,7 +934,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00228">228</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00257">257</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -928,7 +972,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a4a50587b34a513feb30110967229e38f">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00214">214</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00243">243</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -957,7 +1001,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#addaa4002352d62d655a76e2f203b11a0">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00178">178</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00200">200</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -986,7 +1030,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a6b9663a235e9de1dc1997513ae343353">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00172">172</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00194">194</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -1022,7 +1066,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00167">167</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00189">189</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -1058,7 +1102,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00208">208</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00237">237</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -1091,7 +1135,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a0da06b857423f40b6a8143e5a5abff3d">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00201">201</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00232">232</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -1120,7 +1164,37 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3e08c6d99dbfc258bf62d81a53e12776">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00190">190</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00221">221</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+
+</div>
+</div>
+<a id="aee380f9458f6840d88553f49dffc336e" name="aee380f9458f6840d88553f49dffc336e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee380f9458f6840d88553f49dffc336e">&#9670;&#160;</a></span>mnaHasCompactRightSideVectorStamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> CPS::EMT::Ph3::PQLoad::mnaHasCompactRightSideVectorStamp </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Return true when the direct MNA solver can accumulate this component's contribution row-wise instead of adding its full-size dense stamp. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ad8eddb2e8ba54f907e9b31a4b2864f2e">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8h_source.html#l00079">79</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8h_source.html">EMT_Ph3_PQLoad.h</a>.</p>
 
 </div>
 </div>
@@ -1149,7 +1223,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Calculates the voltage vector shifted by 90 degrees for positive sequence. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00096">96</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00094">94</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -1178,7 +1252,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#a58ebbb3b9ca1c39ea6024300b85f44c2">CPS::MNASyncGenInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00251">251</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00280">280</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -1213,7 +1287,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Sets total three-phase P/Q, nominal line-to-line voltage and voltage floor. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00057">57</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00055">55</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -1242,7 +1316,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Updates the instantaneous measured powers. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00121">121</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00135">135</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>
@@ -1271,7 +1345,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_m_n_a_sync_gen_interface.html#af8018a5f5cfb7dd4c252316d785903e9">CPS::MNASyncGenInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00247">247</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html#l00276">276</a> of file <a class="el" href="_e_m_t___ph3___p_q_load_8cpp_source.html">EMT_Ph3_PQLoad.cpp</a>.</p>
 
 </div>
 </div>

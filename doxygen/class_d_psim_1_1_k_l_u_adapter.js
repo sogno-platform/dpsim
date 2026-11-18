@@ -9,5 +9,6 @@ var class_d_psim_1_1_k_l_u_adapter =
     [ "preprocessing", "class_d_psim_1_1_k_l_u_adapter.html#ad566113de2099c870c1c70a00c276f2a", null ],
     [ "printMatrixMarket", "class_d_psim_1_1_k_l_u_adapter.html#aa91539174590b5fa910a8c9f2cf10fb9", null ],
     [ "refactorize", "class_d_psim_1_1_k_l_u_adapter.html#aa7a815403a9340eeb529729a618d70d9", null ],
-    [ "solve", "class_d_psim_1_1_k_l_u_adapter.html#a227389e7c48ed266d97f365e9eb1f89b", null ]
+    [ "solve", "class_d_psim_1_1_k_l_u_adapter.html#a227389e7c48ed266d97f365e9eb1f89b", null ],
+    [ "solveInto", "class_d_psim_1_1_k_l_u_adapter.html#a8181b5ca62803fb26450f21544e1bd87", null ]
 ];

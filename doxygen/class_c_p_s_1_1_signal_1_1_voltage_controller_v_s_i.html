@@ -289,6 +289,14 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a1b17bfb09a7faee55e2eba6b0edc801b" id="r_a1b17bfb09a7faee55e2eba6b0edc801b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b17bfb09a7faee55e2eba6b0edc801b">mD</a> = Matrix::Zero(2, 6)</td></tr>
 <tr class="memdesc:a1b17bfb09a7faee55e2eba6b0edc801b"><td class="mdescLeft">&#160;</td><td class="mdescRight">matrix D of state space model  <br /></td></tr>
 <tr class="separator:a1b17bfb09a7faee55e2eba6b0edc801b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26ac7a498469a47a14611381c8f84069" id="r_a26ac7a498469a47a14611381c8f84069"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26ac7a498469a47a14611381c8f84069">mDiscreteA</a> = Matrix::Zero(4, 4)</td></tr>
+<tr class="memdesc:a26ac7a498469a47a14611381c8f84069"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trapezoidal discrete maps cached during controller initialization.  <br /></td></tr>
+<tr class="separator:a26ac7a498469a47a14611381c8f84069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5c7b36d0f8e853520b1fb3aaaa150fc" id="r_ac5c7b36d0f8e853520b1fb3aaaa150fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5c7b36d0f8e853520b1fb3aaaa150fc">mDiscreteB</a> = Matrix::Zero(4, 6)</td></tr>
+<tr class="separator:ac5c7b36d0f8e853520b1fb3aaaa150fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75f98d934b50cf299ed4cbe68a045b65" id="r_a75f98d934b50cf299ed4cbe68a045b65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75f98d934b50cf299ed4cbe68a045b65">mInputSum</a> = Matrix::Zero(6, 1)</td></tr>
+<tr class="memdesc:a75f98d934b50cf299ed4cbe68a045b65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reusable input sum for the per-step state update.  <br /></td></tr>
+<tr class="separator:a75f98d934b50cf299ed4cbe68a045b65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_signal_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_signal_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html">CPS::SimSignalComp</a></td></tr>
 <tr class="memitem:a80f942eb4781bf009cc6a2ce72c7ff53 inherit pro_attribs_class_c_p_s_1_1_sim_signal_comp" id="r_a80f942eb4781bf009cc6a2ce72c7ff53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a80f942eb4781bf009cc6a2ce72c7ff53">mBehaviour</a> = <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a854e17a6d4e3e9decaaceac82b61b9fea7303849245d0b30cb7adee8a9910738c">Behaviour::Simulation</a></td></tr>
 <tr class="separator:a80f942eb4781bf009cc6a2ce72c7ff53 inherit pro_attribs_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -384,7 +392,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a39aa9f7a81ecaccbb8933fbdf8c09041">CPS::SimSignalComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00186">186</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00188">188</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -542,7 +550,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>pre step dependencies </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00139">139</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00141">141</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -572,7 +580,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>add step dependencies </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00155">155</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00157">157</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -597,7 +605,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>pre step operations </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00149">149</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00151">151</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -622,7 +630,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>step operations </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00167">167</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html#l00169">169</a> of file <a class="el" href="_voltage_controller_v_s_i_8cpp_source.html">VoltageControllerVSI.cpp</a>.</p>
 
 </div>
 </div>
@@ -731,6 +739,56 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a26ac7a498469a47a14611381c8f84069" name="a26ac7a498469a47a14611381c8f84069"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26ac7a498469a47a14611381c8f84069">&#9670;&#160;</a></span>mDiscreteA</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::VoltageControllerVSI::mDiscreteA = Matrix::Zero(4, 4)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Trapezoidal discrete maps cached during controller initialization. </p>
+
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00053">53</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+
+</div>
+</div>
+<a id="ac5c7b36d0f8e853520b1fb3aaaa150fc" name="ac5c7b36d0f8e853520b1fb3aaaa150fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5c7b36d0f8e853520b1fb3aaaa150fc">&#9670;&#160;</a></span>mDiscreteB</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::VoltageControllerVSI::mDiscreteB = Matrix::Zero(4, 6)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00054">54</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+
+</div>
+</div>
 <a id="a415aec75533bd4a21e9a8b7ce46c1078" name="a415aec75533bd4a21e9a8b7ce46c1078"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a415aec75533bd4a21e9a8b7ce46c1078">&#9670;&#160;</a></span>mGamma_dInit</h2>
 
@@ -793,7 +851,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current Input. </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00065">65</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00070">70</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -811,7 +869,33 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous Input. </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00063">63</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00068">68</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+
+</div>
+</div>
+<a id="a75f98d934b50cf299ed4cbe68a045b65" name="a75f98d934b50cf299ed4cbe68a045b65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75f98d934b50cf299ed4cbe68a045b65">&#9670;&#160;</a></span>mInputSum</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::VoltageControllerVSI::mInputSum = Matrix::Zero(6, 1)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reusable input sum for the per-step state update. </p>
+
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00056">56</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -827,7 +911,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00057">57</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00062">62</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -843,7 +927,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00058">58</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00063">63</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1053,7 +1137,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current Output. </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00073">73</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00078">78</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1155,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous Output. </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00071">71</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00076">76</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1139,7 +1223,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current State. </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00069">69</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00074">74</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1157,7 +1241,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous State. </p>
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00067">67</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00072">72</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1199,7 +1283,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00055">55</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00060">60</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>
@@ -1215,7 +1299,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00056">56</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_voltage_controller_v_s_i_8h_source.html#l00061">61</a> of file <a class="el" href="_voltage_controller_v_s_i_8h_source.html">VoltageControllerVSI.h</a>.</p>
 
 </div>
 </div>

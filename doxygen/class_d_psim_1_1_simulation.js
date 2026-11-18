@@ -28,6 +28,7 @@ var class_d_psim_1_1_simulation =
     [ "getPFSolverEnforceReactiveLimits", "class_d_psim_1_1_simulation.html#a63453a526eacd350af78b03c2e725ffe", null ],
     [ "getPFSolverUseSparse", "class_d_psim_1_1_simulation.html#a72ccd37f10957b0a6e3016f4eb4ad9bb", null ],
     [ "getStateSpaceExtractor", "class_d_psim_1_1_simulation.html#aee0f7bae15f09636b8edf8b512a46e18", null ],
+    [ "getZeroSkipping", "class_d_psim_1_1_simulation.html#a4a7576a555cfb6a6a20ddb1cd6298bf6", null ],
     [ "initialize", "class_d_psim_1_1_simulation.html#a6e7d1624005c861948f1a07e6986770e", null ],
     [ "logAttribute", "class_d_psim_1_1_simulation.html#ae7a8557fb6ee1592daa74bec519536e1", null ],
     [ "loggers", "class_d_psim_1_1_simulation.html#ad3bb79d7fea63b679d4f18cf510f773c", null ],
@@ -62,6 +63,7 @@ var class_d_psim_1_1_simulation =
     [ "setSystemMatrixRecomputationMode", "class_d_psim_1_1_simulation.html#a2f53c53047c596447f10230ed8e83f7c", null ],
     [ "setTearingComponents", "class_d_psim_1_1_simulation.html#a49e4836cfc9101c4d2b8928a747f736e", null ],
     [ "setTimeStep", "class_d_psim_1_1_simulation.html#a468c5bf0c5f1e7265379b43ac0e45fcb", null ],
+    [ "setZeroSkipping", "class_d_psim_1_1_simulation.html#a66891fb3e212cb906a81d267463e8a3c", null ],
     [ "start", "class_d_psim_1_1_simulation.html#acf598e815ded8ca12cad5db975ac8849", null ],
     [ "step", "class_d_psim_1_1_simulation.html#a3715d9008824a4e2754cac8d4f6bb2a3", null ],
     [ "stepTimes", "class_d_psim_1_1_simulation.html#a44f6be2f59e3168042dbc9d8b5d4261f", null ],
@@ -114,5 +116,6 @@ var class_d_psim_1_1_simulation =
     [ "mTearComponents", "class_d_psim_1_1_simulation.html#a246bb10a1562c5f704ecf90f94c5c4a7", null ],
     [ "mTime", "class_d_psim_1_1_simulation.html#ae19d32c4a69b5d90003504a28acb38ad", null ],
     [ "mTimeStep", "class_d_psim_1_1_simulation.html#a40be48cb7e32c3705830b046bd1cf859", null ],
-    [ "mTimeStepCount", "class_d_psim_1_1_simulation.html#a7e66ffafb39cfb772e05bd4f37ac1398", null ]
+    [ "mTimeStepCount", "class_d_psim_1_1_simulation.html#a7e66ffafb39cfb772e05bd4f37ac1398", null ],
+    [ "mZeroSkipping", "class_d_psim_1_1_simulation.html#aee7b9a00e92b8ed867314a65d0d8b976", null ]
 ];

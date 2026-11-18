@@ -9,8 +9,10 @@ var class_d_psim_1_1_direct_linear_solver_configuration =
     [ "getPartialRefactorizationMethodString", "class_d_psim_1_1_direct_linear_solver_configuration.html#a68301741ca3dd9218164b5b94cb98b88", null ],
     [ "getScalingMethod", "class_d_psim_1_1_direct_linear_solver_configuration.html#a9690061c0f0aad4de91ef6b693d29c6f", null ],
     [ "getScalingMethodString", "class_d_psim_1_1_direct_linear_solver_configuration.html#a6b788b711029111e94227c5db764f317", null ],
+    [ "getStaticPreconditioner", "class_d_psim_1_1_direct_linear_solver_configuration.html#a627b0a25638790a9ee82dc6b5783b5db", null ],
     [ "setBTF", "class_d_psim_1_1_direct_linear_solver_configuration.html#a81e1e69ecf63bbc6fef256cd8ee06d06", null ],
     [ "setFillInReductionMethod", "class_d_psim_1_1_direct_linear_solver_configuration.html#a2951b62d10e6195eb08235ccd0e1c9a0", null ],
     [ "setPartialRefactorizationMethod", "class_d_psim_1_1_direct_linear_solver_configuration.html#a10239dcf1b13c5ac7eb92294c2fc61a3", null ],
-    [ "setScalingMethod", "class_d_psim_1_1_direct_linear_solver_configuration.html#a066fca77a63b150e0449d7e653075bd7", null ]
+    [ "setScalingMethod", "class_d_psim_1_1_direct_linear_solver_configuration.html#a066fca77a63b150e0449d7e653075bd7", null ],
+    [ "setStaticPreconditioner", "class_d_psim_1_1_direct_linear_solver_configuration.html#a7974406db60cd3d73871171674a78e17", null ]
 ];

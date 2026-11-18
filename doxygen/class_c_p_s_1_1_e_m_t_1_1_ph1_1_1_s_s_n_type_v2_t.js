@@ -26,5 +26,8 @@ var class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t =
     [ "mUOld", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#a1d581b154d46b1672bb775d8723fc65d", null ],
     [ "mW", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#ae2f6ae18c3060260ef618a3111387ab7", null ],
     [ "mX", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#a1c6a998755d5689812338c6c55935d5e", null ],
-    [ "mYHist", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#a2525b83ebbac158623a3284f3b108ebb", null ]
+    [ "mYHist", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#a2525b83ebbac158623a3284f3b108ebb", null ],
+    [ "mYHistC", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#a70fce8ae878e6fe52635e1f6d80ae383", null ],
+    [ "mYHistInputMap", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#ad2857480e20670dfb778c4270eaa1199", null ],
+    [ "mYHistStateMap", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#a931ea88662d1f5ff5189b35f925a5e0c", null ]
 ];

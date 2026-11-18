@@ -4,6 +4,7 @@ var class_c_p_s_1_1_m_n_a_interface =
     [ "Ptr", "class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e", null ],
     [ "createSubComponents", "class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d", null ],
     [ "getRightVector", "class_c_p_s_1_1_m_n_a_interface.html#a6e43fe74ecdc1153c0408462cddc67df", null ],
+    [ "mnaAddCompactRightSideVectorStamp", "class_c_p_s_1_1_m_n_a_interface.html#a8bca306b3f5f06abcba7a173ca65c442", null ],
     [ "mnaAddPostStepDependencies", "class_c_p_s_1_1_m_n_a_interface.html#a0179016962f9ebfe686f16ede91d6404", null ],
     [ "mnaAddPreStepDependencies", "class_c_p_s_1_1_m_n_a_interface.html#a19edf22751b0e9666ba1e232e34bffde", null ],
     [ "mnaApplyRightSideVectorStamp", "class_c_p_s_1_1_m_n_a_interface.html#a3753ef48000d7fda7b940f8ea627e30d", null ],
@@ -11,6 +12,7 @@ var class_c_p_s_1_1_m_n_a_interface =
     [ "mnaApplyRightSideVectorStampHarm", "class_c_p_s_1_1_m_n_a_interface.html#adb882f75b0d0a49bb81b7674394b8420", null ],
     [ "mnaApplySystemMatrixStamp", "class_c_p_s_1_1_m_n_a_interface.html#a3054b9f3600edea682208639cd2aacc7", null ],
     [ "mnaApplySystemMatrixStampHarm", "class_c_p_s_1_1_m_n_a_interface.html#a7ccfb0f111f5450e095132ac13b4f3dc", null ],
+    [ "mnaHasCompactRightSideVectorStamp", "class_c_p_s_1_1_m_n_a_interface.html#ad8eddb2e8ba54f907e9b31a4b2864f2e", null ],
     [ "mnaInitialize", "class_c_p_s_1_1_m_n_a_interface.html#a19f3b3770b99fc16550413b2f77dbf2b", null ],
     [ "mnaInitialize", "class_c_p_s_1_1_m_n_a_interface.html#aa583b6d80d2ff9a01dab0446698a8cad", null ],
     [ "mnaInitializeHarm", "class_c_p_s_1_1_m_n_a_interface.html#aca665eb0006e91958366aefca2863ee0", null ],
@@ -18,5 +20,6 @@ var class_c_p_s_1_1_m_n_a_interface =
     [ "mnaPreStep", "class_c_p_s_1_1_m_n_a_interface.html#a3613e89136e28aa3369d0606463f06e7", null ],
     [ "mnaTasks", "class_c_p_s_1_1_m_n_a_interface.html#a96a887a2ef3d82c277bc87d97adaa5f1", null ],
     [ "mnaUpdateCurrent", "class_c_p_s_1_1_m_n_a_interface.html#a0412c47ba97bbc82f9c06f9ea90c4536", null ],
-    [ "mnaUpdateVoltage", "class_c_p_s_1_1_m_n_a_interface.html#aadd6fae66474b5c63b5156122c461605", null ]
+    [ "mnaUpdateVoltage", "class_c_p_s_1_1_m_n_a_interface.html#aadd6fae66474b5c63b5156122c461605", null ],
+    [ "mnaWriteProfile", "class_c_p_s_1_1_m_n_a_interface.html#afd49b4fa045f84364d3ac9da8f5ad61b", null ]
 ];

@@ -23,6 +23,7 @@ var class_d_psim_1_1_solver =
     [ "doSteadyStateInit", "class_d_psim_1_1_solver.html#a67ae1b76aa257df267fd660c8c542813", null ],
     [ "doSystemMatrixRecomputation", "class_d_psim_1_1_solver.html#acaca0ec55e6c02924c09da8de629912e", null ],
     [ "getTasks", "class_d_psim_1_1_solver.html#ae02c8cdd80fd1eb66d6cf19035167bca", null ],
+    [ "getZeroSkipping", "class_d_psim_1_1_solver.html#a6d66d729df64fcc192543748c297891f", null ],
     [ "initialize", "class_d_psim_1_1_solver.html#a8e851429fec0ddfaf3b20be40ab4cad3", null ],
     [ "log", "class_d_psim_1_1_solver.html#ab809bab8e470b23d3fbedb056197eeb6", null ],
     [ "logLUTimes", "class_d_psim_1_1_solver.html#a9067693a5c1240839d825ff3adbdd50d", null ],
@@ -35,6 +36,7 @@ var class_d_psim_1_1_solver =
     [ "setSystem", "class_d_psim_1_1_solver.html#a55d0b0fd08980de35d936ea167bf8a86", null ],
     [ "setSystemMatrixRecomputationMode", "class_d_psim_1_1_solver.html#af333a4dee89c17bbf902ef0fb2d68d52", null ],
     [ "setTimeStep", "class_d_psim_1_1_solver.html#a6ec0c84fef733b967c37fad1835e2b6f", null ],
+    [ "setZeroSkipping", "class_d_psim_1_1_solver.html#ad5984485a4955bb23824bd18821772ba", null ],
     [ "DEFAULT_STEAD_ST_INI_ACC_LIMIT", "class_d_psim_1_1_solver.html#a7c775c3ecde362dd767d816fc9e17d14", null ],
     [ "DEFAULT_STEAD_ST_INI_TIME_LIMIT", "class_d_psim_1_1_solver.html#a35211a11eab0eb4a5223138467f0efcb", null ],
     [ "mBehaviour", "class_d_psim_1_1_solver.html#a2978a74153340b65c3f3efd0a0617dda", null ],
@@ -51,5 +53,6 @@ var class_d_psim_1_1_solver =
     [ "mSteadyStateInit", "class_d_psim_1_1_solver.html#ac1052010e7821d5c2e07e3e1a64187e7", null ],
     [ "mSystemMatrixRecomputationEnabled", "class_d_psim_1_1_solver.html#a19bbb595644cc88dd6cd5cc653138a8b", null ],
     [ "mSystemMatrixRecomputationMode", "class_d_psim_1_1_solver.html#acb0d898410bd0427fe38fd7552e15776", null ],
-    [ "mTimeStep", "class_d_psim_1_1_solver.html#a2679d6c4e6b94ecf2b11b0bd7c2a5cf2", null ]
+    [ "mTimeStep", "class_d_psim_1_1_solver.html#a2679d6c4e6b94ecf2b11b0bd7c2a5cf2", null ],
+    [ "mZeroSkipping", "class_d_psim_1_1_solver.html#ab67edf5e26448635f38b58ffb4cd2a41", null ]
 ];

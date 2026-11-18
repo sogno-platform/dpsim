@@ -133,6 +133,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a79d05d97b78e57134252232c08f705c1" id="r_a79d05d97b78e57134252232c08f705c1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79d05d97b78e57134252232c08f705c1">VSIVoltageControlVCO</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> withTrafo=false)</td></tr>
 <tr class="memdesc:a79d05d97b78e57134252232c08f705c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines UID, name, logging level and connection trafo existence.  <br /></td></tr>
 <tr class="separator:a79d05d97b78e57134252232c08f705c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fd4ad47420c5ce2829fb62130ee91fb" id="r_a6fd4ad47420c5ce2829fb62130ee91fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fd4ad47420c5ce2829fb62130ee91fb">VSIVoltageControlVCO</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a66b765f33341283bc9b916c74047c749">uid</a>, <a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> useSubcomponents, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> withTrafo=false)</td></tr>
+<tr class="memdesc:a6fd4ad47420c5ce2829fb62130ee91fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Direct MNA filter/source path; legacy child-component path remains default.  <br /></td></tr>
+<tr class="separator:a6fd4ad47420c5ce2829fb62130ee91fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23986f3724cebfd2c3c3a06d0727bd15" id="r_a23986f3724cebfd2c3c3a06d0727bd15"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23986f3724cebfd2c3c3a06d0727bd15">VSIVoltageControlVCO</a> (<a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a> <a class="el" href="class_c_p_s_1_1_identified_object.html#a38b8318459b1651160029263eff6ca47">name</a>, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> useSubcomponents, <a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a> logLevel=Logger::Level::off, <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> withTrafo=false)</td></tr>
+<tr class="separator:a23986f3724cebfd2c3c3a06d0727bd15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06c3b6e7ad6cedc45f5205b3bbb2594d" id="r_a06c3b6e7ad6cedc45f5205b3bbb2594d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06c3b6e7ad6cedc45f5205b3bbb2594d">initializeParentFromNodesAndTerminals</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> frequency) override</td></tr>
 <tr class="memdesc:a06c3b6e7ad6cedc45f5205b3bbb2594d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes component from power flow data.  <br /></td></tr>
 <tr class="separator:a06c3b6e7ad6cedc45f5205b3bbb2594d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,6 +161,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4da59e72aa2eb323937b305a9f6b453a" id="r_a4da59e72aa2eb323937b305a9f6b453a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4da59e72aa2eb323937b305a9f6b453a">mnaParentInitialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a707ca832f3ea093c4cb430c5466cc823">::Ptr</a> leftVector) override</td></tr>
 <tr class="memdesc:a4da59e72aa2eb323937b305a9f6b453a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes internal variables of the component.  <br /></td></tr>
 <tr class="separator:a4da59e72aa2eb323937b305a9f6b453a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7703dcbb274d23019a6c4f90a15ad37a" id="r_a7703dcbb274d23019a6c4f90a15ad37a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7703dcbb274d23019a6c4f90a15ad37a">mnaParentApplySystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix) override</td></tr>
+<tr class="separator:a7703dcbb274d23019a6c4f90a15ad37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fee8f089fdfe6b50119ba750f37e9fc" id="r_a0fee8f089fdfe6b50119ba750f37e9fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fee8f089fdfe6b50119ba750f37e9fc">mnaParentApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override</td></tr>
+<tr class="separator:a0fee8f089fdfe6b50119ba750f37e9fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c05cbab06c6caf1cd933ba952e2d77a" id="r_a2c05cbab06c6caf1cd933ba952e2d77a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c05cbab06c6caf1cd933ba952e2d77a">mnaCompUpdateCurrent</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) override</td></tr>
 <tr class="memdesc:a2c05cbab06c6caf1cd933ba952e2d77a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates current through the component.  <br /></td></tr>
 <tr class="separator:a2c05cbab06c6caf1cd933ba952e2d77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,6 +228,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac7ad198c0bc5c102055a73912b7ece84 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_ac7ad198c0bc5c102055a73912b7ece84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#ac7ad198c0bc5c102055a73912b7ece84">mnaCompApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override</td></tr>
 <tr class="memdesc:ac7ad198c0bc5c102055a73912b7ece84 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector.  <br /></td></tr>
 <tr class="separator:ac7ad198c0bc5c102055a73912b7ece84 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a675c70fc6838273a8b1d6915f2ca99af inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a675c70fc6838273a8b1d6915f2ca99af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a675c70fc6838273a8b1d6915f2ca99af">mnaHasCompactRightSideVectorStamp</a> () const override</td></tr>
+<tr class="memdesc:a675c70fc6838273a8b1d6915f2ca99af inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Composite stamps touch only their cached terminal and virtual-node rows.  <br /></td></tr>
+<tr class="separator:a675c70fc6838273a8b1d6915f2ca99af inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2baa1974954d6bbfb8a134201792d71 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_aa2baa1974954d6bbfb8a134201792d71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aa2baa1974954d6bbfb8a134201792d71">mnaAddCompactRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override</td></tr>
+<tr class="separator:aa2baa1974954d6bbfb8a134201792d71 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3168f7273f910d512311cbed112b885 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_ac3168f7273f910d512311cbed112b885"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#ac3168f7273f910d512311cbed112b885">mnaCompPreStep</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount) override</td></tr>
 <tr class="memdesc:ac3168f7273f910d512311cbed112b885 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA pre step operations.  <br /></td></tr>
 <tr class="separator:ac3168f7273f910d512311cbed112b885 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -233,10 +247,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4715fb765c88e13259cb2a6492450c91 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbc033aef2d5b43ca47ca80d6e2c7f96 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_abbc033aef2d5b43ca47ca80d6e2c7f96"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#abbc033aef2d5b43ca47ca80d6e2c7f96">mnaParentInitialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a707ca832f3ea093c4cb430c5466cc823">::Ptr</a> leftVector)</td></tr>
 <tr class="separator:abbc033aef2d5b43ca47ca80d6e2c7f96 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b9d79f25011a2a8637559aa52fec502 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a0b9d79f25011a2a8637559aa52fec502"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a0b9d79f25011a2a8637559aa52fec502">mnaParentApplySystemMatrixStamp</a> (<a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;systemMatrix)</td></tr>
-<tr class="separator:a0b9d79f25011a2a8637559aa52fec502 inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85ae2805aabb8f5000efac0ad359925a inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_a85ae2805aabb8f5000efac0ad359925a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a85ae2805aabb8f5000efac0ad359925a">mnaParentApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector)</td></tr>
-<tr class="separator:a85ae2805aabb8f5000efac0ad359925a inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf6925fdfa9537fd49985a00b8dfa8df inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_aaf6925fdfa9537fd49985a00b8dfa8df"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aaf6925fdfa9537fd49985a00b8dfa8df">mnaParentPostStep</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a707ca832f3ea093c4cb430c5466cc823">::Ptr</a> &amp;leftVector)</td></tr>
 <tr class="separator:aaf6925fdfa9537fd49985a00b8dfa8df inherit pub_methods_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace8e89c8259f8b1cb0d5ba324feda4b0 inherit pub_methods_class_c_p_s_1_1_composite_power_comp" id="r_ace8e89c8259f8b1cb0d5ba324feda4b0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#ace8e89c8259f8b1cb0d5ba324feda4b0">mnaParentAddPostStepDependencies</a> (<a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;prevStepDependencies, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;attributeDependencies, <a class="el" href="class_c_p_s_1_1_attribute_base.html#af43dac6e42f93597b33862000dc563be">AttributeBase::List</a> &amp;modifiedAttributes, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a707ca832f3ea093c4cb430c5466cc823">::Ptr</a> &amp;leftVector)</td></tr>
@@ -460,6 +470,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a780dfe2d2caa891938f3e4e9796cca1d inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa583b6d80d2ff9a01dab0446698a8cad inherit pub_methods_class_c_p_s_1_1_m_n_a_interface" id="r_aa583b6d80d2ff9a01dab0446698a8cad"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#aa583b6d80d2ff9a01dab0446698a8cad">mnaInitialize</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> omega, <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> timeStep, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> leftVector)=0</td></tr>
 <tr class="separator:aa583b6d80d2ff9a01dab0446698a8cad inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd49b4fa045f84364d3ac9da8f5ad61b inherit pub_methods_class_c_p_s_1_1_m_n_a_interface" id="r_afd49b4fa045f84364d3ac9da8f5ad61b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#afd49b4fa045f84364d3ac9da8f5ad61b">mnaWriteProfile</a> (std::ostream &amp;) const</td></tr>
+<tr class="memdesc:afd49b4fa045f84364d3ac9da8f5ad61b inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write optional component-internal timing rows into the solver profile.  <br /></td></tr>
+<tr class="separator:afd49b4fa045f84364d3ac9da8f5ad61b inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23b816adf7872d4724cbb86ba0d85df3 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface" id="r_a23b816adf7872d4724cbb86ba0d85df3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#a23b816adf7872d4724cbb86ba0d85df3">mnaPostStep</a> (<a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> time, <a class="el" href="namespace_c_p_s.html#aabddb6241134e6ad9d61ae357bc104fa">Int</a> timeStepCount, <a class="el" href="class_c_p_s_1_1_attribute.html">Attribute</a>&lt; <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &gt;<a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">::Ptr</a> &amp;leftVector)=0</td></tr>
 <tr class="memdesc:a23b816adf7872d4724cbb86ba0d85df3 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">MNA post step operations.  <br /></td></tr>
 <tr class="separator:a23b816adf7872d4724cbb86ba0d85df3 inherit pub_methods_class_c_p_s_1_1_m_n_a_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -567,6 +580,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ae337f00c4312caf16269686c77b1278c" id="r_ae337f00c4312caf16269686c77b1278c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae337f00c4312caf16269686c77b1278c">mWithConnectionTransformer</a> = false</td></tr>
 <tr class="memdesc:ae337f00c4312caf16269686c77b1278c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag for connection transformer usage.  <br /></td></tr>
 <tr class="separator:ae337f00c4312caf16269686c77b1278c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a34b3805fc79574c06df284a57bcb8b" id="r_a7a34b3805fc79574c06df284a57bcb8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a34b3805fc79574c06df284a57bcb8b">mUseSubcomponents</a> = true</td></tr>
+<tr class="memdesc:a7a34b3805fc79574c06df284a57bcb8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use direct MNA stamps instead of electrical filter/source children.  <br /></td></tr>
+<tr class="separator:a7a34b3805fc79574c06df284a57bcb8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e07f5cfb14a2b034a1d830579e59e44" id="r_a1e07f5cfb14a2b034a1d830579e59e44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e07f5cfb14a2b034a1d830579e59e44">mWithControl</a> = true</td></tr>
 <tr class="memdesc:a1e07f5cfb14a2b034a1d830579e59e44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag for controller usage.  <br /></td></tr>
 <tr class="separator:a1e07f5cfb14a2b034a1d830579e59e44"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -584,6 +600,28 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a0fede24996d94ea952f1e8dc46289758"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19a417d7fa08f0caf134994557c5dd82" id="r_a19a417d7fa08f0caf134994557c5dd82"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19a417d7fa08f0caf134994557c5dd82">mRightVectorStamps</a></td></tr>
 <tr class="separator:a19a417d7fa08f0caf134994557c5dd82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87fa25277042e1aadffce13d1cffb590" id="r_a87fa25277042e1aadffce13d1cffb590"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87fa25277042e1aadffce13d1cffb590">mDirectRf</a> = Matrix::Zero(3, 3)</td></tr>
+<tr class="separator:a87fa25277042e1aadffce13d1cffb590"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c9984f5eece454eecdb8171490c2e3f" id="r_a6c9984f5eece454eecdb8171490c2e3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c9984f5eece454eecdb8171490c2e3f">mDirectLf</a> = Matrix::Zero(3, 3)</td></tr>
+<tr class="separator:a6c9984f5eece454eecdb8171490c2e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada3a9af92d41367d2b4c1cbfa08656ed" id="r_ada3a9af92d41367d2b4c1cbfa08656ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada3a9af92d41367d2b4c1cbfa08656ed">mDirectCf</a> = Matrix::Zero(3, 3)</td></tr>
+<tr class="separator:ada3a9af92d41367d2b4c1cbfa08656ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33208df1012ed1ca8cbb4f7ec4b80eda" id="r_a33208df1012ed1ca8cbb4f7ec4b80eda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33208df1012ed1ca8cbb4f7ec4b80eda">mDirectRc</a> = Matrix::Zero(3, 3)</td></tr>
+<tr class="separator:a33208df1012ed1ca8cbb4f7ec4b80eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19652c30f8754b6e147c94cbef73d8ff" id="r_a19652c30f8754b6e147c94cbef73d8ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19652c30f8754b6e147c94cbef73d8ff">mDirectIf</a> = Matrix::Zero(3, 1)</td></tr>
+<tr class="separator:a19652c30f8754b6e147c94cbef73d8ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9790f6a7e248649e6f0207c58d671acf" id="r_a9790f6a7e248649e6f0207c58d671acf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9790f6a7e248649e6f0207c58d671acf">mDirectVlf</a> = Matrix::Zero(3, 1)</td></tr>
+<tr class="separator:a9790f6a7e248649e6f0207c58d671acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c3b1e1e9102e53da214bbfd425c489b" id="r_a8c3b1e1e9102e53da214bbfd425c489b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c3b1e1e9102e53da214bbfd425c489b">mDirectVcf</a> = Matrix::Zero(3, 1)</td></tr>
+<tr class="separator:a8c3b1e1e9102e53da214bbfd425c489b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6b22c849f9341b7abcc1b71f2eeac34" id="r_af6b22c849f9341b7abcc1b71f2eeac34"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6b22c849f9341b7abcc1b71f2eeac34">mDirectIcf</a> = Matrix::Zero(3, 1)</td></tr>
+<tr class="separator:af6b22c849f9341b7abcc1b71f2eeac34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5db1ed66c71d2d1d71c6b6ca02ccb525" id="r_a5db1ed66c71d2d1d71c6b6ca02ccb525"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5db1ed66c71d2d1d71c6b6ca02ccb525">mDirectHistoryLf</a> = Matrix::Zero(3, 1)</td></tr>
+<tr class="separator:a5db1ed66c71d2d1d71c6b6ca02ccb525"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98d878039b19d748d71a2bfe0471e1a0" id="r_a98d878039b19d748d71a2bfe0471e1a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98d878039b19d748d71a2bfe0471e1a0">mDirectHistoryCf</a> = Matrix::Zero(3, 1)</td></tr>
+<tr class="separator:a98d878039b19d748d71a2bfe0471e1a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe5ee21b1fb6241daa6073de9a3d7aee" id="r_afe5ee21b1fb6241daa6073de9a3d7aee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe5ee21b1fb6241daa6073de9a3d7aee">mDirectSourceVoltage</a> = Matrix::Zero(3, 1)</td></tr>
+<tr class="separator:afe5ee21b1fb6241daa6073de9a3d7aee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q.html">CPS::Base::AvVoltageSourceInverterDQ</a></td></tr>
 <tr class="memitem:a1f82ecd77de49e6e72ca4eae8e873fd7 inherit pro_attribs_class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q" id="r_a1f82ecd77de49e6e72ca4eae8e873fd7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q.html#a1f82ecd77de49e6e72ca4eae8e873fd7">mLf</a></td></tr>
 <tr class="memdesc:a1f82ecd77de49e6e72ca4eae8e873fd7 inherit pro_attribs_class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q"><td class="mdescLeft">&#160;</td><td class="mdescRight">filter parameters  <br /></td></tr>
@@ -612,6 +650,9 @@ Protected Attributes</h2></td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_composite_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_composite_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html">CPS::CompositePowerComp&lt; Real &gt;</a></td></tr>
 <tr class="memitem:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp" id="r_a230c4cafd696f2c14f9d3fef031cf988"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a230c4cafd696f2c14f9d3fef031cf988">mSubCompCreated</a></td></tr>
 <tr class="separator:a230c4cafd696f2c14f9d3fef031cf988 inherit pro_attribs_class_c_p_s_1_1_composite_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Real &gt;</a></td></tr>
+<tr class="memitem:a4f42f0e550b55b7bfe3598ab963612e5 inherit pro_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a4f42f0e550b55b7bfe3598ab963612e5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a4f42f0e550b55b7bfe3598ab963612e5">mRightVectorValue</a></td></tr>
+<tr class="separator:a4f42f0e550b55b7bfe3598ab963612e5 inherit pro_attribs_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_power_comp.html">CPS::SimPowerComp&lt; Real &gt;</a></td></tr>
 <tr class="memitem:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a16fef50583bd2c58806acbf6185698cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_p_s_1_1_sim_terminal.html">SimTerminal</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt;<a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">::List</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a16fef50583bd2c58806acbf6185698cb">mTerminals</a></td></tr>
 <tr class="memdesc:a16fef50583bd2c58806acbf6185698cb inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a820b19d65a66e64d40ac2b1b94831b1c">List</a> of Terminals.  <br /></td></tr>
@@ -635,6 +676,10 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a25a262fe9867ddbea21ccca38a33b723 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a25a262fe9867ddbea21ccca38a33b723"><td class="memItemLeft" align="right" valign="top">std::vector&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a25a262fe9867ddbea21ccca38a33b723">mMatrixNodeIndexIsGround</a></td></tr>
 <tr class="memdesc:a25a262fe9867ddbea21ccca38a33b723 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Cached" flags for whether the connected nodes are grounded  <br /></td></tr>
 <tr class="separator:a25a262fe9867ddbea21ccca38a33b723 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cbdad368438684843d7b07bb51d5e20 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a5cbdad368438684843d7b07bb51d5e20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">MatrixVar</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a5cbdad368438684843d7b07bb51d5e20">mIntfVoltageValue</a></td></tr>
+<tr class="separator:a5cbdad368438684843d7b07bb51d5e20 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e0f3ea92c891593226ce4fcaf7abdf9 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp" id="r_a8e0f3ea92c891593226ce4fcaf7abdf9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#aac8786917470ab4cc7b3c610e2eb3ab1">MatrixVar</a>&lt; <a class="el" href="namespace_c_p_s.html#a603c4b77d70922bc0423adc57725df50">Real</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_power_comp.html#a8e0f3ea92c891593226ce4fcaf7abdf9">mIntfCurrentValue</a></td></tr>
+<tr class="separator:a8e0f3ea92c891593226ce4fcaf7abdf9 inherit pro_attribs_class_c_p_s_1_1_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_topological_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_topological_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_topological_power_comp.html">CPS::TopologicalPowerComp</a></td></tr>
 <tr class="memitem:a08af609bcbb999d112eb786ca14f2dce inherit pro_attribs_class_c_p_s_1_1_topological_power_comp" id="r_a08af609bcbb999d112eb786ca14f2dce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_topological_power_comp.html#a08af609bcbb999d112eb786ca14f2dce">mNumTerminals</a> = 0</td></tr>
 <tr class="memdesc:a08af609bcbb999d112eb786ca14f2dce inherit pro_attribs_class_c_p_s_1_1_topological_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the number of Terminals which can be connected to network Nodes.  <br /></td></tr>
@@ -710,7 +755,7 @@ Additional Inherited Members</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00021">21</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac89889746657dc98f0020fd947532e95" name="ac89889746657dc98f0020fd947532e95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac89889746657dc98f0020fd947532e95">&#9670;&#160;</a></span>VSIVoltageControlVCO() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac89889746657dc98f0020fd947532e95">&#9670;&#160;</a></span>VSIVoltageControlVCO() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -738,12 +783,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines name amd logging level. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00111">111</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00124">124</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
 <a id="a79d05d97b78e57134252232c08f705c1" name="a79d05d97b78e57134252232c08f705c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79d05d97b78e57134252232c08f705c1">&#9670;&#160;</a></span>VSIVoltageControlVCO() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a79d05d97b78e57134252232c08f705c1">&#9670;&#160;</a></span>VSIVoltageControlVCO() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -773,7 +818,88 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Defines UID, name, logging level and connection trafo existence. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00008">8</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00039">39</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a6fd4ad47420c5ce2829fb62130ee91fb" name="a6fd4ad47420c5ce2829fb62130ee91fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fd4ad47420c5ce2829fb62130ee91fb">&#9670;&#160;</a></span>VSIVoltageControlVCO() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a></td>          <td class="paramname"><span class="paramname"><em>uid</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>useSubcomponents</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>withTrafo</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Direct MNA filter/source path; legacy child-component path remains default. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00044">44</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a23986f3724cebfd2c3c3a06d0727bd15" name="a23986f3724cebfd2c3c3a06d0727bd15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23986f3724cebfd2c3c3a06d0727bd15">&#9670;&#160;</a></span>VSIVoltageControlVCO() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CPS::EMT::Ph3::VSIVoltageControlVCO::VSIVoltageControlVCO </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a09f6ad37b12370b4b58624822be9b055">String</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>useSubcomponents</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_c_p_s_1_1_logger.html#a021e964d1ab0d217a05b95736d2ea804">Logger::Level</a></td>          <td class="paramname"><span class="paramname"><em>logLevel</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Logger::Level::off</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a></td>          <td class="paramname"><span class="paramname"><em>withTrafo</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00134">134</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -804,7 +930,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add control step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00384">384</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00491">491</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -834,7 +960,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add control step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00402">402</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00509">509</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -859,7 +985,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Control pre step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00395">395</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00502">502</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -884,7 +1010,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Perform step of controller. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00417">417</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00524">524</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -915,7 +1041,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a49dac74f4584c6f7c5061647a1fa1d22">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00204">204</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00252">252</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -946,7 +1072,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a82fb36cf23e8e2eca8d52fc1f02ba473">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00491">491</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00614">614</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -977,7 +1103,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a3e08c6d99dbfc258bf62d81a53e12776">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00500">500</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00639">639</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1020,7 +1146,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Add MNA post step dependencies. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00474">474</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00597">597</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1060,7 +1186,65 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aa3cc1211506b167aedb230a39b5f29fb">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00450">450</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00566">566</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0fee8f089fdfe6b50119ba750f37e9fc" name="a0fee8f089fdfe6b50119ba750f37e9fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fee8f089fdfe6b50119ba750f37e9fc">&#9670;&#160;</a></span>mnaParentApplyRightSideVectorStamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::VSIVoltageControlVCO::mnaParentApplyRightSideVectorStamp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rightVector</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a85ae2805aabb8f5000efac0ad359925a">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00474">474</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a7703dcbb274d23019a6c4f90a15ad37a" name="a7703dcbb274d23019a6c4f90a15ad37a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7703dcbb274d23019a6c4f90a15ad37a">&#9670;&#160;</a></span>mnaParentApplySystemMatrixStamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EMT::Ph3::VSIVoltageControlVCO::mnaParentApplySystemMatrixStamp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#af0203b5aa6a69ba1b8642d8ccf5eb7be">SparseMatrixRow</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>systemMatrix</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a0b9d79f25011a2a8637559aa52fec502">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00448">448</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1098,7 +1282,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Initializes internal variables of the component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00371">371</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00428">428</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1136,7 +1320,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>MNA post step operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00484">484</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00607">607</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1171,7 +1355,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aec0167e51c7ef78899a86b0c7f3746cc">CPS::CompositePowerComp&lt; Real &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00462">462</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00578">578</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1211,7 +1395,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for parameters of control loops. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00147">147</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00193">193</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1246,7 +1430,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for parameters of filter. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00167">167</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00213">213</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1281,7 +1465,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for initial values applied in controllers. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00188">188</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00236">236</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1311,7 +1495,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for general parameters of the component. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00102">102</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00148">148</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1366,7 +1550,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for parameters of transformer. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00118">118</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html#l00164">164</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8cpp_source.html">EMT_Ph3_VSIVoltageControlVCO.cpp</a>.</p>
 
 </div>
 </div>
@@ -1393,7 +1577,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00138">138</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00160">160</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1424,6 +1608,270 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ada3a9af92d41367d2b4c1cbfa08656ed" name="ada3a9af92d41367d2b4c1cbfa08656ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada3a9af92d41367d2b4c1cbfa08656ed">&#9670;&#160;</a></span>mDirectCf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectCf = Matrix::Zero(3, 3)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00072">72</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="a98d878039b19d748d71a2bfe0471e1a0" name="a98d878039b19d748d71a2bfe0471e1a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98d878039b19d748d71a2bfe0471e1a0">&#9670;&#160;</a></span>mDirectHistoryCf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectHistoryCf = Matrix::Zero(3, 1)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00079">79</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="a5db1ed66c71d2d1d71c6b6ca02ccb525" name="a5db1ed66c71d2d1d71c6b6ca02ccb525"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5db1ed66c71d2d1d71c6b6ca02ccb525">&#9670;&#160;</a></span>mDirectHistoryLf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectHistoryLf = Matrix::Zero(3, 1)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00078">78</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="af6b22c849f9341b7abcc1b71f2eeac34" name="af6b22c849f9341b7abcc1b71f2eeac34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6b22c849f9341b7abcc1b71f2eeac34">&#9670;&#160;</a></span>mDirectIcf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectIcf = Matrix::Zero(3, 1)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00077">77</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="a19652c30f8754b6e147c94cbef73d8ff" name="a19652c30f8754b6e147c94cbef73d8ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19652c30f8754b6e147c94cbef73d8ff">&#9670;&#160;</a></span>mDirectIf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectIf = Matrix::Zero(3, 1)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00074">74</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="a6c9984f5eece454eecdb8171490c2e3f" name="a6c9984f5eece454eecdb8171490c2e3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c9984f5eece454eecdb8171490c2e3f">&#9670;&#160;</a></span>mDirectLf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectLf = Matrix::Zero(3, 3)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00071">71</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="a33208df1012ed1ca8cbb4f7ec4b80eda" name="a33208df1012ed1ca8cbb4f7ec4b80eda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33208df1012ed1ca8cbb4f7ec4b80eda">&#9670;&#160;</a></span>mDirectRc</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectRc = Matrix::Zero(3, 3)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00073">73</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="a87fa25277042e1aadffce13d1cffb590" name="a87fa25277042e1aadffce13d1cffb590"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87fa25277042e1aadffce13d1cffb590">&#9670;&#160;</a></span>mDirectRf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectRf = Matrix::Zero(3, 3)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00070">70</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="afe5ee21b1fb6241daa6073de9a3d7aee" name="afe5ee21b1fb6241daa6073de9a3d7aee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe5ee21b1fb6241daa6073de9a3d7aee">&#9670;&#160;</a></span>mDirectSourceVoltage</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectSourceVoltage = Matrix::Zero(3, 1)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00080">80</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="a8c3b1e1e9102e53da214bbfd425c489b" name="a8c3b1e1e9102e53da214bbfd425c489b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c3b1e1e9102e53da214bbfd425c489b">&#9670;&#160;</a></span>mDirectVcf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectVcf = Matrix::Zero(3, 1)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00076">76</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
+<a id="a9790f6a7e248649e6f0207c58d671acf" name="a9790f6a7e248649e6f0207c58d671acf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9790f6a7e248649e6f0207c58d671acf">&#9670;&#160;</a></span>mDirectVlf</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mDirectVlf = Matrix::Zero(3, 1)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00075">75</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
 <a id="a211cb51f4252a195157b9e487a0ff2de" name="a211cb51f4252a195157b9e487a0ff2de"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a211cb51f4252a195157b9e487a0ff2de">&#9670;&#160;</a></span>mElecActivePower</h2>
 
@@ -1436,7 +1884,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00092">92</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00105">105</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1452,7 +1900,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00093">93</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00106">106</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1470,7 +1918,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Measured current d-axis in local reference frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00088">88</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00101">101</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1488,7 +1936,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Measured current q-axis in local reference frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00090">90</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00103">103</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1512,7 +1960,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00063">63</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00065">65</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1536,7 +1984,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00061">61</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00063">63</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1560,7 +2008,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00062">62</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00064">64</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1586,7 +2034,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Controller gains used to derive the PF-consistent steady-state integrators. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00060">60</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00062">62</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1612,7 +2060,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Preserve explicit controller-state values when supplied by the caller. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00058">58</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00060">60</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1630,7 +2078,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Nominal frequency. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00073">73</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00086">86</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1654,7 +2102,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00067">67</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00069">69</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1840,6 +2288,32 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a7a34b3805fc79574c06df284a57bcb8b" name="a7a34b3805fc79574c06df284a57bcb8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a34b3805fc79574c06df284a57bcb8b">&#9670;&#160;</a></span>mUseSubcomponents</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> CPS::EMT::Ph3::VSIVoltageControlVCO::mUseSubcomponents = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Use direct MNA stamps instead of electrical filter/source children. </p>
+
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00056">56</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+
+</div>
+</div>
 <a id="a90f8a199cc3dd71b6117957662b46d74" name="a90f8a199cc3dd71b6117957662b46d74"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a90f8a199cc3dd71b6117957662b46d74">&#9670;&#160;</a></span>mVcd</h2>
 
@@ -1853,7 +2327,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Measured voltage d-axis in local reference frame Input for VCO </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00083">83</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00096">96</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1895,7 +2369,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00103">103</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00116">116</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1912,7 +2386,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Measured voltage q-axis in local reference frame Input for VCO </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00086">86</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00099">99</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1930,7 +2404,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Voltage d reference. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00075">75</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00088">88</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -1998,7 +2472,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00106">106</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00119">119</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -2014,7 +2488,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00108">108</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00121">121</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -2030,7 +2504,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00107">107</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00120">120</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -2048,7 +2522,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Voltage q reference. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00077">77</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00090">90</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -2064,7 +2538,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00100">100</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00113">113</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -2082,7 +2556,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Voltage as control output after transformation interface. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00097">97</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00110">110</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>
@@ -2134,7 +2608,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Flag for controller usage. </p>
 
-<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00056">56</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html#l00058">58</a> of file <a class="el" href="_e_m_t___ph3___v_s_i_voltage_control_v_c_o_8h_source.html">EMT_Ph3_VSIVoltageControlVCO.h</a>.</p>
 
 </div>
 </div>

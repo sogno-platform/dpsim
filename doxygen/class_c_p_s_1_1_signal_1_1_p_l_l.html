@@ -264,6 +264,11 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a3ced2aa86d51cbd93d416066ec098838" id="r_a3ced2aa86d51cbd93d416066ec098838"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ced2aa86d51cbd93d416066ec098838">mD</a> = Matrix::Zero(2, 2)</td></tr>
 <tr class="memdesc:a3ced2aa86d51cbd93d416066ec098838"><td class="mdescLeft">&#160;</td><td class="mdescRight">matrix D of state space model  <br /></td></tr>
 <tr class="separator:a3ced2aa86d51cbd93d416066ec098838"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd3ac6d47ae51902cccd7ba8d29f23ed" id="r_abd3ac6d47ae51902cccd7ba8d29f23ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd3ac6d47ae51902cccd7ba8d29f23ed">mDiscreteA</a> = Matrix::Zero(2, 2)</td></tr>
+<tr class="memdesc:abd3ac6d47ae51902cccd7ba8d29f23ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trapezoidal discrete maps cached when the simulation step is set.  <br /></td></tr>
+<tr class="separator:abd3ac6d47ae51902cccd7ba8d29f23ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af420e6341befbfd2eb45e98f1310bd5b" id="r_af420e6341befbfd2eb45e98f1310bd5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af420e6341befbfd2eb45e98f1310bd5b">mDiscreteB</a> = Matrix::Zero(2, 2)</td></tr>
+<tr class="separator:af420e6341befbfd2eb45e98f1310bd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_p_s_1_1_sim_signal_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_c_p_s_1_1_sim_signal_comp')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html">CPS::SimSignalComp</a></td></tr>
 <tr class="memitem:a80f942eb4781bf009cc6a2ce72c7ff53 inherit pro_attribs_class_c_p_s_1_1_sim_signal_comp" id="r_a80f942eb4781bf009cc6a2ce72c7ff53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a80f942eb4781bf009cc6a2ce72c7ff53">mBehaviour</a> = <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a854e17a6d4e3e9decaaceac82b61b9fea7303849245d0b30cb7adee8a9910738c">Behaviour::Simulation</a></td></tr>
 <tr class="separator:a80f942eb4781bf009cc6a2ce72c7ff53 inherit pro_attribs_class_c_p_s_1_1_sim_signal_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -349,7 +354,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Composition of A, B, C, D matrices based on <a class="el" href="class_c_p_s_1_1_signal_1_1_p_l_l.html">PLL</a> parameters. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00058">58</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00060">60</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
 
 </div>
 </div>
@@ -378,7 +383,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="class_c_p_s_1_1_sim_signal_comp.html#a39aa9f7a81ecaccbb8933fbdf8c09041">CPS::SimSignalComp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00117">117</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00119">119</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
 
 </div>
 </div>
@@ -408,7 +413,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Setter for initial values. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00042">42</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00044">44</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
 
 </div>
 </div>
@@ -489,7 +494,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>pre step dependencies </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00071">71</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00073">73</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
 
 </div>
 </div>
@@ -519,7 +524,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>add step dependencies </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00087">87</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00089">89</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
 
 </div>
 </div>
@@ -544,7 +549,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>pre step operations </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00081">81</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00083">83</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
 
 </div>
 </div>
@@ -569,7 +574,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>step operations </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00095">95</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8cpp_source.html#l00097">97</a> of file <a class="el" href="_p_l_l_8cpp_source.html">PLL.cpp</a>.</p>
 
 </div>
 </div>
@@ -678,6 +683,56 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="abd3ac6d47ae51902cccd7ba8d29f23ed" name="abd3ac6d47ae51902cccd7ba8d29f23ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd3ac6d47ae51902cccd7ba8d29f23ed">&#9670;&#160;</a></span>mDiscreteA</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::PLL::mDiscreteA = Matrix::Zero(2, 2)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Trapezoidal discrete maps cached when the simulation step is set. </p>
+
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00041">41</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+
+</div>
+</div>
+<a id="af420e6341befbfd2eb45e98f1310bd5b" name="af420e6341befbfd2eb45e98f1310bd5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af420e6341befbfd2eb45e98f1310bd5b">&#9670;&#160;</a></span>mDiscreteB</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> CPS::Signal::PLL::mDiscreteB = Matrix::Zero(2, 2)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00042">42</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+
+</div>
+</div>
 <a id="a5b5b559ddbaa11dd8db390d7f4fb1aee" name="a5b5b559ddbaa11dd8db390d7f4fb1aee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5b5b559ddbaa11dd8db390d7f4fb1aee">&#9670;&#160;</a></span>mInputCurr</h2>
 
@@ -692,7 +747,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current Input. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00048">48</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00051">51</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>
@@ -710,7 +765,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous Input. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00046">46</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00049">49</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>
@@ -728,7 +783,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>This is never explicitely set to reference anything, so the outside code is responsible for setting up the reference. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00043">43</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00046">46</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>
@@ -824,7 +879,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current Output. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00056">56</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00059">59</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>
@@ -842,7 +897,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous Output. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00054">54</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00057">57</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>
@@ -860,7 +915,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Current State. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00052">52</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00055">55</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>
@@ -878,7 +933,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Previous State. </p>
 
-<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00050">50</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_p_l_l_8h_source.html#l00053">53</a> of file <a class="el" href="_p_l_l_8h_source.html">PLL.h</a>.</p>
 
 </div>
 </div>

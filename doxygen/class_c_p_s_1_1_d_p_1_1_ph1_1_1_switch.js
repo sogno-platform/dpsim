@@ -17,6 +17,7 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch =
     [ "mnaCompApplySwitchSystemMatrixStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#acd396898f6656ccbf3cd1ee5fb51e43c", null ],
     [ "mnaCompApplySystemMatrixStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#a532fadb0e3fb142fdde81c8882f7dec2", null ],
     [ "mnaCompInitialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#ad028ec84708681a3152b666ea19b7350", null ],
+    [ "mnaCompInitializeHarm", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#adf1fc28432f12804cf574b761399e616", null ],
     [ "mnaCompPostStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#ad510782897126df58386df55e2afddb9", null ],
     [ "mnaCompUpdateCurrent", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#aa9bac7e667b3166bffbc330deec14c6f", null ],
     [ "mnaCompUpdateVoltage", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_switch.html#ae0862e1231cb670fa3edead3aa78f2ab", null ],

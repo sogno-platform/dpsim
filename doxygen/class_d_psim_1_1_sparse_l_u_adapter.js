@@ -9,5 +9,6 @@ var class_d_psim_1_1_sparse_l_u_adapter =
     [ "partialRefactorize", "class_d_psim_1_1_sparse_l_u_adapter.html#a690c8572475dcf47e29c506fa18bc131", null ],
     [ "preprocessing", "class_d_psim_1_1_sparse_l_u_adapter.html#aede66db4407f1b5bc9a958ed04566b24", null ],
     [ "refactorize", "class_d_psim_1_1_sparse_l_u_adapter.html#a1c512f04a37f13f479e7641c69245320", null ],
-    [ "solve", "class_d_psim_1_1_sparse_l_u_adapter.html#aac83730ecc714199a52099fd293a188b", null ]
+    [ "solve", "class_d_psim_1_1_sparse_l_u_adapter.html#aac83730ecc714199a52099fd293a188b", null ],
+    [ "solveInto", "class_d_psim_1_1_sparse_l_u_adapter.html#a165b4116b55fe91997bbee88087c385b", null ]
 ];

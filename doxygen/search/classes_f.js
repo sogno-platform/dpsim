@@ -11,9 +11,10 @@ var searchData=
   ['resindseries_8',['ResIndSeries',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_res_ind_series.html',1,'CPS::DP::Ph1']]],
   ['resistor_9',['Resistor',['../class_c_p_s_1_1_base_1_1_ph1_1_1_resistor.html',1,'CPS::Base::Ph1::Resistor'],['../class_c_p_s_1_1_base_1_1_ph3_1_1_resistor.html',1,'CPS::Base::Ph3::Resistor'],['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html',1,'CPS::DP::Ph1::Resistor'],['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_resistor.html',1,'CPS::DP::Ph3::Resistor'],['../class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_resistor.html',1,'CPS::EMT::DC::Resistor'],['../class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html',1,'CPS::EMT::Ph1::Resistor'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_resistor.html',1,'CPS::EMT::Ph3::Resistor'],['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html',1,'CPS::SP::Ph1::Resistor'],['../class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html',1,'CPS::SP::Ph3::Resistor']]],
   ['rgb_10',['Rgb',['../struct_c_p_s_1_1_utils_1_1_rgb.html',1,'CPS::Utils']]],
-  ['root_11',['Root',['../class_d_psim_1_1_scheduler_1_1_root.html',1,'DPsim::Scheduler']]],
-  ['rxline_12',['RXLine',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html',1,'CPS::SP::Ph1']]],
-  ['rxline_13',['RxLine',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html',1,'CPS::DP::Ph1::RxLine'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html',1,'CPS::EMT::Ph3::RxLine'],['../class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html',1,'CPS::SP::Ph3::RxLine']]],
-  ['rxload_14',['RXLoad',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html',1,'CPS::DP::Ph1::RXLoad'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html',1,'CPS::EMT::Ph3::RXLoad']]],
-  ['rxloadswitch_15',['RXLoadSwitch',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html',1,'CPS::DP::Ph1']]]
+  ['rightvectorstamp_11',['RightVectorStamp',['../struct_d_psim_1_1_mna_solver_direct_1_1_right_vector_stamp.html',1,'DPsim::MnaSolverDirect']]],
+  ['root_12',['Root',['../class_d_psim_1_1_scheduler_1_1_root.html',1,'DPsim::Scheduler']]],
+  ['rxline_13',['RXLine',['../class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html',1,'CPS::SP::Ph1']]],
+  ['rxline_14',['RxLine',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html',1,'CPS::DP::Ph1::RxLine'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html',1,'CPS::EMT::Ph3::RxLine'],['../class_c_p_s_1_1_s_p_1_1_ph3_1_1_rx_line.html',1,'CPS::SP::Ph3::RxLine']]],
+  ['rxload_15',['RXLoad',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html',1,'CPS::DP::Ph1::RXLoad'],['../class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html',1,'CPS::EMT::Ph3::RXLoad']]],
+  ['rxloadswitch_16',['RXLoadSwitch',['../class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load_switch.html',1,'CPS::DP::Ph1']]]
 ];

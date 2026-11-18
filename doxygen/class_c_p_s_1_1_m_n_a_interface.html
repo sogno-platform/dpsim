@@ -137,6 +137,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3753ef48000d7fda7b940f8ea627e30d" id="r_a3753ef48000d7fda7b940f8ea627e30d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3753ef48000d7fda7b940f8ea627e30d">mnaApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector)=0</td></tr>
 <tr class="memdesc:a3753ef48000d7fda7b940f8ea627e30d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stamps right side (source) vector.  <br /></td></tr>
 <tr class="separator:a3753ef48000d7fda7b940f8ea627e30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8eddb2e8ba54f907e9b31a4b2864f2e" id="r_ad8eddb2e8ba54f907e9b31a4b2864f2e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8eddb2e8ba54f907e9b31a4b2864f2e">mnaHasCompactRightSideVectorStamp</a> () const</td></tr>
+<tr class="separator:ad8eddb2e8ba54f907e9b31a4b2864f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bca306b3f5f06abcba7a173ca65c442" id="r_a8bca306b3f5f06abcba7a173ca65c442"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8bca306b3f5f06abcba7a173ca65c442">mnaAddCompactRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;)</td></tr>
+<tr class="separator:a8bca306b3f5f06abcba7a173ca65c442"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd49b4fa045f84364d3ac9da8f5ad61b" id="r_afd49b4fa045f84364d3ac9da8f5ad61b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd49b4fa045f84364d3ac9da8f5ad61b">mnaWriteProfile</a> (std::ostream &amp;) const</td></tr>
+<tr class="memdesc:afd49b4fa045f84364d3ac9da8f5ad61b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write optional component-internal timing rows into the solver profile.  <br /></td></tr>
+<tr class="separator:afd49b4fa045f84364d3ac9da8f5ad61b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadd6fae66474b5c63b5156122c461605" id="r_aadd6fae66474b5c63b5156122c461605"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadd6fae66474b5c63b5156122c461605">mnaUpdateVoltage</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector)=0</td></tr>
 <tr class="memdesc:aadd6fae66474b5c63b5156122c461605"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update interface voltage from MNA system result.  <br /></td></tr>
 <tr class="separator:aadd6fae66474b5c63b5156122c461605"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,7 +182,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface to be implemented by all models used by the MNA solver. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00018">18</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00020">20</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a99daa13babcb894a6f878fc889faa0a7" name="a99daa13babcb894a6f878fc889faa0a7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a99daa13babcb894a6f878fc889faa0a7">&#9670;&#160;</a></span>List</h2>
@@ -189,7 +196,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00021">21</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00023">23</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
 
 </div>
 </div>
@@ -205,7 +212,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00020">20</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00022">22</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
 
 </div>
 </div>
@@ -237,7 +244,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html#abf403a79e23af776abb026dc443b84b2">CPS::DP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_p_q_load_c_s.html#a916b4273ccfebed943c2f2c2979113b7">CPS::DP::Ph1::PQLoadCS</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_rx_line.html#abca476ec430f52f35c7abbe7ee3adc38">CPS::DP::Ph1::RxLine</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_r_x_load.html#af104d35a2f803aa0177ae06e7d055e09">CPS::DP::Ph1::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_s_v_c.html#a3619b1cdd52c87c9dd918c0f9fb77643">CPS::DP::Ph1::SVC</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_ideal.html#a3ac938c8db2b7f8a307f79b2f00428ec">CPS::DP::Ph1::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#aac75ff5b7c201e84d65dbb247cdf2abc">CPS::DP::Ph1::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_transformer.html#a679284758a4f9b9f84914c638e946057">CPS::DP::Ph1::Transformer</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_pi_line.html#aaa41e75303abd4985c04581b37ebc347">CPS::DP::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line.html#aa2f2a340a9db62ebbd9c6b89ddc83e34">CPS::EMT::DC::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_pi_line.html#a8323c4419c5125780b96b833513fe917">CPS::EMT::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_half_decoupling_line.html#a5d870e9bf106de7fb021102dae5e83c2">CPS::EMT::Ph3::HalfDecouplingLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#ad54f4a3f622775c3ab6d2835448f268e">CPS::EMT::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#ac29da6211a1d77de29c35757950a8d59">CPS::EMT::Ph3::RxLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#a34fcf4db94272f8b1c79985116f6bf3b">CPS::EMT::Ph3::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_ideal.html#ac2c3080cd78dd5ece40de1ceb8574cb9">CPS::EMT::Ph3::SynchronGeneratorIdeal</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_tr_stab.html#abc3e5a512bb33f246248eb49218b7e3c">CPS::EMT::Ph3::SynchronGeneratorTrStab</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#a9248b3b5a9c0b25262bf641b365e925f">CPS::EMT::Ph3::Transformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_load.html#a9dcc5dab583da3edb1340a7a07369724">CPS::SP::Ph1::Load</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html#a01c5724378081a047ffde56b474587a4">CPS::SP::Ph1::PiLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_r_x_line.html#a4b91fa33bb51df0aabc7d4a6ef71d374">CPS::SP::Ph1::RXLine</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_solid_state_transformer.html#a3de91f856ead2586da549b9f17f2259d">CPS::SP::Ph1::SolidStateTransformer</a>, <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator_tr_stab.html#a86bdf87084a52d70da7482212b4b6eea">CPS::SP::Ph1::SynchronGeneratorTrStab</a>, and <a class="el" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_transformer.html#ac1788a9cf382633de211895844afbbda">CPS::SP::Ph1::Transformer</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00025">25</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00027">27</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
 
 </div>
 </div>
@@ -265,6 +272,36 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a24fa222b6fc7a3152af5d181f87215cf">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a24fa222b6fc7a3152af5d181f87215cf">CPS::MNASimPowerComp&lt; Complex &gt;</a>, and <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a24fa222b6fc7a3152af5d181f87215cf">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a8bca306b3f5f06abcba7a173ca65c442" name="a8bca306b3f5f06abcba7a173ca65c442"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bca306b3f5f06abcba7a173ca65c442">&#9670;&#160;</a></span>mnaAddCompactRightSideVectorStamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNAInterface::mnaAddCompactRightSideVectorStamp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Add this component's current RHS contribution to the global vector. Only called when <a class="el" href="#ad8eddb2e8ba54f907e9b31a4b2864f2e">mnaHasCompactRightSideVectorStamp()</a> is true. </p>
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aa2baa1974954d6bbfb8a134201792d71">CPS::CompositePowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aa2baa1974954d6bbfb8a134201792d71">CPS::CompositePowerComp&lt; Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#aa2baa1974954d6bbfb8a134201792d71">CPS::CompositePowerComp&lt; Real &gt;</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html#a9f6ef44752a6bfbf87ac38566e38f769">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_current_source.html#ad2259c97a407755ec47d328ccbbfe2a6">CPS::DP::Ph1::CurrentSource</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#a5a0dd7a049f01239ad505afb08b2a406">CPS::DP::Ph3::Capacitor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_current_source.html#aca89d3d4fd89f2208bbf68fb86673946">CPS::DP::Ph3::CurrentSource</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#a8ce2688036a9cbf52a33baab9438ce28">CPS::DP::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html#a7b70a86cf946d57e072b0b4331cb3d16">CPS::DP::Ph3::SynchronGenerator4OrderVBR</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a122d9e3fd9d98fd4c411e44a81a387ea">CPS::DP::Ph3::VoltageSource</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#acbcbe54fbad13aba8f5066a86416bcef">CPS::DP::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line.html#a9385eb50a9327910710f30fa633097f7">CPS::EMT::DC::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html#a1fbf23e4d41d5e4cc02b86c909a53017">CPS::EMT::Ph1::CurrentSource</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#a978cf41441c91231a925d877a31e8299">CPS::EMT::Ph3::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#a2a145a7fc5bef472b1adae385bd402e8">CPS::EMT::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html#a13d63a8c0ef36be31cf6e96471271304">CPS::EMT::Ph3::PQLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#a8810e775cb0d8687975cc9a2f89bb1cc">CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#ac8900b684fc8a6d1ae6a69f22b8bf781">CPS::EMT::Ph3::RxLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#ace50da44e0dfb7bd213712787ded36ac">CPS::EMT::Ph3::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#a875da1303513d3fc8e99e80df7ee45a3">CPS::EMT::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#accf66041bc4f80488c31e1c1e29d87b5">CPS::EMT::Ph3::Transformer</a>, and <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#ac4268ed9c3c7fcd2e2c52bc6aca74d2f">CPS::EMT::SSNComp</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00041">41</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
 
 </div>
 </div>
@@ -495,6 +532,36 @@ Public Member Functions</h2></td></tr>
 <p>Stamps system matrix considering the frequency index. </p>
 
 <p>Implemented in <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ada19496d2d0f2a2d72901cd0721c2ee8">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ada19496d2d0f2a2d72901cd0721c2ee8">CPS::MNASimPowerComp&lt; Complex &gt;</a>, and <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#ada19496d2d0f2a2d72901cd0721c2ee8">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
+
+</div>
+</div>
+<a id="ad8eddb2e8ba54f907e9b31a4b2864f2e" name="ad8eddb2e8ba54f907e9b31a4b2864f2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8eddb2e8ba54f907e9b31a4b2864f2e">&#9670;&#160;</a></span>mnaHasCompactRightSideVectorStamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> CPS::MNAInterface::mnaHasCompactRightSideVectorStamp </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Return true when the direct MNA solver can accumulate this component's contribution row-wise instead of adding its full-size dense stamp. </p>
+
+<p>Reimplemented in <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a675c70fc6838273a8b1d6915f2ca99af">CPS::CompositePowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a675c70fc6838273a8b1d6915f2ca99af">CPS::CompositePowerComp&lt; Complex &gt;</a>, <a class="el" href="class_c_p_s_1_1_composite_power_comp.html#a675c70fc6838273a8b1d6915f2ca99af">CPS::CompositePowerComp&lt; Real &gt;</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_current_source.html#a2a014b250558050286ce483dc8ad8e17">CPS::DP::Ph1::CurrentSource</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html#a70fa9bf64b6031b3eb8a1534987b342a">CPS::DP::Ph3::Capacitor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_current_source.html#ad4e6493db0fdafefc71899a71e73954b">CPS::DP::Ph3::CurrentSource</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html#aa51949660e69d63756de754424a9f62d">CPS::DP::Ph3::Inductor</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html#afb6870ff08da0e123a0aff72ab30069a">CPS::DP::Ph3::SynchronGenerator4OrderVBR</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_voltage_source.html#a0fbd3a3af7d681535eb32124a29fa318">CPS::DP::Ph3::VoltageSource</a>, <a class="el" href="class_c_p_s_1_1_d_p_1_1_s_s_n_comp.html#af7b3c020ccac9133211e01ce6b8f8f7c">CPS::DP::SSNComp</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line.html#a091d5761dc06fd79ca0ae898d639d32c">CPS::EMT::DC::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html#abc0eea20863009d86c6a879f70866c27">CPS::EMT::Ph1::CurrentSource</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#a7fd9b1ec049691d09fb6a7ba502a5991">CPS::EMT::Ph3::NetworkInjection</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_pi_line.html#a8a82047f9db084232bd282c61425bbdf">CPS::EMT::Ph3::PiLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html#aee380f9458f6840d88553f49dffc336e">CPS::EMT::Ph3::PQLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html#af0bdc6bcd2e8ff2d34906aad43eaa0fc">CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_rx_line.html#a49a7e3a5d7f42220576497b1bfc11910">CPS::EMT::Ph3::RxLine</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_r_x_load.html#a3e254b6e46d3a146b2da3b03be997b16">CPS::EMT::Ph3::RXLoad</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html#aee9786528ceb34f126c91709ba29374c">CPS::EMT::Ph3::SynchronGeneratorVBR</a>, <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#acc80f6f1333f286f397b366a6516b9fa">CPS::EMT::Ph3::Transformer</a>, and <a class="el" href="class_c_p_s_1_1_e_m_t_1_1_s_s_n_comp.html#ae535619d560efbe7dfad68eb26f8c806">CPS::EMT::SSNComp</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00038">38</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
 
 </div>
 </div>
@@ -754,6 +821,35 @@ Public Member Functions</h2></td></tr>
 <p>Update interface voltage from MNA system result. </p>
 
 <p>Implemented in <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a81c668cf843c9deaa789bd2f0a4be038">CPS::MNASimPowerComp&lt; VarType &gt;</a>, <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a81c668cf843c9deaa789bd2f0a4be038">CPS::MNASimPowerComp&lt; Complex &gt;</a>, and <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a81c668cf843c9deaa789bd2f0a4be038">CPS::MNASimPowerComp&lt; Real &gt;</a>.</p>
+
+</div>
+</div>
+<a id="afd49b4fa045f84364d3ac9da8f5ad61b" name="afd49b4fa045f84364d3ac9da8f5ad61b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd49b4fa045f84364d3ac9da8f5ad61b">&#9670;&#160;</a></span>mnaWriteProfile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CPS::MNAInterface::mnaWriteProfile </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write optional component-internal timing rows into the solver profile. </p>
+
+<p class="definition">Definition at line <a class="el" href="_m_n_a_interface_8h_source.html#l00043">43</a> of file <a class="el" href="_m_n_a_interface_8h_source.html">MNAInterface.h</a>.</p>
 
 </div>
 </div>

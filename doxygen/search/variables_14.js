@@ -5,10 +5,12 @@ var searchData=
   ['values_2',['values',['../structdpsim__csr__matrix.html#a9c79ea6d8c91199feb877b993032f120',1,'dpsim_csr_matrix']]],
   ['var1_3',['Var1',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#a286fa9764195e3517cfabb037071c3b2',1,'CPS::DP::Ph3::SynchronGeneratorVBR']]],
   ['var2_4',['Var2',['../class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_v_b_r.html#ad456ce7e8d814315f2ab5f73307acaf5',1,'CPS::DP::Ph3::SynchronGeneratorVBR']]],
-  ['vector_5',['vector',['../struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#a7d95bd81de88f2c0962f1b5fb5af82ab',1,'DPsim::GpuDenseAdapter::GpuData']]],
-  ['villasaffinity_6',['villasAffinity',['../class_d_psim_1_1_interface_worker_villas.html#ac5eb0fdc843dc6d7b7a0130bfe3ba4c7',1,'DPsim::InterfaceWorkerVillas']]],
-  ['villashugepages_7',['villasHugePages',['../class_d_psim_1_1_interface_worker_villas.html#ad08af6c02b7a8634979ec5f982cc1824',1,'DPsim::InterfaceWorkerVillas']]],
-  ['villaspriority_8',['villasPriority',['../class_d_psim_1_1_interface_worker_villas.html#adaf22ba019ce9a4ef9325c5b99a432db',1,'DPsim::InterfaceWorkerVillas']]],
-  ['vs_5fmax_9',['Vs_max',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a0d551f5115118c96f10931618271862b',1,'CPS::Signal::PSS1AParameters']]],
-  ['vs_5fmin_10',['Vs_min',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a228a2fd6d94f097748ab7d3157673cd8',1,'CPS::Signal::PSS1AParameters']]]
+  ['vdq0_5',['vdq0',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html#a68287310fd8a57199ea2d49f8c5f572b',1,'CPS::EMT::Ph3::HipSG4State']]],
+  ['vector_6',['vector',['../struct_d_psim_1_1_gpu_dense_adapter_1_1_gpu_data.html#a7d95bd81de88f2c0962f1b5fb5af82ab',1,'DPsim::GpuDenseAdapter::GpuData']]],
+  ['villasaffinity_7',['villasAffinity',['../class_d_psim_1_1_interface_worker_villas.html#ac5eb0fdc843dc6d7b7a0130bfe3ba4c7',1,'DPsim::InterfaceWorkerVillas']]],
+  ['villashugepages_8',['villasHugePages',['../class_d_psim_1_1_interface_worker_villas.html#ad08af6c02b7a8634979ec5f982cc1824',1,'DPsim::InterfaceWorkerVillas']]],
+  ['villaspriority_9',['villasPriority',['../class_d_psim_1_1_interface_worker_villas.html#adaf22ba019ce9a4ef9325c5b99a432db',1,'DPsim::InterfaceWorkerVillas']]],
+  ['voltagedq0_10',['voltageDq0',['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_hip_s_g4_state.html#ac49687fbabc6666523453b3d7014dec8',1,'CPS::EMT::Ph3::HipSG4State::voltageDq0'],['../struct_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r_1_1_metal_device_data.html#a77a3a89830ee92e2eca2d9c1391edc2c',1,'CPS::EMT::Ph3::SynchronGenerator4OrderVBR::MetalDeviceData::voltageDq0']]],
+  ['vs_5fmax_11',['Vs_max',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a0d551f5115118c96f10931618271862b',1,'CPS::Signal::PSS1AParameters']]],
+  ['vs_5fmin_12',['Vs_min',['../class_c_p_s_1_1_signal_1_1_p_s_s1_a_parameters.html#a228a2fd6d94f097748ab7d3157673cd8',1,'CPS::Signal::PSS1AParameters']]]
 ];

@@ -1,7 +1,9 @@
 var class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection =
 [
     [ "NetworkInjection", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a2a77851c6164276f751f4d48b39755fd", null ],
+    [ "NetworkInjection", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a2f6d43ec9885a141cce7d3214a67ffb4", null ],
     [ "NetworkInjection", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#ace1ff9ae23ccb48609bf0380409fcb68", null ],
+    [ "NetworkInjection", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a25617148b84c4de67d3011b41bd28dce", null ],
     [ "NetworkInjection", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a5def126e002a9313789646a1194ce348", null ],
     [ "clone", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a053f85def1c9b60ab6de17f9d0664f20", null ],
     [ "daeInitialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a1d1eb776f97282d2a95ca102e1b173f6", null ],
@@ -12,6 +14,7 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection =
     [ "mnaParentAddPostStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a5d4c2ad79fdcdd3a9f5dd85afc937136", null ],
     [ "mnaParentAddPreStepDependencies", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#ab7a8a9bce1fa7fd4b8fb6d146ed3bfa4", null ],
     [ "mnaParentApplyRightSideVectorStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a62492c133401eaa5f01565c968347834", null ],
+    [ "mnaParentApplySystemMatrixStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#ac988da49641509dcd9e413d0bf97ca09", null ],
     [ "mnaParentPostStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#aef42652f78f79c0ebd5b7ad5c5f3afac", null ],
     [ "mnaParentPreStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a56a6580e12587f094b3737de4c0bc98f", null ],
     [ "setParameters", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_network_injection.html#a50920784a323ec68a5766a6a66ce82e6", null ],

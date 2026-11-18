@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 1385;
+var viewWidth = 1391;
 var viewHeight = 178;
 var sectionId = 'dynsection-0';
 </script>
@@ -67,10 +67,10 @@ var sectionId = 'dynsection-0';
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1376.75,-125.5 1202.5,-125.5 1202.5,-89 1376.75,-89 1376.75,-125.5"/>
-<text text-anchor="start" x="1210.5" y="-112" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGenerator</text>
-<text text-anchor="middle" x="1289.62" y="-97.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQODE</text>
+<g id="a_Node000011"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1382.75,-152.5 1202.5,-152.5 1202.5,-116 1382.75,-116 1382.75,-152.5"/>
+<text text-anchor="start" x="1210.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGenerator4</text>
+<text text-anchor="middle" x="1292.62" y="-124.75" font-family="Helvetica,sans-Serif" font-size="10.00">OrderVBR</text>
 </a>
 </g>
 </g>
@@ -78,18 +78,18 @@ var sectionId = 'dynsection-0';
 <g id="edge13_Node000001_Node000011" class="edge">
 <title>Node1&#45;&gt;Node11</title>
 <g id="a_edge13_Node000001_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1172.97,-92.31C1182.71,-93.57 1192.53,-94.84 1202.1,-96.07"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1173.47,-88.84 1163.1,-91.03 1172.57,-95.79 1173.47,-88.84"/>
+<path fill="none" stroke="#63b8ff" d="M1129.31,-93.63C1156.05,-100.32 1188.21,-108.37 1216.82,-115.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1130.23,-90.25 1119.68,-91.21 1128.53,-97.04 1130.23,-90.25"/>
 </a>
 </g>
 </g>
 <!-- Node12 -->
 <g id="Node000012" class="node">
 <title>Node12</title>
-<g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_trapez.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1376.75,-70.5 1202.5,-70.5 1202.5,-34 1376.75,-34 1376.75,-70.5"/>
-<text text-anchor="start" x="1210.5" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGenerator</text>
-<text text-anchor="middle" x="1289.62" y="-42.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQTrapez</text>
+<g id="a_Node000012"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1379.75,-97.5 1205.5,-97.5 1205.5,-61 1379.75,-61 1379.75,-97.5"/>
+<text text-anchor="start" x="1213.5" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGenerator</text>
+<text text-anchor="middle" x="1292.62" y="-69.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQODE</text>
 </a>
 </g>
 </g>
@@ -97,8 +97,27 @@ var sectionId = 'dynsection-0';
 <g id="edge14_Node000001_Node000012" class="edge">
 <title>Node1&#45;&gt;Node12</title>
 <g id="a_edge14_Node000001_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1176.33,-66.24C1184.94,-65.17 1193.58,-64.09 1202.03,-63.04"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1176.05,-62.75 1166.56,-67.46 1176.91,-69.69 1176.05,-62.75"/>
+<path fill="none" stroke="#63b8ff" d="M1177.1,-79.25C1186.47,-79.25 1195.88,-79.25 1205.07,-79.25"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1177.22,-75.75 1167.22,-79.25 1177.22,-82.75 1177.22,-75.75"/>
+</a>
+</g>
+</g>
+<!-- Node13 -->
+<g id="Node000013" class="node">
+<title>Node13</title>
+<g id="a_Node000013"><a xlink:href="class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_trapez.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="1379.75,-42.5 1205.5,-42.5 1205.5,-6 1379.75,-6 1379.75,-42.5"/>
+<text text-anchor="start" x="1213.5" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">CPS::DP::Ph3::SynchronGenerator</text>
+<text text-anchor="middle" x="1292.62" y="-14.75" font-family="Helvetica,sans-Serif" font-size="10.00">DQTrapez</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node13 -->
+<g id="edge15_Node000001_Node000013" class="edge">
+<title>Node1&#45;&gt;Node13</title>
+<g id="a_edge15_Node000001_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1129.31,-64.87C1156.05,-58.18 1188.21,-50.13 1216.82,-42.97"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1128.53,-61.46 1119.68,-67.29 1130.23,-68.25 1128.53,-61.46"/>
 </a>
 </g>
 </g>

@@ -3,7 +3,6 @@ var class_c_p_s_1_1_signal_1_1_f_i_r_filter =
     [ "Step", "class_c_p_s_1_1_signal_1_1_f_i_r_filter_1_1_step.html", "class_c_p_s_1_1_signal_1_1_f_i_r_filter_1_1_step" ],
     [ "FIRFilter", "class_c_p_s_1_1_signal_1_1_f_i_r_filter.html#a8b876899d487e806c91931a924efdf98", null ],
     [ "FIRFilter", "class_c_p_s_1_1_signal_1_1_f_i_r_filter.html#a7cd8ba4b0a9ee3b15053c1c76cd5321e", null ],
-    [ "getIndex", "class_c_p_s_1_1_signal_1_1_f_i_r_filter.html#ac60964a30654888f29cec9cbaad68f4c", null ],
     [ "getTasks", "class_c_p_s_1_1_signal_1_1_f_i_r_filter.html#ac7817cf96959943d6e7323c369012a97", null ],
     [ "incrementIndex", "class_c_p_s_1_1_signal_1_1_f_i_r_filter.html#afb85d445d549b97ff464282e05621e22", null ],
     [ "initialize", "class_c_p_s_1_1_signal_1_1_f_i_r_filter.html#aab14231634412fa5b0d14c4b049d963e", null ],

@@ -27,6 +27,8 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m =
     [ "mEdqtPrevStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a6fb41a7e9d15edeba23582f8ee236a12", null ],
     [ "mEh", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a68873c640e3207ca6336131f171503d2", null ],
     [ "mEhMod", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a790f5db2c8fa38e90bc2c08f46eaba05", null ],
+    [ "mIdpResistanceProduct", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a154134527484910dae116cc0399a6af7", null ],
+    [ "mIdpScratch", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a05f13ef9b9111da9e96b4c9f69945d16", null ],
     [ "mIdpTwoPrevStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a8f96de16e78bf22ce114f7a5b563deaf", null ],
     [ "mIhMod", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#a274a33ac27d6b421a40b5a5da0f2b77f", null ],
     [ "mResistanceMatrixVarying", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html#ae3781cb69d0604986b5e4e194d948696", null ],

@@ -27,6 +27,7 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor =
     [ "mnaTearApplyVoltageStamp", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a2734b6db40e4bd5e138e57444cc1103c", null ],
     [ "mnaTearInitialize", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a7a538ada99b1a3e10757cdb76a6b1def", null ],
     [ "mnaTearPostStep", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a86efe64bfd0d7288717389a57aae35bd", null ],
+    [ "updateInductance", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a5ffba68df4a83bde5a7b73b0a7c0f519", null ],
     [ "mEquivCond", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a2ae1b042c7da54cfb11c8db5b8c7e553", null ],
     [ "mEquivCurrent", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#a8427ae4ddface940af9ddf3b33d5739d", null ],
     [ "mPrevCurrFac", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html#ac70db49a83e1744f3af331aac8b29455", null ]
