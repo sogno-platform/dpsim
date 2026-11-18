@@ -40,13 +40,14 @@ void MnaSolver<VarType>::setSystem(const CPS::SystemTopology &system) {
 template <typename VarType>
 void MnaSolver<VarType>::addRightVectorStamp(
     const CPS::MNAInterface::Ptr &component) {
-  const Matrix &stamp = component->getRightVector()->get();
+  auto rightVector = component->getRightVector();
+  const Matrix &stamp = rightVector->get();
   if (stamp.size() == 0)
     return;
 
   std::vector<UInt> indices;
   const Bool hasIndices = component->getRightVectorStampIndices(indices);
-  mRightVectorStamps.push_back(&stamp);
+  mRightVectorStamps.push_back(std::move(rightVector));
   mRightVectorStampIndices.push_back(std::move(indices));
   mRightVectorStampUsesIndices.push_back(hasIndices);
 }
@@ -56,7 +57,7 @@ void MnaSolver<VarType>::addRightVectorStamps(Matrix &rightVector,
                                               Int stampColumn) const {
   for (std::size_t stampIdx = 0; stampIdx < mRightVectorStamps.size();
        ++stampIdx) {
-    const Matrix &stamp = *mRightVectorStamps[stampIdx];
+    const Matrix &stamp = mRightVectorStamps[stampIdx]->get();
     if (mRightVectorStampUsesIndices[stampIdx]) {
       for (UInt row : mRightVectorStampIndices[stampIdx]) {
         if (stampColumn < 0)

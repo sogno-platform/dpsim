@@ -85,7 +85,8 @@ protected:
   /// Source vector of known quantities
   Matrix mRightSideVector;
   /// List of all right side vector contributions
-  std::vector<const Matrix *> mRightVectorStamps;
+  // Keep the source attribute alive for as long as its RHS stamp is used.
+  std::vector<CPS::Attribute<Matrix>::Ptr> mRightVectorStamps;
   /// Sparse row indices for stamps that can provide their structural support.
   std::vector<std::vector<UInt>> mRightVectorStampIndices;
   /// Whether each RHS stamp has valid sparse row indices.

@@ -296,8 +296,8 @@ void MnaSolverDirect<VarType>::solveWithSystemMatrixRecomputation(
       recomputeSystemMatrix(time);
       mVariableComponentChanged = true;
       mRightSideVector.setZero();
-      for (auto stamp : mRightVectorStamps)
-        mRightSideVector += *stamp;
+      for (const auto &stamp : mRightVectorStamps)
+        mRightSideVector += stamp->get();
       **mLeftSideVector =
           mDirectLinearSolverVariableSystemMatrix->solve(mRightSideVector);
     }
@@ -534,12 +534,13 @@ void MnaSolverDirect<VarType>::prepareCompactRightVectorStamps() {
   // this ordered list directly instead of hashing every RHS stamp each step.
   mRightVectorStampOperations.clear();
   mRightVectorStampOperations.reserve(mRightVectorStamps.size());
-  for (const Matrix *stamp : mRightVectorStamps) {
-    const auto compact = compactStamps.find(stamp);
+  for (const auto &stamp : mRightVectorStamps) {
+    const Matrix *stampMatrix = &stamp->get();
+    const auto compact = compactStamps.find(stampMatrix);
     if (compact != compactStamps.end())
       mRightVectorStampOperations.push_back({nullptr, compact->second});
     else
-      mRightVectorStampOperations.push_back({stamp, nullptr});
+      mRightVectorStampOperations.push_back({stampMatrix, nullptr});
   }
 }
 
@@ -734,8 +735,8 @@ void MnaSolverDirect<VarType>::solveWithHarmonics(Real time, Int timeStepCount,
   mRightSideVectorHarm[freqIdx].setZero();
 
   // Sum of right side vectors (computed by the components' pre-step tasks)
-  for (auto stamp : mRightVectorStamps)
-    mRightSideVectorHarm[freqIdx] += stamp->col(freqIdx);
+  for (const auto &stamp : mRightVectorStamps)
+    mRightSideVectorHarm[freqIdx] += stamp->get().col(freqIdx);
 
   // Frequency solve tasks execute concurrently. Derive the switch-state key
   // locally instead of mutating the shared mCurrentSwitchStatus bitset from
