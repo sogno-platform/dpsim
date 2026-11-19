@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2026 Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+# SPDX-License-Identifier: MPL-2.0
+
+name: Cache Binder image
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prebuild:
+    name: Prebuild on mybinder.org
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the revision
+        uses: actions/checkout@v6
+
+      - name: Ask BinderHub to build and cache this revision
+        uses: jupyterhub/repo2docker-action@master
+        with:
+          NO_PUSH: true
+          MYBINDERORG_TAG: ${{ github.ref_name }}
