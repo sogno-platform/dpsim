@@ -22,6 +22,7 @@ assert os.access(EXAMPLES / "DP_VS_RL1", os.X_OK), "DP_VS_RL1 is not executable"
 import dpsim  # noqa: E402
 import dpsimpy  # noqa: E402
 
+assert Path(dpsim.__file__).resolve() == BUILD / "dpsim" / "__init__.py"
 
 # Run a short compiled example from the same repository root notebooks use.
 subprocess.run([str(EXAMPLES / "DP_VS_RL1")], cwd=ROOT, check=True)
