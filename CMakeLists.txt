@@ -1,7 +1,7 @@
 # Please keep 3.14 as minimum requirement for building on OPAL-RT targets
 cmake_minimum_required(VERSION 3.14...3.23)
 project(DPsim
-		VERSION 1.4.0 # x-release-please-version
+		VERSION 1.5.0 # x-release-please-version
 		DESCRIPTION "C++ Power System Simulation Library"
 		LANGUAGES CXX
 		HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
