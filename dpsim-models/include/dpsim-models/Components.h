@@ -72,11 +72,9 @@
 #include <dpsim-models/DP/DP_Ph1_Shunt.h>
 #include <dpsim-models/DP/DP_Ph1_Switch.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator3OrderVBR.h>
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator5OrderVBR.h>
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6aOrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator6bOrderVBR.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGeneratorIdeal.h>
@@ -169,7 +167,6 @@
 #include <dpsim-models/EMT/EMT_Ph3_SeriesResistor.h>
 #include <dpsim-models/EMT/EMT_Ph3_SeriesSwitch.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator3OrderVBR.h>
-#include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator4OrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator5OrderVBR.h>
 #include <dpsim-models/EMT/EMT_Ph3_SynchronGenerator6aOrderVBR.h>

@@ -35,6 +35,7 @@ void EMT::VTypeSSNComp::initializeFromNodesAndTerminals(Real frequency) {
   MatrixComp uInit = buildInitialInputFromNodes(frequency);
   MatrixComp xInit = calculateSteadyStateStateFromInput(uInit, frequency);
   MatrixComp yInit = calculateSteadyStateOutputFromInput(xInit, uInit);
+  yInit += Complex(0., 2. * PI * frequency) * mD1.cast<Complex>() * uInit;
 
   mX->get() = xInit.real();
   *mIntfVoltageValue = uInit.real();

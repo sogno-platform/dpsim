@@ -152,7 +152,7 @@ void MnaSolverPlugin<VarType>::solve(Real time, Int timeStepCount) {
   // Add together the right side vector (computed by the components'
   // pre-step tasks)
   for (const auto &stamp : this->mRightVectorStamps)
-    this->mRightSideVector += *stamp;
+    this->mRightSideVector += stamp->get();
 
   if (!this->mIsInInitialization)
     this->updateSwitchStatus();

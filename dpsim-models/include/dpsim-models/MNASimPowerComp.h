@@ -16,6 +16,20 @@ private:
   Bool mHasPreStep;
   Bool mHasPostStep;
 
+protected:
+  /// Cache all non-ground terminal rows used by nodal RHS stamps.
+  void appendTerminalRightVectorStampIndices(std::vector<UInt> &indices,
+                                             UInt phasesPerTerminal) {
+    indices.clear();
+    for (UInt terminalIdx = 0; terminalIdx < this->terminalNumber();
+         ++terminalIdx) {
+      if (!this->terminalNotGrounded(terminalIdx))
+        continue;
+      for (UInt phase = 0; phase < phasesPerTerminal; ++phase)
+        indices.push_back(this->matrixNodeIndex(terminalIdx, phase));
+    }
+  }
+
 public:
   using Type = VarType;
   using Ptr = std::shared_ptr<MNASimPowerComp<VarType>>;

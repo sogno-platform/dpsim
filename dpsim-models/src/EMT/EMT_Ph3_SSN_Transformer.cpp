@@ -9,51 +9,16 @@
 
 using namespace CPS;
 
-namespace {
-constexpr Int kVoltage0 = 0;
-constexpr Int kCurrent0 = 3;
-constexpr Int kVoltage1 = 6;
-constexpr Int kCurrent1 = 9;
-constexpr Int kVoltageMag = 12;
-constexpr Int kCurrentMag = 15;
-
-using PhaseVector = Eigen::Matrix<Real, 3, 1>;
-using PhaseVectorComp = Eigen::Matrix<Complex, 3, 1>;
-
-PhaseVectorComp phaseVoltage(Complex phaseA) {
-  PhaseVectorComp voltage;
-  voltage(0) = phaseA;
-  voltage(1) = phaseA * SHIFT_TO_PHASE_B;
-  voltage(2) = phaseA * SHIFT_TO_PHASE_C;
-  return voltage;
-}
-} // namespace
-
 EMT::Ph3::SSN::Transformer::Transformer(String uid, String name,
                                         Logger::Level logLevel,
                                         Bool withResistiveLosses)
     : MultiPortVTypeSSNComp(uid, name, logLevel),
-      Base::Ph3::Transformer(mAttributes), mStateValue(&mX->get()),
+      Base::Ph3::Transformer(mAttributes),
       mSeriesResistanceHalf(Matrix::Zero(3, 3)),
       mSeriesInductanceHalf(Matrix::Zero(3, 3)),
-      mInductorAdmittance(Matrix::Zero(3, 3)),
-      mSeriesSystemInverse(Matrix::Identity(3, 3)),
-      mSeriesAdmittance(Matrix::Zero(3, 3)),
-      mMagnetizingInductorAdmittance(Matrix::Zero(3, 3)),
-      mMagnetizingConductance(Matrix::Zero(3, 3)),
-      mMidpointInverse(Matrix::Zero(3, 3)),
-      mPortAdmittance00(Matrix::Zero(3, 3)),
-      mPortAdmittance01(Matrix::Zero(3, 3)),
-      mPortAdmittance10(Matrix::Zero(3, 3)),
-      mPortAdmittance11(Matrix::Zero(3, 3)), mHistory0(Matrix::Zero(3, 1)),
-      mHistory1(Matrix::Zero(3, 1)), mHistoryMagnetizing(Matrix::Zero(3, 1)),
-      mMidpointHistory(Matrix::Zero(3, 1)), mMidpointSource(Matrix::Zero(3, 1)),
-      mSource0(Matrix::Zero(3, 1)), mSource1(Matrix::Zero(3, 1)),
       mMagnetizingResistance(Matrix::Zero(3, 3)),
       mMagnetizingInductance(Matrix::Zero(3, 3)),
-      mWithResistiveLosses(withResistiveLosses) {
-  *mStateValue = Matrix::Zero(18, 1);
-}
+      mWithResistiveLosses(withResistiveLosses) {}
 
 SimPowerComp<Real>::Ptr EMT::Ph3::SSN::Transformer::clone(String copySuffix) {
   auto copy = SharedFactory<Transformer>::make(copySuffix, copySuffix,
@@ -76,9 +41,8 @@ void EMT::Ph3::SSN::Transformer::setParameters(
   Base::Ph3::Transformer::setParameters(nomVoltagePrimary, nomVoltageSecondary,
                                         ratedPower, ratioAbs, ratioPhase,
                                         resistance, inductance);
-  EMT::SSNComp::setParameters(Matrix::Zero(18, 18), Matrix::Zero(18, 6),
-                              Matrix::Zero(6, 18), Matrix::Zero(6, 6));
-  mParametersSet = true;
+  const Matrix zero = Matrix::Zero(6, 6);
+  SSNComp::setParameters(zero, zero, zero, zero);
 }
 
 void EMT::Ph3::SSN::Transformer::setMagnetizingBranch(Real noLoadCurrent,
@@ -112,7 +76,6 @@ void EMT::Ph3::SSN::Transformer::resolveWindingRoles() {
         (mNominalVoltagePrimary >= mNominalVoltageSecondary) ? 0 : 1;
     break;
   }
-  mOrientationSign = (mReferenceTerminal == 0) ? 1. : -1.;
   mRatioFromReference =
       (mReferenceTerminal == 0) ? effectiveRatio() : 1. / effectiveRatio();
   if (std::abs(std::arg(mRatioFromReference)) > 1e-9)
@@ -122,6 +85,8 @@ void EMT::Ph3::SSN::Transformer::resolveWindingRoles() {
 
 void EMT::Ph3::SSN::Transformer::initializeFromNodesAndTerminals(
     Real frequency) {
+  if (frequency <= 0.)
+    throw std::invalid_argument("Frequency must be positive.");
   resolveWindingRoles();
   const Real omega = 2. * PI * frequency;
   const Real magnetizingSusceptance =
@@ -135,157 +100,44 @@ void EMT::Ph3::SSN::Transformer::initializeFromNodesAndTerminals(
       Math::singlePhaseParameterToThreePhase(magnetizingInductance);
   mMagnetizingResistance =
       Math::singlePhaseParameterToThreePhase(magnetizingResistance);
-  mMagnetizingConductance = mMagnetizingResistance.inverse();
 
   mSeriesInductanceHalf = mInductance / 2.;
   mSeriesResistanceHalf.setZero();
   if (mWithResistiveLosses)
     mSeriesResistanceHalf = mResistance / 2.;
 
-  const PhaseVectorComp voltage0 =
-      phaseVoltage(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0));
-  const PhaseVectorComp voltage1 =
-      phaseVoltage(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1));
-  const PhaseVectorComp referenceVoltage =
-      (mReferenceTerminal == 0) ? voltage0 : voltage1;
-  const PhaseVectorComp otherVoltage =
-      (mReferenceTerminal == 0) ? voltage1 : voltage0;
-  const PhaseVectorComp referredOtherVoltage =
-      mRatioFromReference.real() * otherVoltage;
+  // State x = [i_ref; i_other], with the magnetizing current eliminated by
+  // midpoint KCL: i_mag = i_ref + i_other.
+  Matrix mass = Matrix::Zero(6, 6);
+  Matrix resistance = Matrix::Zero(6, 6);
+  const Matrix magnetizingI = mMagnetizingInductance;
+  const Matrix magnetizingR = mMagnetizingResistance;
+  mass.block<3, 3>(0, 0) = mSeriesInductanceHalf + magnetizingI;
+  mass.block<3, 3>(0, 3) = magnetizingI;
+  mass.block<3, 3>(3, 0) = magnetizingI;
+  mass.block<3, 3>(3, 3) = mSeriesInductanceHalf + magnetizingI;
+  resistance.block<3, 3>(0, 0) = mSeriesResistanceHalf + magnetizingR;
+  resistance.block<3, 3>(0, 3) = magnetizingR;
+  resistance.block<3, 3>(3, 0) = magnetizingR;
+  resistance.block<3, 3>(3, 3) = mSeriesResistanceHalf + magnetizingR;
 
-  const MatrixComp halfImpedance =
-      mSeriesResistanceHalf.cast<Complex>() +
-      Complex(0., omega) * mSeriesInductanceHalf.cast<Complex>();
-  const MatrixComp seriesAdmittance = halfImpedance.inverse();
-  const MatrixComp magnetizingAdmittance =
-      mMagnetizingConductance.cast<Complex>() +
-      Complex(0., -1. / omega) *
-          mMagnetizingInductance.inverse().cast<Complex>();
-  const MatrixComp midpointInverse =
-      (2. * seriesAdmittance + magnetizingAdmittance).inverse();
-  const PhaseVectorComp midpointVoltage =
-      midpointInverse * seriesAdmittance *
-      (referenceVoltage + referredOtherVoltage);
-  const PhaseVectorComp current0 =
-      seriesAdmittance * (midpointVoltage - referenceVoltage);
-  const PhaseVectorComp current1 =
-      seriesAdmittance * (referredOtherVoltage - midpointVoltage);
-  const PhaseVectorComp currentMagnetizing =
-      (magnetizingAdmittance - mMagnetizingConductance.cast<Complex>()) *
-      (-midpointVoltage);
-
-  const PhaseVectorComp voltageL0 =
-      Complex(0., omega) * mSeriesInductanceHalf.cast<Complex>() * current0;
-  const PhaseVectorComp voltageL1 =
-      Complex(0., omega) * mSeriesInductanceHalf.cast<Complex>() * current1;
-  const PhaseVectorComp voltageLMag = Complex(0., omega) *
-                                      mMagnetizingInductance.cast<Complex>() *
-                                      currentMagnetizing;
-  mStateValue->block<3, 1>(kVoltage0, 0) = voltageL0.real();
-  mStateValue->block<3, 1>(kCurrent0, 0) = current0.real();
-  mStateValue->block<3, 1>(kVoltage1, 0) = voltageL1.real();
-  mStateValue->block<3, 1>(kCurrent1, 0) = current1.real();
-  mStateValue->block<3, 1>(kVoltageMag, 0) = voltageLMag.real();
-  mStateValue->block<3, 1>(kCurrentMag, 0) = currentMagnetizing.real();
-  *mIntfVoltageValue = Matrix::Zero(6, 1);
-  mIntfVoltageValue->block(0, 0, 3, 1) = voltage0.real();
-  mIntfVoltageValue->block(3, 0, 3, 1) = voltage1.real();
-  *mIntfCurrentValue = Matrix::Zero(6, 1);
+  const Matrix inverseMass = mass.inverse();
+  Matrix inputMap = Matrix::Zero(6, 6);
+  Matrix outputMap = Matrix::Zero(6, 6);
+  const Matrix identity = Matrix::Identity(3, 3);
+  const Real ratio = mRatioFromReference.real();
   if (mReferenceTerminal == 0) {
-    mIntfCurrentValue->block(0, 0, 3, 1) = -current0.real();
-    mIntfCurrentValue->block(3, 0, 3, 1) = -current1.real();
+    inputMap.block<3, 3>(0, 0) = identity;
+    inputMap.block<3, 3>(3, 3) = ratio * identity;
+    outputMap.block<3, 3>(0, 0) = identity;
+    outputMap.block<3, 3>(3, 3) = ratio * identity;
   } else {
-    mIntfCurrentValue->block(3, 0, 3, 1) = -current0.real();
-    mIntfCurrentValue->block(0, 0, 3, 1) = -current1.real();
+    inputMap.block<3, 3>(0, 3) = identity;
+    inputMap.block<3, 3>(3, 0) = ratio * identity;
+    outputMap.block<3, 3>(0, 3) = ratio * identity;
+    outputMap.block<3, 3>(3, 0) = identity;
   }
-}
-
-void EMT::Ph3::SSN::Transformer::recomputeDiscreteModel() {
-  const Real timeStep = mTimeStep;
-  mInductorAdmittance = (timeStep / 2.) * mSeriesInductanceHalf.inverse();
-  mSeriesSystemInverse =
-      (Matrix::Identity(3, 3) + mInductorAdmittance * mSeriesResistanceHalf)
-          .inverse();
-  mSeriesAdmittance = mSeriesSystemInverse * mInductorAdmittance;
-  mMagnetizingInductorAdmittance =
-      (timeStep / 2.) * mMagnetizingInductance.inverse();
-  mMidpointInverse = (2. * mSeriesAdmittance + mMagnetizingInductorAdmittance +
-                      mMagnetizingConductance)
-                         .inverse();
-  const Matrix diagonal =
-      mSeriesAdmittance * mMidpointInverse * mSeriesAdmittance;
-  mPortAdmittance00 = mSeriesAdmittance - diagonal;
-  mPortAdmittance01 = -diagonal * mRatioFromReference.real();
-  mPortAdmittance10 = mPortAdmittance01;
-  mPortAdmittance11 = std::norm(mRatioFromReference) * mPortAdmittance00;
-  mW = Matrix::Zero(6, 6);
-  if (mReferenceTerminal == 0) {
-    mW.block<3, 3>(0, 0) = mPortAdmittance00;
-    mW.block<3, 3>(0, 3) = mPortAdmittance01;
-    mW.block<3, 3>(3, 0) = mPortAdmittance10;
-    mW.block<3, 3>(3, 3) = mPortAdmittance11;
-  } else {
-    mW.block<3, 3>(0, 0) = mPortAdmittance11;
-    mW.block<3, 3>(0, 3) = mPortAdmittance10;
-    mW.block<3, 3>(3, 0) = mPortAdmittance01;
-    mW.block<3, 3>(3, 3) = mPortAdmittance00;
-  }
-  mdA.setZero(18, 18);
-  mdB.setZero(18, 6);
-}
-
-void EMT::Ph3::SSN::Transformer::calculateHistoryVector(Matrix &history) const {
-  const auto &state = *mStateValue;
-  mHistory0 = mSeriesSystemInverse *
-              (mInductorAdmittance * state.block<3, 1>(kVoltage0, 0) +
-               state.block<3, 1>(kCurrent0, 0));
-  mHistory1 = mSeriesSystemInverse *
-              (mInductorAdmittance * state.block<3, 1>(kVoltage1, 0) +
-               state.block<3, 1>(kCurrent1, 0));
-  mHistoryMagnetizing =
-      mMagnetizingInductorAdmittance * state.block<3, 1>(kVoltageMag, 0) +
-      state.block<3, 1>(kCurrentMag, 0);
-  mMidpointHistory = -mHistory0 + mHistory1 + mHistoryMagnetizing;
-  mMidpointSource = mMidpointInverse * mMidpointHistory;
-  mSource0 = mHistory0 + mSeriesAdmittance * mMidpointSource;
-  mSource1 = mRatioFromReference.real() *
-             (mSeriesAdmittance * mMidpointSource - mHistory1);
-  history = Matrix::Zero(6, 1);
-  const UInt ref = 3 * mReferenceTerminal;
-  const UInt other = 3 * (1 - mReferenceTerminal);
-  history.block<3, 1>(ref, 0) = -mSource0;
-  history.block<3, 1>(other, 0) = -mSource1;
-}
-
-void EMT::Ph3::SSN::Transformer::updateState(const Matrix &,
-                                             const Matrix &input) {
-  const PhaseVector voltage0 = input.block<3, 1>(0, 0);
-  const PhaseVector voltage1 = input.block<3, 1>(3, 0);
-  const PhaseVector referenceVoltage =
-      (mReferenceTerminal == 0) ? voltage0 : voltage1;
-  const PhaseVector otherVoltage =
-      (mReferenceTerminal == 0) ? voltage1 : voltage0;
-  const PhaseVector referredOtherVoltage =
-      mRatioFromReference.real() * otherVoltage;
-  const PhaseVector midpointVoltage =
-      mMidpointInverse *
-      (mSeriesAdmittance * referenceVoltage +
-       mSeriesAdmittance * referredOtherVoltage + mMidpointHistory);
-  const PhaseVector totalVoltage0 = midpointVoltage - referenceVoltage;
-  const PhaseVector current0 = mSeriesAdmittance * totalVoltage0 + mHistory0;
-  const PhaseVector voltageL0 =
-      totalVoltage0 - mSeriesResistanceHalf * current0;
-  const PhaseVector totalVoltage1 = referredOtherVoltage - midpointVoltage;
-  const PhaseVector current1 = mSeriesAdmittance * totalVoltage1 + mHistory1;
-  const PhaseVector voltageL1 =
-      totalVoltage1 - mSeriesResistanceHalf * current1;
-  const PhaseVector voltageLMag = -midpointVoltage;
-  const PhaseVector currentMagnetizing =
-      mMagnetizingInductorAdmittance * voltageLMag + mHistoryMagnetizing;
-  mStateValue->block<3, 1>(kVoltage0, 0) = voltageL0;
-  mStateValue->block<3, 1>(kCurrent0, 0) = current0;
-  mStateValue->block<3, 1>(kVoltage1, 0) = voltageL1;
-  mStateValue->block<3, 1>(kCurrent1, 0) = current1;
-  mStateValue->block<3, 1>(kVoltageMag, 0) = voltageLMag;
-  mStateValue->block<3, 1>(kCurrentMag, 0) = currentMagnetizing;
+  SSNComp::setParameters(-inverseMass * resistance, inverseMass * inputMap,
+                         outputMap, Matrix::Zero(6, 6));
+  MultiPortVTypeSSNComp::initializeFromNodesAndTerminals(frequency);
 }

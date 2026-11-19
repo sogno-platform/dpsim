@@ -9,29 +9,27 @@
 #pragma once
 
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
+#include <dpsim-models/DP/DP_Ph1_DPDQInterface.h>
 #include <dpsim-models/Solver/MNASyncGenInterface.h>
-#include <dpsim-models/Solver/MNAVariableCompInterface.h>
-
 namespace CPS {
-namespace EMT {
-namespace Ph3 {
-/// @brief 4 Order Synchronous generator model for transient stability analysis
+namespace DP {
+namespace Ph1 {
+/// @brief 6 Order Synchronous generator model for transient stability analysis
 ///
 /// This model is based on Eremia section 2.1.6.
-/// Modeling approach: delayed current injection + predictor corrector method
-class SynchronGenerator4OrderPCM
-    : public Base::ReducedOrderSynchronGenerator<Real>,
+class SynchronGenerator6OrderPCM
+    : public Base::ReducedOrderSynchronGenerator<Complex>,
       public MNASyncGenInterface,
-      public MNAVariableCompInterface,
-      public SharedFactory<SynchronGenerator4OrderPCM> {
-
+      public SharedFactory<SynchronGenerator6OrderPCM> {
 public:
   ///
-  SynchronGenerator4OrderPCM(const String &uid, const String &name,
+  SynchronGenerator6OrderPCM(const String &uid, const String &name,
                              Logger::Level logLevel = Logger::Level::off);
   ///
-  SynchronGenerator4OrderPCM(const String &name,
+  SynchronGenerator6OrderPCM(const String &name,
                              Logger::Level logLevel = Logger::Level::off);
+  ///
+  SimPowerComp<Complex>::Ptr clone(String name) override;
 
   // #### General Functions ####
   ///
@@ -46,10 +44,6 @@ public:
   void updateVoltage(const Matrix &leftVector) override;
   ///
   bool requiresIteration() override;
-  ///
-  Matrix parkTransform(Real theta, const Matrix &abcVector);
-  ///
-  Matrix inverseParkTransform(Real theta, const Matrix &dq0Vector);
   ///
   void initializeResistanceMatrix() final{};
 
@@ -67,15 +61,19 @@ public:
   ///
   void mnaCompPostStep(const Matrix &leftVector) final;
   ///
-  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final;
-  void mnaCompInitialize(Real omega, Real timeStep,
-                         Attribute<Matrix>::Ptr leftVector) override;
-  Bool hasParameterChanged() override { return true; }
+  void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final{};
 
 protected:
+  /// Interface used to transform between DP and DQ vars
+  DPDQInterface mDomainInterface;
+
   // #### Model specific variables ####
+  /// Subransient emf
+  const Attribute<Matrix>::Ptr mEdq_s;
   /// Transient emf
-  const Attribute<Matrix>::Ptr mEdq0_t;
+  const Attribute<Matrix>::Ptr mEdq_t;
+  ///
+  Matrix mEdqts = Matrix::Zero(4, 1);
 
   // Variables saving values for later use
   /// Trapedzoidal based state space matrix Ad
@@ -84,25 +82,20 @@ protected:
   Matrix mBdTrapezoidal;
   /// Trapedzoidal based state space matrix Cd
   Matrix mCdTrapezoidal;
-  /// Edqt at k
-  Matrix mEdq0tPrevStep;
-  /// Idq at k
-  Matrix mIdq0PrevStep;
-  /// Vdq at k
-  Matrix mVdq0PrevStep;
+  /// Edqts at k
+  Matrix mEdqtsPrevStep;
   /// Vdq at j-1
-  Matrix mVdq0PrevIter;
+  Matrix mVdqPrevIter;
+  /// Idq at k
+  Matrix mIdqPrevStep;
 
   /// A matrix of continuous time state space model
-  Matrix mAStateSpace = Matrix::Zero(3, 3);
+  Matrix mAStateSpace = Matrix::Zero(4, 4);
   /// B matrix of continuous time state space model
-  Matrix mBStateSpace = Matrix::Zero(3, 3);
+  Matrix mBStateSpace = Matrix::Zero(4, 2);
   /// C matrix of continuous time state space model
-  Matrix mCStateSpace = Matrix::Zero(3, 1);
-
-  /// Balanced Norton companion conductance used by the EMT network solve.
-  Matrix mNortonConductance = Matrix::Zero(3, 3);
+  Matrix mCStateSpace = Matrix::Zero(4, 1);
 };
-} // namespace Ph3
-} // namespace EMT
+} // namespace Ph1
+} // namespace DP
 } // namespace CPS

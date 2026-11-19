@@ -85,7 +85,12 @@ protected:
   /// Source vector of known quantities
   Matrix mRightSideVector;
   /// List of all right side vector contributions
-  std::vector<const Matrix *> mRightVectorStamps;
+  // Keep the source attribute alive for as long as its RHS stamp is used.
+  std::vector<CPS::Attribute<Matrix>::Ptr> mRightVectorStamps;
+  /// Sparse row indices for stamps that can provide their structural support.
+  std::vector<std::vector<UInt>> mRightVectorStampIndices;
+  /// Whether each RHS stamp has valid sparse row indices.
+  std::vector<Bool> mRightVectorStampUsesIndices;
 
   // #### MNA specific attributes related to harmonics / additional frequencies ####
   /// Source vector of known quantities
@@ -137,6 +142,10 @@ protected:
 
   /// Initialization of individual components
   void initializeComponents();
+  /// Add a component's RHS stamp and cache any known structural row indices.
+  void addRightVectorStamp(const CPS::MNAInterface::Ptr &component);
+  /// Accumulate component RHS stamps, using sparse indices when available.
+  void addRightVectorStamps(Matrix &rightVector, Int stampColumn = -1) const;
   /// Initialization of system matrices and source vector
   virtual void initializeSystem();
   /// Initialization of system matrices and source vector

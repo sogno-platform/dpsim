@@ -34,24 +34,6 @@ public:
                      const Matrix &parallelConductance = Matrix::Zero(3, 3));
 
   void initializeFromNodesAndTerminals(Real frequency) override;
-
-private:
-  using TerminalVoltage = Eigen::Matrix<Real, 3, 1>;
-
-  Matrix *mStateValue;
-  Matrix mInductorAdmittance;
-  Matrix mSeriesAdmittance;
-  Matrix mSeriesSystemInverse;
-  Matrix mCapAdmittance;
-  mutable Matrix mSeriesHistory;
-  mutable Matrix mInductorHistory;
-  mutable Matrix mCapHistory0;
-  mutable Matrix mCapHistory1;
-
-protected:
-  void recomputeDiscreteModel() override;
-  void calculateHistoryVector(Matrix &history) const override;
-  void updateState(const Matrix &uOld, const Matrix &uNew) override;
 };
 
 } // namespace SSN

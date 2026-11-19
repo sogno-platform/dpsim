@@ -9,9 +9,7 @@
 #include <dpsim-models/Base/Base_ReducedOrderSynchronGenerator.h>
 #include <dpsim-models/Base/Base_Turbine.h>
 
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderPCM.h>
 #include <dpsim-models/DP/DP_Ph1_SynchronGenerator4OrderTPM.h>
-#include <dpsim-models/DP/DP_Ph1_SynchronGenerator6OrderPCM.h>
 #include <dpsim-models/Signal/HydroTurbine.h>
 #include <dpsim-models/Signal/HydroTurbineGovernor.h>
 #include <dpsim-models/Signal/PSS1A.h>
@@ -147,20 +145,10 @@ namespace DP {
 namespace Ph1 {
 void registerSynchronGenerators() {
   FactoryRegistration<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>
-      _4OrderDPIter(
-          "4PCM", new DerivedCreator<
-                      CPS::DP::Ph1::SynchronGenerator4OrderPCM,
-                      CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>);
-  FactoryRegistration<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>
       _4OrderDPTPM("4TPM",
                    new DerivedCreator<
                        CPS::DP::Ph1::SynchronGenerator4OrderTPM,
                        CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>);
-  FactoryRegistration<CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>
-      _6OrderDPIter(
-          "6PCM", new DerivedCreator<
-                      CPS::DP::Ph1::SynchronGenerator6OrderPCM,
-                      CPS::Base::ReducedOrderSynchronGenerator<CPS::Complex>>);
 }
 } // namespace Ph1
 } // namespace DP
