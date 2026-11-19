@@ -8,6 +8,7 @@ var class_c_p_s_1_1_m_n_a_sim_power_comp =
     [ "MNASimPowerComp", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#ab9f66bb4639c7d0d73b47cef6be789c5", null ],
     [ "MNASimPowerComp", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#ac82b50fbcc4e8853344f14b29252e118", null ],
     [ "~MNASimPowerComp", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a2ddb3a168d346de565deb3cf438764ec", null ],
+    [ "appendTerminalRightVectorStampIndices", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a9e22a1ba3f6b36af10703226bd866dda", null ],
     [ "getRightVector", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a24fa222b6fc7a3152af5d181f87215cf", null ],
     [ "mnaAddPostStepDependencies", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a61982f8f6284e232708f17d4b87bf78c", null ],
     [ "mnaAddPreStepDependencies", "class_c_p_s_1_1_m_n_a_sim_power_comp.html#a182611eb4f5872ae7138f94ae93c3c5b", null ],

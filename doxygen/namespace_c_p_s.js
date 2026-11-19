@@ -99,9 +99,7 @@ var namespace_c_p_s =
       [ "SG5OrderVBR", "namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a2f362bae02ffdd26a2995181e4da803e", null ],
       [ "SG4OrderVBR", "namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8adaa62a8189f1ccaa12dc8bf1fc5abf93", null ],
       [ "SG3OrderVBR", "namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a3ad97e0e90d04751085821f4488438e7", null ],
-      [ "SG4OrderPCM", "namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a0968fd038e55d52ad36ff748402598fa", null ],
       [ "SG4OrderTPM", "namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a89d31cdcc3d2f5c667e5ce2bedc9c2cf", null ],
-      [ "SG6OrderPCM", "namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a778a6501e30fb17e4de86155527e0e95", null ],
       [ "None", "namespace_c_p_s.html#ada17f6a04d29355cd45243f13e7078f8a6adf97f83acf6453d4a6a4b1070f3754", null ]
     ] ],
     [ "MNA_SUBCOMP_TASK_ORDER", "namespace_c_p_s.html#a4897abf57d5233edab587ea9cd685f26", [

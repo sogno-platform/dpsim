@@ -147,6 +147,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2c4fbfad4b0c409b325004f46f29f273"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d5a730b56e6db3caef750edb5e0a85f" id="r_a7d5a730b56e6db3caef750edb5e0a85f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d5a730b56e6db3caef750edb5e0a85f">mnaCompApplyRightSideVectorStamp</a> (<a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;rightVector) override final</td></tr>
 <tr class="separator:a7d5a730b56e6db3caef750edb5e0a85f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad099d8bd5b0b9a506ae5e67c5df33d7b" id="r_ad099d8bd5b0b9a506ae5e67c5df33d7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad099d8bd5b0b9a506ae5e67c5df33d7b">getRightVectorStampIndices</a> (std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt; &amp;indices) override final</td></tr>
+<tr class="memdesc:ad099d8bd5b0b9a506ae5e67c5df33d7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return row indices touched by this component's sparse RHS stamp.  <br /></td></tr>
+<tr class="separator:ad099d8bd5b0b9a506ae5e67c5df33d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b930c914424c55177f82c23bb7a78fb" id="r_a5b930c914424c55177f82c23bb7a78fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b930c914424c55177f82c23bb7a78fb">mnaCompUpdateVoltage</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) override final</td></tr>
 <tr class="separator:a5b930c914424c55177f82c23bb7a78fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8169e8f53bc45b1f9c2c8e48500f4506" id="r_a8169e8f53bc45b1f9c2c8e48500f4506"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8169e8f53bc45b1f9c2c8e48500f4506">mnaCompUpdateCurrent</a> (const <a class="el" href="namespace_c_p_s.html#a081464dfe063130c6fca7929ce291b15">Matrix</a> &amp;leftVector) override final</td></tr>
@@ -431,6 +434,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a74c1897ff55a8c13503fb6959c769a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad629435d1fb5bf6aadb25b3e651b23fd" id="r_ad629435d1fb5bf6aadb25b3e651b23fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad629435d1fb5bf6aadb25b3e651b23fd">updateStateSpaceModel</a> ()</td></tr>
 <tr class="separator:ad629435d1fb5bf6aadb25b3e651b23fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_class_c_p_s_1_1_m_n_a_sim_power_comp"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_c_p_s_1_1_m_n_a_sim_power_comp')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html">CPS::MNASimPowerComp&lt; Complex &gt;</a></td></tr>
+<tr class="memitem:a9e22a1ba3f6b36af10703226bd866dda inherit pro_methods_class_c_p_s_1_1_m_n_a_sim_power_comp" id="r_a9e22a1ba3f6b36af10703226bd866dda"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_m_n_a_sim_power_comp.html#a9e22a1ba3f6b36af10703226bd866dda">appendTerminalRightVectorStampIndices</a> (std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt; &amp;indices, <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> phasesPerTerminal)</td></tr>
+<tr class="memdesc:a9e22a1ba3f6b36af10703226bd866dda inherit pro_methods_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cache all non-ground terminal rows used by nodal RHS stamps.  <br /></td></tr>
+<tr class="separator:a9e22a1ba3f6b36af10703226bd866dda inherit pro_methods_class_c_p_s_1_1_m_n_a_sim_power_comp"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
@@ -762,6 +769,37 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="_d_p___ph1___mixed_v_type_variable_s_s_n_comp_8cpp_source.html#l00039">39</a> of file <a class="el" href="_d_p___ph1___mixed_v_type_variable_s_s_n_comp_8cpp_source.html">DP_Ph1_MixedVTypeVariableSSNComp.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ad099d8bd5b0b9a506ae5e67c5df33d7b" name="ad099d8bd5b0b9a506ae5e67c5df33d7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad099d8bd5b0b9a506ae5e67c5df33d7b">&#9670;&#160;</a></span>getRightVectorStampIndices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_c_p_s.html#ace0e6b9548abd863a1c8637775434218">Bool</a> CPS::DP::Ph1::MixedVTypeVariableSSNComp::getRightVectorStampIndices </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="namespace_c_p_s.html#ae5e72b1a2405f04bed0cd13fc63aac57">UInt</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>indices</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel final">final</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return row indices touched by this component's sparse RHS stamp. </p>
+
+<p>Reimplemented from <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#af6cafaee7deb5f7b84ef3cf0c52c2a5a">CPS::MNAInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_d_p___ph1___mixed_v_type_variable_s_s_n_comp_8h_source.html#l00108">108</a> of file <a class="el" href="_d_p___ph1___mixed_v_type_variable_s_s_n_comp_8h_source.html">DP_Ph1_MixedVTypeVariableSSNComp.h</a>.</p>
 
 </div>
 </div>

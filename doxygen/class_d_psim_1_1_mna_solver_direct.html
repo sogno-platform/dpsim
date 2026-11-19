@@ -322,6 +322,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a7356f9da648286ce39d197d04a5d3805 inherit pro_methods_class_d_psim_1_1_mna_solver" id="r_a7356f9da648286ce39d197d04a5d3805"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a7356f9da648286ce39d197d04a5d3805">initializeComponents</a> ()</td></tr>
 <tr class="memdesc:a7356f9da648286ce39d197d04a5d3805 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization of individual components.  <br /></td></tr>
 <tr class="separator:a7356f9da648286ce39d197d04a5d3805 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac110c4eeda3dcd602930346a11830b6e inherit pro_methods_class_d_psim_1_1_mna_solver" id="r_ac110c4eeda3dcd602930346a11830b6e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#ac110c4eeda3dcd602930346a11830b6e">addRightVectorStamp</a> (const <a class="el" href="class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e">CPS::MNAInterface::Ptr</a> &amp;component)</td></tr>
+<tr class="memdesc:ac110c4eeda3dcd602930346a11830b6e inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a component's RHS stamp and cache any known structural row indices.  <br /></td></tr>
+<tr class="separator:ac110c4eeda3dcd602930346a11830b6e inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cdd6f447ecb9500acc0d1bfefc918b9 inherit pro_methods_class_d_psim_1_1_mna_solver" id="r_a1cdd6f447ecb9500acc0d1bfefc918b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a1cdd6f447ecb9500acc0d1bfefc918b9">addRightVectorStamps</a> (<a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &amp;rightVector, <a class="el" href="namespace_d_psim.html#a6a29611b9912f8abc0545523b3f84f8c">Int</a> stampColumn=-1) const</td></tr>
+<tr class="memdesc:a1cdd6f447ecb9500acc0d1bfefc918b9 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate component RHS stamps, using sparse indices when available.  <br /></td></tr>
+<tr class="separator:a1cdd6f447ecb9500acc0d1bfefc918b9 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4017cc7c9155f6073d23457e18f15166 inherit pro_methods_class_d_psim_1_1_mna_solver" id="r_a4017cc7c9155f6073d23457e18f15166"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a4017cc7c9155f6073d23457e18f15166">initializeSystem</a> ()</td></tr>
 <tr class="memdesc:a4017cc7c9155f6073d23457e18f15166 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization of system matrices and source vector.  <br /></td></tr>
 <tr class="separator:a4017cc7c9155f6073d23457e18f15166 inherit pro_methods_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -464,9 +470,15 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a1e81a580e806486107925234c9072510 inherit pro_attribs_class_d_psim_1_1_mna_solver" id="r_a1e81a580e806486107925234c9072510"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a1e81a580e806486107925234c9072510">mRightSideVector</a></td></tr>
 <tr class="memdesc:a1e81a580e806486107925234c9072510 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source vector of known quantities.  <br /></td></tr>
 <tr class="separator:a1e81a580e806486107925234c9072510 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72925e0d5789ff568392d1aad47559c0 inherit pro_attribs_class_d_psim_1_1_mna_solver" id="r_a72925e0d5789ff568392d1aad47559c0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; const <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a72925e0d5789ff568392d1aad47559c0">mRightVectorStamps</a></td></tr>
-<tr class="memdesc:a72925e0d5789ff568392d1aad47559c0 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">List</a> of all right side vector contributions.  <br /></td></tr>
-<tr class="separator:a72925e0d5789ff568392d1aad47559c0 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0ef1c19b2c9994cde52d74f4170499b inherit pro_attribs_class_d_psim_1_1_mna_solver" id="r_ac0ef1c19b2c9994cde52d74f4170499b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="class_c_p_s_1_1_attribute.html">CPS::Attribute</a>&lt; <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &gt;<a class="el" href="class_d_psim_1_1_solver.html#a7806d21e027fcba76a9ab2be5b5f28ba">::Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#ac0ef1c19b2c9994cde52d74f4170499b">mRightVectorStamps</a></td></tr>
+<tr class="memdesc:ac0ef1c19b2c9994cde52d74f4170499b inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_d_psim_1_1_solver.html#a1b7b853ce69c4c12f8e41994b1944b0c">List</a> of all right side vector contributions.  <br /></td></tr>
+<tr class="separator:ac0ef1c19b2c9994cde52d74f4170499b inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f1a5310936bce1d08d123806f652779 inherit pro_attribs_class_d_psim_1_1_mna_solver" id="r_a4f1a5310936bce1d08d123806f652779"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; <a class="el" href="namespace_d_psim.html#aca275dbce4c75f8e270755c373b13d5d">UInt</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a4f1a5310936bce1d08d123806f652779">mRightVectorStampIndices</a></td></tr>
+<tr class="memdesc:a4f1a5310936bce1d08d123806f652779 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sparse row indices for stamps that can provide their structural support.  <br /></td></tr>
+<tr class="separator:a4f1a5310936bce1d08d123806f652779 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbf64153b612e6981084c4acc716fa0c inherit pro_attribs_class_d_psim_1_1_mna_solver" id="r_adbf64153b612e6981084c4acc716fa0c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespace_d_psim.html#aa7f17909fba1876614c5f455ad2a453d">Bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#adbf64153b612e6981084c4acc716fa0c">mRightVectorStampUsesIndices</a></td></tr>
+<tr class="memdesc:adbf64153b612e6981084c4acc716fa0c inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether each RHS stamp has valid sparse row indices.  <br /></td></tr>
+<tr class="separator:adbf64153b612e6981084c4acc716fa0c inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bdd5f5d0bd6d7244eb42ab096e37e73 inherit pro_attribs_class_d_psim_1_1_mna_solver" id="r_a1bdd5f5d0bd6d7244eb42ab096e37e73"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespace_d_psim.html#a7920162dfc7e843a4f1a1248fe9ccb0e">Matrix</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_psim_1_1_mna_solver.html#a1bdd5f5d0bd6d7244eb42ab096e37e73">mRightSideVectorHarm</a></td></tr>
 <tr class="memdesc:a1bdd5f5d0bd6d7244eb42ab096e37e73 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source vector of known quantities.  <br /></td></tr>
 <tr class="separator:a1bdd5f5d0bd6d7244eb42ab096e37e73 inherit pro_attribs_class_d_psim_1_1_mna_solver"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -680,7 +692,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00547">547</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00548">548</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -711,7 +723,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Returns a pointer to an object of type <a class="el" href="class_d_psim_1_1_direct_linear_solver.html">DirectLinearSolver</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00935">935</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00936">936</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -837,7 +849,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_mna_solver.html#add36bddabbd8c8c5e5bbe8eb506a0651">DPsim::MnaSolver&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00589">589</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00590">590</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -903,7 +915,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_mna_solver.html#a6a436178ea0d30734fa625003ba63c14">DPsim::MnaSolver&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00576">576</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00577">577</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -969,7 +981,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_mna_solver.html#a2b2457708b7a669d84f94f60d7fea31c">DPsim::MnaSolver&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00583">583</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00584">584</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1031,7 +1043,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Logging of the LU factorization time. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00905">905</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00906">906</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1064,7 +1076,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_d_psim_1_1_solver.html#a9067693a5c1240839d825ff3adbdd50d">DPsim::Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00791">791</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00792">792</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1095,7 +1107,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Logging of the LU refactorization time. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00912">912</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00913">913</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1126,7 +1138,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Logging of the right-hand-side solution time. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00889">889</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00890">890</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1159,7 +1171,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_mna_solver.html#a3f3289675b396ccbe3a4f72437631377">DPsim::MnaSolver&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00751">751</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00752">752</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1259,7 +1271,7 @@ template&lt;typename VarType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00872">872</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00873">873</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1292,7 +1304,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented from <a class="el" href="class_d_psim_1_1_solver.html#a8ebf8f186a5707b10619c4393eae9c7f">DPsim::Solver</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00993">993</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00994">994</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1315,7 +1327,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Sets the linear solver to "implementation" and creates an object. </p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00987">987</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00988">988</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1354,7 +1366,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Reimplemented in <a class="el" href="class_d_psim_1_1_mna_solver_plugin.html#a7654ac6f3d60b51c0ee195fa115a0051">DPsim::MnaSolverPlugin&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00594">594</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00595">595</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>
@@ -1396,7 +1408,7 @@ template&lt;typename VarType&gt; </div>
 
 <p>Implements <a class="el" href="class_d_psim_1_1_mna_solver.html#a960147a26173e7bfc12a7da77ae11ce4">DPsim::MnaSolver&lt; VarType &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00732">732</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_m_n_a_solver_direct_8cpp_source.html#l00733">733</a> of file <a class="el" href="_m_n_a_solver_direct_8cpp_source.html">MNASolverDirect.cpp</a>.</p>
 
 </div>
 </div>

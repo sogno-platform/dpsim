@@ -3,6 +3,7 @@ var class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t =
     [ "SSNTypeV2T", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#a0cd5d5343a38ae7ad8ce6e76dbe94d04", null ],
     [ "SSNTypeV2T", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#abaaf651f6e276af481761b6304f9c667", null ],
     [ "clone", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#ab41564bc80788df07076312edf42f0e8", null ],
+    [ "getRightVectorStampIndices", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#afda51d27e4f6ad081c3ec5f19280c06c", null ],
     [ "initializeFromNodesAndTerminals", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#aa86d05a73ef8e0f2924bf4f55320e136", null ],
     [ "manualInit", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#a20d2901843bde0c21a71e6817e7c2e4a", null ],
     [ "mnaCompAddPostStepDependencies", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html#acb0fb531cd530156154060a1193f07f5", null ],

@@ -4,6 +4,7 @@ var class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp =
     [ "buildInitialInputFromNodes", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html#a448fbea0a469dabf9c352456aad4572a", null ],
     [ "calculateHistoryVector", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html#ae8a44a3a16557a450fc5a23fadf79ac6", null ],
     [ "companionConductance", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html#a7b35f08b2d1c95ef4f4fce8c9ba71161", null ],
+    [ "getRightVectorStampIndices", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html#abc7a30543c2f72c08889b85b09d4b448", null ],
     [ "mnaCompApplyRightSideVectorStamp", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html#aa8529db7b78d1a0d0283144ef11b142c", null ],
     [ "mnaCompApplySystemMatrixStamp", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html#adf5ea8b67ae4fc1be1da723c496e386a", null ],
     [ "mnaCompUpdateCurrent", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_two_terminal_i_type_s_s_n_comp.html#a32290dbd191c5d7a8542e56685b5a011", null ],

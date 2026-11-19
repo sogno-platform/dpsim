@@ -33,7 +33,6 @@ var namespace_c_p_s_1_1_e_m_t_1_1_ph3 =
     [ "SSN_InductionMotor", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_s_s_n___induction_motor" ],
     [ "Switch", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch" ],
     [ "SynchronGenerator3OrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator3_order_v_b_r.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator3_order_v_b_r" ],
-    [ "SynchronGenerator4OrderPCM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m" ],
     [ "SynchronGenerator4OrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_v_b_r" ],
     [ "SynchronGenerator5OrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator5_order_v_b_r.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator5_order_v_b_r" ],
     [ "SynchronGenerator6aOrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6a_order_v_b_r.html", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6a_order_v_b_r" ],

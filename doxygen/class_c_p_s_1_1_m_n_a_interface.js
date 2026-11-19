@@ -4,6 +4,7 @@ var class_c_p_s_1_1_m_n_a_interface =
     [ "Ptr", "class_c_p_s_1_1_m_n_a_interface.html#ae0ae005f7e53b1d5c27f508149a0da2e", null ],
     [ "createSubComponents", "class_c_p_s_1_1_m_n_a_interface.html#a780dfe2d2caa891938f3e4e9796cca1d", null ],
     [ "getRightVector", "class_c_p_s_1_1_m_n_a_interface.html#a6e43fe74ecdc1153c0408462cddc67df", null ],
+    [ "getRightVectorStampIndices", "class_c_p_s_1_1_m_n_a_interface.html#af6cafaee7deb5f7b84ef3cf0c52c2a5a", null ],
     [ "mnaAddCompactRightSideVectorStamp", "class_c_p_s_1_1_m_n_a_interface.html#a8bca306b3f5f06abcba7a173ca65c442", null ],
     [ "mnaAddPostStepDependencies", "class_c_p_s_1_1_m_n_a_interface.html#a0179016962f9ebfe686f16ede91d6404", null ],
     [ "mnaAddPreStepDependencies", "class_c_p_s_1_1_m_n_a_interface.html#a19edf22751b0e9666ba1e232e34bffde", null ],

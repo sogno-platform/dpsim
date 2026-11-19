@@ -6,6 +6,7 @@ var class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp =
     [ "getC", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a50dc45b1bc4a7f82eba0b73a761f7528", null ],
     [ "getDiscreteA", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#ab16269d1500f28c8625596fc5c8ef590", null ],
     [ "getDiscreteB", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a2186539e9bfbadf3e9a54603908d9661", null ],
+    [ "getRightVectorStampIndices", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#ad099d8bd5b0b9a506ae5e67c5df33d7b", null ],
     [ "getStateCount", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a3e37984e4b32b34793753b6354da489f", null ],
     [ "hasParameterChanged", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#ab026c7f64f39be0206ce1d7f4d57e54e", null ],
     [ "initializeFromNodesAndTerminals", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_mixed_v_type_variable_s_s_n_comp.html#a1c32e6cf85a4d33924b980479e433977", null ],

@@ -166,9 +166,7 @@ var hierarchy =
                 [ "CPS::DP::Ph1::SynchronGenerator6aOrderVBR", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6a_order_v_b_r.html", null ],
                 [ "CPS::DP::Ph1::SynchronGenerator6bOrderVBR", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html", null ]
               ] ],
-              [ "CPS::DP::Ph1::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html", null ],
               [ "CPS::DP::Ph1::SynchronGenerator4OrderTPM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html", null ],
-              [ "CPS::DP::Ph1::SynchronGenerator6OrderPCM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html", null ],
               [ "CPS::DP::Ph1::SynchronGeneratorIter", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html", null ],
               [ "CPS::SP::Ph1::ReducedOrderSynchronGeneratorVBR", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_reduced_order_synchron_generator_v_b_r.html", [
                 [ "CPS::SP::Ph1::SynchronGenerator3OrderVBR", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html", null ],
@@ -296,8 +294,7 @@ var hierarchy =
                 [ "CPS::EMT::Ph3::SynchronGenerator5OrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator5_order_v_b_r.html", null ],
                 [ "CPS::EMT::Ph3::SynchronGenerator6aOrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6a_order_v_b_r.html", null ],
                 [ "CPS::EMT::Ph3::SynchronGenerator6bOrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6b_order_v_b_r.html", null ]
-              ] ],
-              [ "CPS::EMT::Ph3::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html", null ]
+              ] ]
             ] ],
             [ "CPS::CompositePowerComp< Real >", "class_c_p_s_1_1_composite_power_comp.html", [
               [ "CPS::EMT::DC::PiLine", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_pi_line.html", null ],
@@ -322,7 +319,6 @@ var hierarchy =
             [ "CPS::EMT::Ph1::CurrentSource", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_current_source.html", null ],
             [ "CPS::EMT::Ph1::Inductor", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_inductor.html", null ],
             [ "CPS::EMT::Ph1::Resistor", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html", null ],
-            [ "CPS::EMT::Ph1::SSN::Full_Serial_RLC", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html", null ],
             [ "CPS::EMT::Ph1::SSNTypeI2T", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_i2_t.html", null ],
             [ "CPS::EMT::Ph1::SSNTypeV2T", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_type_v2_t.html", null ],
             [ "CPS::EMT::Ph1::Switch", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_switch.html", null ],
@@ -360,6 +356,7 @@ var hierarchy =
                   [ "CPS::EMT::DC::Inductor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_inductor.html", null ],
                   [ "CPS::EMT::DC::Resistor", "class_c_p_s_1_1_e_m_t_1_1_d_c_1_1_resistor.html", null ]
                 ] ],
+                [ "CPS::EMT::Ph1::SSN::Full_Serial_RLC", "class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_s_s_n_1_1_full___serial___r_l_c.html", null ],
                 [ "CPS::EMT::Ph3::FourTerminalVTypeSSNComp", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_four_terminal_v_type_s_s_n_comp.html", [
                   [ "CPS::EMT::Ph3::GenericFourTerminalVTypeSSN", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_generic_four_terminal_v_type_s_s_n.html", null ]
                 ] ],
@@ -491,12 +488,9 @@ var hierarchy =
       [ "CPS::SP::Ph1::varResSwitch", "class_c_p_s_1_1_s_p_1_1_ph1_1_1var_res_switch.html", null ]
     ] ],
     [ "CPS::MNASyncGenInterface", "class_c_p_s_1_1_m_n_a_sync_gen_interface.html", [
-      [ "CPS::DP::Ph1::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html", null ],
       [ "CPS::DP::Ph1::SynchronGenerator4OrderTPM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html", null ],
-      [ "CPS::DP::Ph1::SynchronGenerator6OrderPCM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html", null ],
       [ "CPS::DP::Ph1::SynchronGeneratorIter", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator_iter.html", null ],
-      [ "CPS::EMT::Ph3::PQLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html", null ],
-      [ "CPS::EMT::Ph3::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html", null ]
+      [ "CPS::EMT::Ph3::PQLoad", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_p_q_load.html", null ]
     ] ],
     [ "CPS::MNATearInterface", "class_c_p_s_1_1_m_n_a_tear_interface.html", [
       [ "CPS::DP::Ph1::Inductor", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html", null ],
@@ -532,7 +526,6 @@ var hierarchy =
       [ "CPS::EMT::Ph3::ReducedOrderSynchronGeneratorVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_reduced_order_synchron_generator_v_b_r.html", null ],
       [ "CPS::EMT::Ph3::SeriesSwitch", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_switch.html", null ],
       [ "CPS::EMT::Ph3::Switch", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_switch.html", null ],
-      [ "CPS::EMT::Ph3::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html", null ],
       [ "CPS::EMT::Ph3::SynchronGeneratorDQTrapez", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_d_q_trapez.html", null ],
       [ "CPS::EMT::Ph3::SynchronGeneratorVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator_v_b_r.html", null ],
       [ "CPS::EMT::VTypeVariableSSNComp", "class_c_p_s_1_1_e_m_t_1_1_v_type_variable_s_s_n_comp.html", null ],
@@ -977,10 +970,6 @@ var hierarchy =
       [ "CPS::EMT::Ph3::SynchronGenerator3OrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator3_order_v_b_r.html", null ],
       [ "CPS::SP::Ph1::SynchronGenerator3OrderVBR", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator3_order_v_b_r.html", null ]
     ] ],
-    [ "SharedFactory< SynchronGenerator4OrderPCM >", "class_shared_factory.html", [
-      [ "CPS::DP::Ph1::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_p_c_m.html", null ],
-      [ "CPS::EMT::Ph3::SynchronGenerator4OrderPCM", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator4_order_p_c_m.html", null ]
-    ] ],
     [ "SharedFactory< SynchronGenerator4OrderTPM >", "class_shared_factory.html", [
       [ "CPS::DP::Ph1::SynchronGenerator4OrderTPM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator4_order_t_p_m.html", null ]
     ] ],
@@ -1004,9 +993,6 @@ var hierarchy =
       [ "CPS::DP::Ph1::SynchronGenerator6bOrderVBR", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html", null ],
       [ "CPS::EMT::Ph3::SynchronGenerator6bOrderVBR", "class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_synchron_generator6b_order_v_b_r.html", null ],
       [ "CPS::SP::Ph1::SynchronGenerator6bOrderVBR", "class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator6b_order_v_b_r.html", null ]
-    ] ],
-    [ "SharedFactory< SynchronGenerator6OrderPCM >", "class_shared_factory.html", [
-      [ "CPS::DP::Ph1::SynchronGenerator6OrderPCM", "class_c_p_s_1_1_d_p_1_1_ph1_1_1_synchron_generator6_order_p_c_m.html", null ]
     ] ],
     [ "SharedFactory< SynchronGeneratorDQODE >", "class_shared_factory.html", [
       [ "CPS::DP::Ph3::SynchronGeneratorDQODE", "class_c_p_s_1_1_d_p_1_1_ph3_1_1_synchron_generator_d_q_o_d_e.html", null ],

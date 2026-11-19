@@ -3541,24 +3541,6 @@ model, so the table cannot fall behind the code. For the equations behind a mode
 &lt;td style="text-align:center">✓&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>SynchronGenerator4OrderPCM&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;td style="text-align:center">✓&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;td style="text-align:center">✓&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>SynchronGenerator6OrderPCM&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;td style="text-align:center">✓&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;td style="text-align:center">–&lt;/td>
-&lt;/tr>
-&lt;tr>
 &lt;td>SynchronGenerator4OrderTPM&lt;/td>
 &lt;td style="text-align:center">–&lt;/td>
 &lt;td style="text-align:center">–&lt;/td>
