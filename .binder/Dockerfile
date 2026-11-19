@@ -32,7 +32,7 @@ RUN cmake -S . -B build \
 	-DDPSIM_BUILD_EXAMPLES=ON \
 	-DWITH_PYBIND=ON \
 	&& cmake --build build --parallel "$(nproc)" \
-	&& cp -r python/src/dpsim build/dpsim \
+	&& cp -r python/src/dpsim build/ \
 	&& python3 .binder/smoke_test.py \
 	&& chown -R ${NB_UID}:${NB_UID} ${HOME}
 
