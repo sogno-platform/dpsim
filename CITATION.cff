@@ -14,7 +14,7 @@ abstract: >-
   electromagnetic transient and dynamic phasor domains as well as continuous
   power flow, and is capable of real-time execution.
 license: MPL-2.0
-version: 1.4.0 # x-release-please-version
+version: 1.5.0 # x-release-please-version
 preferred-citation:
   type: article
   title: "DPsim: A dynamic phasor real-time simulator for power systems"
