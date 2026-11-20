@@ -368,7 +368,7 @@ void MnaSolverDirect<VarType>::extractStateSpace(Real time) {
 }
 
 template <> void MnaSolverDirect<Real>::createEmptySystemMatrix() {
-  if (mSwitches.size() > SWITCH_NUM)
+  if (!mSystemMatrixRecomputationEnabled && mSwitches.size() > SWITCH_NUM)
     throw SystemError("Too many Switches.");
 
   if (mSystemMatrixRecomputationEnabled) {
@@ -388,7 +388,7 @@ template <> void MnaSolverDirect<Real>::createEmptySystemMatrix() {
 }
 
 template <> void MnaSolverDirect<Complex>::createEmptySystemMatrix() {
-  if (mSwitches.size() > SWITCH_NUM)
+  if (!mSystemMatrixRecomputationEnabled && mSwitches.size() > SWITCH_NUM)
     throw SystemError("Too many Switches.");
 
   if (mFrequencyParallel) {
