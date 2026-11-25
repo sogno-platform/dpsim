@@ -86,10 +86,9 @@ void DP::Ph1::ProfileVoltageSource::readFromFile() {
 
   villas__node__message__free_unpacked(pb_msg, nullptr);
 
-  std::cout << "Read " << mSamples.size() << " samples from file "
-            << mSourceFile << std::endl;
+  SPDLOG_LOGGER_INFO(mSLog, "Read {} samples from file {}", mSamples.size(), mSourceFile.string());
   for (double sample : mSamples) {
-    std::cout << sample << std::endl;
+    SPDLOG_LOGGER_INFO(mSLog, "{}", sample);
   }
 }
 
@@ -255,7 +254,6 @@ void DP::Ph1::ProfileVoltageSource::mnaCompApplyRightSideVectorStampHarm(
 void DP::Ph1::ProfileVoltageSource::updateVoltage(Real time) {
   (**mIntfVoltage)(0, 0) = mSamples[mSourceIndex];
   mSourceIndex = (mSourceIndex + 1) % mSamples.size();
-  // std::cout << "Update voltage to " << (**mIntfVoltage)(0, 0) << " at " << time << std::endl;
 }
 
 void DP::Ph1::ProfileVoltageSource::mnaCompPreStep(Real time,

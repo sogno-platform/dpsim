@@ -146,7 +146,7 @@ Real ODESolver::step(Real initial_time) {
   SUNMatDestroy(A);
 
   // Print statistics:
-  //std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
+  //SPDLOG_LOGGER_DEBUG(mSLog, "Number Computing Steps: {} Number Error-Test-Fails: {}", nst, netf);
   return Tf;
 }
 
@@ -168,8 +168,7 @@ int ODESolver::check_flag(void *flagvalue, const std::string &funcname,
 
   // Check if SUNDIALS function returned NULL pointer - no memory allocated
   if (opt == 0 && flagvalue == NULL) {
-    std::cout << "\nSUNDIALS_ERROR: " << funcname
-              << " failed - returned NULL pointer\n\n";
+    SPDLOG_LOGGER_ERROR(mSLog, "\nSUNDIALS_ERROR: {} failed - returned NULL pointer\n\n", funcname);
     return 1;
   }
 
@@ -177,16 +176,14 @@ int ODESolver::check_flag(void *flagvalue, const std::string &funcname,
   else if (opt == 1) {
     errflag = (int *)flagvalue;
     if (*errflag < 0) {
-      std::cout << "\nSUNDIALS_ERROR: " << funcname
-                << " failed with flag = " << *errflag << "\n\n";
+      SPDLOG_LOGGER_ERROR(mSLog, "\nSUNDIALS_ERROR: {} failed with flag = {}\n\n", funcname, *errflag);
       return 1;
     }
   }
 
   // Check if function returned NULL pointer - no memory allocated
   else if (opt == 2 && flagvalue == NULL) {
-    std::cout << "\nMEMORY_ERROR: " << funcname
-              << " failed - returned NULL pointer\n\n";
+    SPDLOG_LOGGER_ERROR(mSLog, "\nMEMORY_ERROR: {} failed - returned NULL pointer\n\n", funcname);
     return 1;
   }
 
