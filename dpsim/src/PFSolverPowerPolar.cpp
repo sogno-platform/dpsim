@@ -489,6 +489,13 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
       }
     }
 
+    // Exclude local shunt, matching calculatePAndQInjectionPQBuses's convention.
+    CPS::Real V = sol_V.coeff(node_idx);
+    for (auto comp : mSystem.mComponentsAtNode[topoNode])
+      if (auto shuntPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
+        S += std::pow(V, 2) * Complex(-**(shuntPtr->mConductancePerUnit),
+                                      **(shuntPtr->mSusceptancePerUnit));
+
     // Store net nodal injection, not generator power
     sol_P(node_idx) = S.real();
     sol_Q(node_idx) = S.imag();
@@ -523,6 +530,13 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
         break;
       }
     }
+
+    // Exclude local shunt, matching calculatePAndQInjectionPQBuses's convention.
+    CPS::Real V = sol_V.coeff(node_idx);
+    for (auto comp : mSystem.mComponentsAtNode[topoNode])
+      if (auto shuntPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
+        S += std::pow(V, 2) * Complex(-**(shuntPtr->mConductancePerUnit),
+                                      **(shuntPtr->mSusceptancePerUnit));
 
     // Store net nodal Q injection, not generator Q
     sol_Q(node_idx) = S.imag();
