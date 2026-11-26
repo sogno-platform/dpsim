@@ -103,6 +103,9 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["@CMAKE_CURRENT_SOURCE_DIR@/_static"]
 
+# Copied verbatim into the output root, which is where the index.html redirect to about.html comes from
+html_extra_path = ["@CMAKE_CURRENT_SOURCE_DIR@/_extra"]
+
 # Softens the dense, generated pybind11 signatures.
 html_css_files = ["custom.css"]
 
