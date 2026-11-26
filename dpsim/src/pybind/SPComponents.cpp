@@ -160,6 +160,11 @@ void addSPPh1Components(py::module_ mSPPh1) {
       .def("modify_power_flow_bus_type",
            &CPS::SP::Ph1::SynchronGenerator::modifyPowerFlowBusType,
            "bus_type"_a)
+      .def("set_slack_weight", &CPS::SP::Ph1::SynchronGenerator::setSlackWeight,
+           "slack_weight"_a)
+      .def("get_slack_weight", &CPS::SP::Ph1::SynchronGenerator::getSlackWeight)
+      .def("get_rated_apparent_power",
+           &CPS::SP::Ph1::SynchronGenerator::getRatedApparentPower)
       .def("get_apparent_power",
            &CPS::SP::Ph1::SynchronGenerator::getApparentPower);
 
