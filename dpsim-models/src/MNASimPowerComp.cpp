@@ -10,7 +10,7 @@ const Task::List &MNASimPowerComp<VarType>::mnaTasks() const {
 }
 
 template <typename VarType>
-Attribute<Matrix>::Ptr MNASimPowerComp<VarType>::getRightVector() const {
+Attribute<RhsVector>::Ptr MNASimPowerComp<VarType>::getRightVector() const {
   return mRightVector;
 }
 
@@ -23,7 +23,7 @@ template <typename VarType>
 void MNASimPowerComp<VarType>::mnaInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   mMnaTasks.clear();
-  **this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+  **this->mRightVector = RhsVector(leftVector->get().rows(), 1);
 
   if (mHasPreStep) {
     this->mMnaTasks.push_back(
@@ -54,7 +54,7 @@ void MNASimPowerComp<VarType>::mnaApplySystemMatrixStamp(
 
 template <typename VarType>
 void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   this->mnaCompApplyRightSideVectorStamp(rightVector);
 };
 
@@ -107,7 +107,7 @@ void MNASimPowerComp<VarType>::mnaApplySystemMatrixStampHarm(
 
 template <typename VarType>
 void MNASimPowerComp<VarType>::mnaApplyRightSideVectorStampHarm(
-    Matrix &sourceVector) {
+    RhsVector &sourceVector) {
   this->mnaCompApplyRightSideVectorStampHarm(sourceVector);
 };
 
@@ -131,7 +131,7 @@ void MNASimPowerComp<VarType>::mnaCompApplySystemMatrixStamp(
 
 template <typename VarType>
 void MNASimPowerComp<VarType>::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   // Empty default implementation. Can be overridden by child classes if desired.
 }
 
@@ -187,7 +187,7 @@ void MNASimPowerComp<VarType>::mnaCompApplySystemMatrixStampHarm(
 
 template <typename VarType>
 void MNASimPowerComp<VarType>::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &sourceVector) {
+    RhsVector &sourceVector) {
   // Empty default implementation. Can be overridden by child classes if desired.
 }
 

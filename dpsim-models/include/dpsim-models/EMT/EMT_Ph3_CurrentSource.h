@@ -62,7 +62,7 @@ public:
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Returns voltage through the component
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   /// MNA pre step operations

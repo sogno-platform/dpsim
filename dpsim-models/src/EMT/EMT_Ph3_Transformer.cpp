@@ -596,7 +596,7 @@ void EMT::Ph3::Transformer::mnaParentPreStep(Real time, Int timeStepCount) {
 }
 
 void EMT::Ph3::Transformer::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   const UInt midpoint = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);

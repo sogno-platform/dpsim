@@ -81,7 +81,7 @@ void DP::Ph3::SynchronGenerator4OrderVBR::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph3::SynchronGenerator4OrderVBR::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   MatrixFixedSize<3, 1> dqInternal;
   dqInternal << mNortonEd + mEdTransient - mInitialEdTransient,
       mNortonEq + mEqTransient - mInitialEqTransient, 0;

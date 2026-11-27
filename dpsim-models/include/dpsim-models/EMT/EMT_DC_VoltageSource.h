@@ -34,7 +34,7 @@ public:
                          Attribute<Matrix>::Ptr leftVector) override;
   void
   mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override final;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override final;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override final;
   void mnaCompUpdateCurrent(const Matrix &leftVector) override final;
   void mnaCompPreStep(Real time, Int timeStepCount) override final;
   void mnaCompPostStep(Real time, Int timeStepCount,

@@ -68,8 +68,8 @@ public:
   void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
                                          Int freqIdx) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
+  void mnaCompApplyRightSideVectorStampHarm(RhsVector &rightVector) override;
   /// Update interface voltage from MNA system results
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
   void mnaCompUpdateVoltageHarm(const Matrix &leftVector, Int freqIdx);

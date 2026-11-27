@@ -472,7 +472,7 @@ void EMT::Ph3::VSIVoltageControlVCO::mnaParentApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::VSIVoltageControlVCO::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   const UInt filter = mVirtualNodes[1]->matrixNodeIndex(PhaseType::A);

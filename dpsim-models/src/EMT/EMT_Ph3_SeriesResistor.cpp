@@ -53,7 +53,7 @@ void EMT::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::SeriesResistor::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 }
 
 void EMT::Ph3::SeriesResistor::mnaCompApplySystemMatrixStamp(

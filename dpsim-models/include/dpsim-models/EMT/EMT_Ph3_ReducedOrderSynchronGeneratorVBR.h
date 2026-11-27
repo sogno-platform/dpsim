@@ -66,7 +66,7 @@ protected:
 
   // ### MNA Section ###
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Accumulate only the three source entries instead of its full-sized stamp.
   Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
   void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;

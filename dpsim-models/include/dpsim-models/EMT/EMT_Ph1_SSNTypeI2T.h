@@ -68,7 +68,7 @@ public:
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   Bool getRightVectorStampIndices(std::vector<UInt> &indices) override {
     indices = {mVirtualNodes[0]->matrixNodeIndex()};
     return true;

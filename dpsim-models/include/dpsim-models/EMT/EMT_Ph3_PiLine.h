@@ -41,7 +41,7 @@ protected:
   // Parallel capacitor submodel at Terminal 1
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// solver
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
   Bool mUseSubcomponents = true;
   Attribute<Matrix>::Ptr mDirectState;
   MatrixFixedSize<3, 3> mDirectInductorAdmittance =
@@ -77,7 +77,7 @@ public:
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   Bool mnaHasCompactRightSideVectorStamp() const override;
   void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
 

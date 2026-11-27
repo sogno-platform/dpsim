@@ -156,7 +156,7 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::SynchronGeneratorDQTrapez::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   const Matrix compensationCurrent = mNortonConductance * **mIntfVoltage;
   for (UInt phase = 0; phase < 3; ++phase)
     Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),

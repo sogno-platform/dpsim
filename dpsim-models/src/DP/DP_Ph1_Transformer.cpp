@@ -451,7 +451,7 @@ void DP::Ph1::Transformer::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph1::Transformer::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   const UInt midpoint = mVirtualNodes[2]->matrixNodeIndex();

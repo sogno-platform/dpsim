@@ -48,7 +48,7 @@ protected:
   /// internal switch is only opened after this time offset
   Real mSwitchTimeOffset = 1.0;
   /// Right side vectors of subcomponents
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
 
 public:
   /// Defines UID, name and logging level
@@ -67,7 +67,7 @@ public:
   void initializeParentFromNodesAndTerminals(Real frequency) override;
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Sets model specific parameters
   void setParameters(Real activePower, Real reactivePower, Real nomVolt,
                      Real openResistance, Real closedResistance,

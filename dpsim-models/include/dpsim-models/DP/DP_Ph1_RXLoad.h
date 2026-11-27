@@ -38,7 +38,7 @@ protected:
   /// Internal resistance
   std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
   /// Right side vectors of subcomponents
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
   Bool mDirectUseInductor = false;
   Bool mDirectUseCapacitor = false;
   Real mDirectConductance = 0.;
@@ -80,7 +80,7 @@ public:
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
 
   // #### MNA section ####
   /// Update interface current from MNA system result

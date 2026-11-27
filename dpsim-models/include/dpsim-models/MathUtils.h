@@ -84,6 +84,67 @@ public:
 
   static Real realFromVectorElement(const Matrix &mat, Matrix::Index row);
 
+  static void setVectorElement(RhsVector &mat, Matrix::Index row, Complex value,
+                               Int maxFreq = 1, Int freqIdx = 0,
+                               Matrix::Index colOffset = 0) {
+    const Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+    const Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+    mat.coeffRef(harmRow, colOffset) = value.real();
+    mat.coeffRef(harmRow + harmonicOffset / 2, colOffset) = value.imag();
+  }
+
+  static void addToVectorElement(RhsVector &mat, Matrix::Index row,
+                                 Complex value, Int maxFreq = 1,
+                                 Int freqIdx = 0) {
+    const Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+    const Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+    mat.coeffRef(harmRow, 0) += value.real();
+    mat.coeffRef(harmRow + harmonicOffset / 2, 0) += value.imag();
+  }
+
+  static Complex complexFromVectorElement(const RhsVector &mat,
+                                          Matrix::Index row, Int maxFreq = 1,
+                                          Int freqIdx = 0) {
+    const Eigen::Index harmonicOffset = mat.rows() / maxFreq;
+    const Eigen::Index harmRow = row + harmonicOffset * freqIdx;
+    return Complex(mat.coeff(harmRow, 0),
+                   mat.coeff(harmRow + harmonicOffset / 2, 0));
+  }
+
+  static void addToVectorElement(RhsVector &mat, Matrix::Index row,
+                                 Real value) {
+    mat.coeffRef(row, 0) += value;
+  }
+
+  static void setVectorElement(RhsVector &mat, Matrix::Index row, Real value) {
+    mat.coeffRef(row, 0) = value;
+  }
+
+  static Real realFromVectorElement(const RhsVector &mat, Matrix::Index row) {
+    return mat.coeff(row, 0);
+  }
+
+  /// Sets all entries of a component's right-side vector to zero and keeps
+  /// the rows it writes.
+  static void setVectorZero(RhsVector &mat) {
+    for (Eigen::Index col = 0; col < mat.outerSize(); ++col)
+      for (RhsVector::InnerIterator it(mat, col); it; ++it)
+        it.valueRef() = 0.;
+  }
+
+  /// Adds all entries of a component's right-side vector to the system vector.
+  static void addVectorElements(Matrix &mat, const RhsVector &stamp) {
+    for (Eigen::Index col = 0; col < stamp.outerSize(); ++col)
+      for (RhsVector::InnerIterator it(stamp, col); it; ++it)
+        mat(it.row(), it.col()) += it.value();
+  }
+
+  static void setVectorElements(Matrix &mat, const RhsVector &stamp) {
+    for (Eigen::Index col = 0; col < stamp.outerSize(); ++col)
+      for (RhsVector::InnerIterator it(stamp, col); it; ++it)
+        mat(it.row(), it.col()) = it.value();
+  }
+
   // #### Matric Operations ####
   //
   // | Re-Re(row,col)_harm1 | Im-Re(row,col)_harm1 | Interharmonics harm1-harm2

@@ -71,12 +71,11 @@ void CompositePowerComp<VarType>::mnaCompInitialize(
     subComp->mnaInitialize(omega, timeStep, leftVector);
   }
 
-  **this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+  **this->mRightVector = RhsVector(leftVector->get().rows(), 1);
 
-  // RHS stamps are dense vectors for historical reasons, but a subcomponent
-  // can only write at its connected terminal and virtual-node indices. Cache
-  // those locations once so the composite can aggregate the stamps without
-  // clearing and adding full network-sized vectors on every step.
+  // A subcomponent can only write at its connected terminal and virtual-node
+  // indices. Cache those locations once so the composite aggregates only
+  // these rows on every step.
   const UInt vectorSize = static_cast<UInt>(leftVector->get().rows());
   const UInt baseRowLimit = [&]() {
     if constexpr (std::is_same_v<VarType, Complex>)
@@ -145,64 +144,19 @@ void CompositePowerComp<VarType>::mnaCompApplySystemMatrixStamp(
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
-  if (!mRightVectorStampIndicesInitialized) {
-    rightVector.setZero();
-    for (const auto &stamp : mRightVectorStamps) {
-      if ((**stamp).size() != 0)
-        rightVector += **stamp;
-    }
-  } else {
-    if constexpr (std::is_same_v<VarType, Complex>) {
-      for (UInt freq = 0; freq < this->mNumFreqs; ++freq)
-        for (UInt index : mRightVectorAffectedIndices)
-          Math::setVectorElement(rightVector, index, Complex(0., 0.),
-                                 this->mNumFreqs, freq);
-    } else {
-      for (UInt index : mRightVectorAffectedIndices)
-        rightVector(index, 0) = 0.;
-    }
-    for (std::size_t stampIndex = 0; stampIndex < mRightVectorStamps.size();
-         ++stampIndex) {
-      const auto &stamp = mRightVectorStamps[stampIndex];
-      if ((**stamp).size() == 0)
-        continue;
-      if constexpr (std::is_same_v<VarType, Complex>) {
-        for (UInt freq = 0; freq < this->mNumFreqs; ++freq)
-          for (UInt index : mRightVectorStampIndices[stampIndex])
-            Math::addToVectorElement(rightVector, index,
-                                     Math::complexFromVectorElement(
-                                         **stamp, index, this->mNumFreqs, freq),
-                                     this->mNumFreqs, freq);
-      } else {
-        for (UInt index : mRightVectorStampIndices[stampIndex])
-          rightVector(index, 0) += (**stamp)(index, 0);
-      }
-    }
-  }
+    RhsVector &rightVector) {
+  Math::setVectorZero(rightVector);
+  for (const auto &stamp : mRightVectorStamps)
+    for (Eigen::Index col = 0; col < (**stamp).outerSize(); ++col)
+      for (RhsVector::InnerIterator it(**stamp, col); it; ++it)
+        rightVector.coeffRef(it.row(), it.col()) += it.value();
   mnaParentApplyRightSideVectorStamp(rightVector);
 }
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaAddCompactRightSideVectorStamp(
     Matrix &rightVector) {
-  if (!mRightVectorStampIndicesInitialized) {
-    rightVector += **this->mRightVector;
-    return;
-  }
-
-  const Matrix &stamp = **this->mRightVector;
-  if constexpr (std::is_same_v<VarType, Complex>) {
-    for (UInt freq = 0; freq < this->mNumFreqs; ++freq)
-      for (UInt index : mRightVectorAffectedIndices)
-        Math::addToVectorElement(
-            rightVector, index,
-            Math::complexFromVectorElement(stamp, index, this->mNumFreqs, freq),
-            this->mNumFreqs, freq);
-  } else {
-    for (UInt index : mRightVectorAffectedIndices)
-      rightVector(index, 0) += stamp(index, 0);
-  }
+  Math::addVectorElements(rightVector, **this->mRightVector);
 }
 
 template <typename VarType>

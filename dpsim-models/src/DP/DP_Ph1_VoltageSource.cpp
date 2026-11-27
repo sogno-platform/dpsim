@@ -145,7 +145,7 @@ void DP::Ph1::VoltageSource::mnaCompInitializeHarm(
 
   mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
   mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-  **mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+  **mRightVector = RhsVector(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(
@@ -219,7 +219,7 @@ void DP::Ph1::VoltageSource::mnaCompApplySystemMatrixStampHarm(
 }
 
 void DP::Ph1::VoltageSource::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   // TODO: Is this correct with two nodes not gnd?
   Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(),
                          (**mIntfVoltage)(0, 0), mNumFreqs);
@@ -229,7 +229,7 @@ void DP::Ph1::VoltageSource::mnaCompApplyRightSideVectorStamp(
 }
 
 void DP::Ph1::VoltageSource::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     // TODO: Is this correct with two nodes not gnd?
     Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(),

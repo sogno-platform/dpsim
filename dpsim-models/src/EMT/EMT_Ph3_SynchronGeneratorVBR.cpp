@@ -277,7 +277,7 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaCompAddPreStepDependencies(
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (terminalNotGrounded(0)) {
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), mISourceEq(0));
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), mISourceEq(1));

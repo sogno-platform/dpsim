@@ -51,7 +51,7 @@ Bool DP::Ph3::SeriesSwitch::mnaIsClosed() { return **mIsClosed; }
 void DP::Ph3::SeriesSwitch::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 }
 
 void DP::Ph3::SeriesSwitch::mnaCompApplySystemMatrixStamp(

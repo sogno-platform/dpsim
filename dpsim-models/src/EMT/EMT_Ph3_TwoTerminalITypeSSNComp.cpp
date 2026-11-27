@@ -43,7 +43,7 @@ void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   const Matrix &G = mWInverse;
   // i = G * v - G * mYHist
   Matrix iHist = -G * mYHist;

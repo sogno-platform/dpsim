@@ -275,7 +275,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaParentApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt phase = 0; phase < 3; ++phase)
     Math::addToVectorElement(rightVector, matrixNodeIndex(0, phase),
                              (**mIntfCurrent)(phase, 0));
@@ -316,7 +316,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaParentPreStep(Real time,
                             mStatorConductance * **mStatorVoltagePrevious;
   const Matrix sourceInjection =
       mStatorConductance * **mStatorSourceVoltage + **mStatorHistoryCurrent;
-  **mRightVector = Matrix::Zero((**mRightVector).rows(), 1);
+  **mRightVector = RhsVector((**mRightVector).rows(), 1);
   for (UInt phase = 0; phase < 3; ++phase)
     Math::addToVectorElement(**mRightVector, matrixNodeIndex(0, phase),
                              sourceInjection(phase, 0));

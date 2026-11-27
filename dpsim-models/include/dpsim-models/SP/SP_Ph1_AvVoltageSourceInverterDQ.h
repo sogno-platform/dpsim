@@ -63,7 +63,7 @@ protected:
 
   // #### solver ####
   ///
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
 
 public:
   // ### General Parameters ###

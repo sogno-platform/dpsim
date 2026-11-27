@@ -243,7 +243,7 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mCompensationOn)
     mCompensationCurrent = **mIntfVoltage / mRcomp;
 

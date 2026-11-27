@@ -61,7 +61,7 @@ public:
                            Attribute<Matrix>::Ptr leftVector) override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   void cacheDirectMatrixIndices();
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   Bool mnaHasCompactRightSideVectorStamp() const override;
   void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
   /// Derives values from power flow data and pushes them to subcomponents

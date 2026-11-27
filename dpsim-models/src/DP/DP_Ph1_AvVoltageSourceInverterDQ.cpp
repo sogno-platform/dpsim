@@ -527,7 +527,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentApplySystemMatrixStamp(
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return CompositePowerComp<Complex>::mnaParentApplyRightSideVectorStamp(
         rightVector);
@@ -559,11 +559,11 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddCompactRightSideVectorStamp(
   // The direct filter realization keeps only its external voltage source and
   // connection transformer as MNA children. Unlike the legacy pre-step path,
   // the direct parent does not fold those child histories into its own vector.
-  const Matrix &transformerStamp = **mConnectionTransformer->mRightVector;
-  const Matrix &sourceStamp = **mSubCtrledVoltageSource->mRightVector;
+  const RhsVector &transformerStamp = **mConnectionTransformer->mRightVector;
+  const RhsVector &sourceStamp = **mSubCtrledVoltageSource->mRightVector;
   for (UInt index : mDirectChildRightVectorIndices) {
-    rightVector(index, 0) += transformerStamp(index, 0);
-    rightVector(index, 0) += sourceStamp(index, 0);
+    rightVector(index, 0) += transformerStamp.coeff(index, 0);
+    rightVector(index, 0) += sourceStamp.coeff(index, 0);
   }
 }
 

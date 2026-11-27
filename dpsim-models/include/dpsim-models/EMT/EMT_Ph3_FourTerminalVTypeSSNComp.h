@@ -25,7 +25,7 @@ public:
 
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
 
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   Bool getRightVectorStampIndices(std::vector<UInt> &indices) override {
     appendTerminalRightVectorStampIndices(indices, 3);
     return true;

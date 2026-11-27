@@ -55,7 +55,7 @@ protected:
   /// Parallel capacitor submodel at Terminal 1
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// Right side vectors of subcomponents
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
   /// True after createSubComponents() runs; prevents double-construction.
 
 public:
@@ -80,7 +80,7 @@ public:
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
 
   // #### MNA section ####
   /// Updates internal current variable of the component

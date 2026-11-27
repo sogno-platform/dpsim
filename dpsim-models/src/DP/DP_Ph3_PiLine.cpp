@@ -227,7 +227,8 @@ void DP::Ph3::PiLine::mnaParentApplySystemMatrixStamp(
                                        terminalNotGrounded(1), false, mSLog);
 }
 
-void DP::Ph3::PiLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph3::PiLine::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   mDirectSeriesHistory = mDirectInductorAdmittance * mDirectSeriesVoltage +

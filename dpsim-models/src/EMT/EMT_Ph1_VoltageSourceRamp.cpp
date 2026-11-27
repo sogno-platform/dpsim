@@ -121,7 +121,7 @@ void EMT::Ph1::VoltageSourceRamp::mnaParentApplySystemMatrixStamp(
 }
 
 void EMT::Ph1::VoltageSourceRamp::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!mUseSubcomponents)
     Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(),
                            mDirectVoltageForRhs);

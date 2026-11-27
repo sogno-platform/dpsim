@@ -159,7 +159,8 @@ void EMT::Ph3::Shunt::mnaParentApplySystemMatrixStamp(
                                         terminalNotGrounded(0), false, mSLog);
 }
 
-void EMT::Ph3::Shunt::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph3::Shunt::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents || !terminalNotGrounded(0))
     return;
   for (Int phase = 0; phase < 3; ++phase) {

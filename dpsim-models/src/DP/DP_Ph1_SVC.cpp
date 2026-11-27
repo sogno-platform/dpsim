@@ -233,7 +233,7 @@ void DP::Ph1::SVC::mnaParentApplySystemMatrixStamp(
   }
 }
 
-void DP::Ph1::SVC::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph1::SVC::mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   for (UInt freq = 0; freq < mNumFreqs; ++freq) {

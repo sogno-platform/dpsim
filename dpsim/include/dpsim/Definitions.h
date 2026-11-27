@@ -23,6 +23,7 @@ using Int = CPS::Int;
 using UInt = CPS::UInt;
 using Matrix = CPS::Matrix;
 using MatrixComp = CPS::MatrixComp;
+using RhsVector = CPS::RhsVector;
 using SparseMatrix = CPS::SparseMatrixRow;
 using SparseMatrixComp = CPS::SparseMatrixCompRow;
 

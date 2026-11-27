@@ -30,7 +30,7 @@ void DP::Ph1::TwoTerminalVTypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph1::TwoTerminalVTypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     if (terminalNotGrounded(0))
       Math::setVectorElement(rightVector, matrixNodeIndex(0), mYHist(0, 0),

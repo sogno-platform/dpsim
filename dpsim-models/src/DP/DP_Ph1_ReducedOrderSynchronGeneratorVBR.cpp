@@ -156,7 +156,7 @@ void DP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph1::ReducedOrderSynchronGeneratorVBR::
-    mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+    mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) {
   if (mModelAsNortonSource) {
     // Determine equivalent Norton current
     mIvbr = Complex(mConductanceMatrix(0, 0) * mEvbr.real() +

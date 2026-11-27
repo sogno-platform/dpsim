@@ -73,7 +73,7 @@ void EMT::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph1::VoltageSource::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(),
                          (**mIntfVoltage)(0, 0));
 }

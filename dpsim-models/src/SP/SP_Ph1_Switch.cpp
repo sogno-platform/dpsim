@@ -46,7 +46,7 @@ void SP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 void SP::Ph1::Switch::mnaCompInitialize(Real omega, Real timeStep,
                                         Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 }
 
 Bool SP::Ph1::Switch::mnaIsClosed() { return isClosed(); }
@@ -71,7 +71,8 @@ void SP::Ph1::Switch::mnaCompApplySwitchSystemMatrixStamp(
                                  terminalNotGrounded(1), mSLog);
 }
 
-void SP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {}
+void SP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) {
+}
 
 void SP::Ph1::Switch::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // Voltage across component is defined as V1 - V0

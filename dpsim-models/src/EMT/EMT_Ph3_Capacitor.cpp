@@ -85,7 +85,7 @@ void EMT::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::Capacitor::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   mEquivCurrent = -**mIntfCurrent + -mEquivCond * **mIntfVoltage;
   if (terminalNotGrounded(0)) {
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),

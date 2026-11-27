@@ -332,7 +332,7 @@ void DP::Ph1::SynchronGeneratorTrStab::mnaParentApplySystemMatrixStamp(
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   const UInt emfNode = virtualNode(0)->matrixNodeIndex();

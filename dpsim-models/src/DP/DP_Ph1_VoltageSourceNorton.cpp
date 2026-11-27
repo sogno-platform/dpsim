@@ -95,7 +95,7 @@ void DP::Ph1::VoltageSourceNorton::initializeFromNodesAndTerminals(
 }
 
 void DP::Ph1::VoltageSourceNorton::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   mEquivCurrent = (**mIntfVoltage)(0, 0) / **mResistance;
 
   // Apply matrix stamp for equivalent current source

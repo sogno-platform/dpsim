@@ -63,7 +63,7 @@ void DP::Ph1::varResSwitch::mnaCompApplySwitchSystemMatrixStamp(
 }
 
 void DP::Ph1::varResSwitch::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {}
+    RhsVector &rightVector) {}
 
 Bool DP::Ph1::varResSwitch::mnaIsClosed() { return isClosed(); }
 

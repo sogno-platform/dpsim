@@ -430,7 +430,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   const UInt filter = mVirtualNodes[1]->matrixNodeIndex(PhaseType::A);

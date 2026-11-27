@@ -56,7 +56,8 @@ public:
                            Attribute<Matrix>::Ptr leftVector) override final;
   void
   mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override final;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override final;
+  void
+  mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override final;
   Bool mnaHasCompactRightSideVectorStamp() const override final;
   void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override final;
 

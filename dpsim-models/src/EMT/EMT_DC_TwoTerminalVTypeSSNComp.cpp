@@ -66,7 +66,7 @@ void EMT::DC::TwoTerminalVTypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::DC::TwoTerminalVTypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (terminalNotGrounded(0))
     Math::setVectorElement(rightVector, matrixNodeIndex(0), mYHist(0, 0));
   if (terminalNotGrounded(1))

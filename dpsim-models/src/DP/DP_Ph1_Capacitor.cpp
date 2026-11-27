@@ -139,7 +139,7 @@ void DP::Ph1::Capacitor::mnaCompInitializeHarm(
 
   mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
   mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-  **mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+  **mRightVector = RhsVector(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(
@@ -160,7 +160,8 @@ void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStampHarm(
                                  mSLog);
 }
 
-void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     //mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
     //mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
@@ -190,7 +191,7 @@ void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
 }
 
 void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     //mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
     //mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;

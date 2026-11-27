@@ -43,7 +43,7 @@ void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph3::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   MatrixComp iHist = -mWInverse * mYHist;
 
   if (terminalNotGrounded(0)) {

@@ -117,7 +117,8 @@ void DP::Ph1::Shunt::mnaParentApplySystemMatrixStamp(
   }
 }
 
-void DP::Ph1::Shunt::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph1::Shunt::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents || mDirectCapacitance <= 0.)
     return;
   for (UInt freq = 0; freq < mNumFreqs; ++freq) {

@@ -363,7 +363,7 @@ void DP::Ph3::Transformer::mnaParentApplySystemMatrixStamp(
 }
 
 void DP::Ph3::Transformer::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   const UInt midpoint = mVirtualNodes[2]->matrixNodeIndex(PhaseType::A);

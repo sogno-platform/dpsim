@@ -71,7 +71,7 @@ void EMT::DC::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::DC::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   const Real historyCurrent = -companionConductance() * mYHist(0, 0);
   if (terminalNotGrounded(0))
     Math::setVectorElement(rightVector, matrixNodeIndex(0), historyCurrent);

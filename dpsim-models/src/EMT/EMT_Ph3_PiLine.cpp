@@ -243,7 +243,8 @@ void EMT::Ph3::PiLine::mnaParentApplySystemMatrixStamp(
         terminalNotGrounded(terminal), false, mSLog);
 }
 
-void EMT::Ph3::PiLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph3::PiLine::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   const UInt midpoint = mVirtualNodes[0]->matrixNodeIndex(PhaseType::A);

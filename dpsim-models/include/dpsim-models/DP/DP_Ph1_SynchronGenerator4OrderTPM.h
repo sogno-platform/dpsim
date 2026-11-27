@@ -100,7 +100,7 @@ public:
 
   // #### MNA Functions ####
   ///
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   ///
   void mnaCompPostStep(const Matrix &leftVector) override;
   ///

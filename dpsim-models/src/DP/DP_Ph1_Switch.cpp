@@ -226,7 +226,7 @@ void DP::Ph1::Switch::mnaCompInitialize(Real omega, Real timeStep,
                                         Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
   mTimeStep = timeStep;
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 
   // omega is the DP reference-frame angular frequency supplied by the solver.
   mShiftOmega = omega;
@@ -280,7 +280,8 @@ void DP::Ph1::Switch::mnaCompApplySwitchSystemMatrixStamp(
                                  terminalNotGrounded(1), mSLog);
 }
 
-void DP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {}
+void DP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) {
+}
 
 Bool DP::Ph1::Switch::mnaIsClosed() {
   if (mSwitchingMode == SwitchingMode::Ideal)

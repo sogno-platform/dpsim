@@ -98,7 +98,7 @@ void DP::Ph1::CurrentSource::mnaCompPreStep(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::CurrentSource::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   (**mIntfCurrent)(0, 0) = **mCurrentRef;
 
   if (terminalNotGrounded(0))

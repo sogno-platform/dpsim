@@ -41,7 +41,7 @@ void EMT::Ph1::CurrentSource::mnaCompInitialize(
 }
 
 void EMT::Ph1::CurrentSource::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (terminalNotGrounded(0))
     Math::setVectorElement(rightVector, matrixNodeIndex(0),
                            -(**mIntfCurrent)(0, 0));

@@ -38,7 +38,7 @@ protected:
   // Parallel capacitor submodel at Terminal 1
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// solver
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
   /// Select the legacy component hierarchy or direct parent MNA stamps.
   Bool mUseSubcomponents = true;
   /// Companion-model coefficients used when subcomponents are disabled.
@@ -83,7 +83,7 @@ public:
   /// MNA pre step operations
   void mnaParentPreStep(Real time, Int timeStepCount) override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// MNA post step operations
   void mnaParentPostStep(Real time, Int timeStepCount,
                          Attribute<Matrix>::Ptr &leftVector) override;

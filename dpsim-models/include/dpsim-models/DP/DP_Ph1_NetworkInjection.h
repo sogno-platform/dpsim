@@ -36,7 +36,7 @@ private:
 
   // #### solver ####
   /// Vector to collect subcomponent right vector stamps
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
 
 public:
   const Attribute<Complex>::Ptr mVoltageRef;
@@ -81,7 +81,7 @@ public:
 
   // #### MNA Section ####
   /// Stamps right side (source) vector
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Returns current through the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// Updates voltage across component

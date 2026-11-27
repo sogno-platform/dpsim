@@ -95,7 +95,7 @@ public:
   void mnaStep(Matrix &systemMatrix, Matrix &rightVector, Matrix &leftVector,
                Real time);
   ///
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   ///
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
 

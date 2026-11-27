@@ -291,7 +291,7 @@ void DP::Ph1::MixedVTypeVariableSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph1::MixedVTypeVariableSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     if (terminalNotGrounded(0))
       Math::setVectorElement(rightVector, matrixNodeIndex(0), mYHist, mNumFreqs,

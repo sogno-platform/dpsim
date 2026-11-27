@@ -47,7 +47,7 @@ private:
     /// Tear-topology columns coupled to this subnet (restrict Schur recompute)
     std::vector<UInt> tearColumns;
     /// List of all right side vector contributions
-    std::vector<const Matrix *> rightVectorStamps;
+    std::vector<const RhsVector *> rightVectorStamps;
     /// Left-side vector of the subnet AFTER complete step
     CPS::Attribute<Matrix>::Ptr leftVector;
     // #### MNA specific attributes related to system recomputation

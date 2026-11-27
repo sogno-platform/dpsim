@@ -119,7 +119,8 @@ void DP::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
       terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 }
 
-void DP::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   // Companion-model history source for the next time step.
   mEquivCurrent = mEquivCond * **mIntfVoltage + mPrevCurrFac * **mIntfCurrent;
 

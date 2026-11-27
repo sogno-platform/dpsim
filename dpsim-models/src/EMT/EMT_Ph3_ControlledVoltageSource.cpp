@@ -120,7 +120,7 @@ void EMT::Ph3::ControlledVoltageSource::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::ControlledVoltageSource::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   Math::setVectorElement(rightVector, mVirtualNodeRows[0],
                          (**mIntfVoltage)(0, 0));
   Math::setVectorElement(rightVector, mVirtualNodeRows[1],

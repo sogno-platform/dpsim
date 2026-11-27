@@ -110,7 +110,7 @@ void DP::Ph1::ResIndSeries::mnaCompInitializeHarm(
 
   mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
   mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-  **mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+  **mRightVector = RhsVector(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::ResIndSeries::mnaCompApplySystemMatrixStamp(
@@ -192,7 +192,7 @@ void DP::Ph1::ResIndSeries::mnaCompApplySystemMatrixStampHarm(
 }
 
 void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (Int freq = 0; freq < mNumFreqs; freq++) {
     // Calculate equivalent current source for next time step
     mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) +
@@ -219,7 +219,7 @@ void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStamp(
 }
 
 void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (Int freq = 0; freq < mNumFreqs; freq++) {
     // Calculate equivalent current source for next time step
     mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) +

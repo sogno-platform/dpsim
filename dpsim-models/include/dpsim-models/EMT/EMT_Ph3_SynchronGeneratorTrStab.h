@@ -101,7 +101,7 @@ public:
                            Attribute<Matrix>::Ptr leftVector) override;
   /// Stamp the stator R-L Norton conductance and history current.
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Performs with the model of a synchronous generator
   /// to calculate the flux and current from the voltage vector.
   void mnaParentPreStep(Real time, Int timeStepCount) override;

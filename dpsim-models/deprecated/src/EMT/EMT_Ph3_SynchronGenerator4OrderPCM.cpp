@@ -92,7 +92,7 @@ void EMT::Ph3::SynchronGenerator4OrderPCM::stepInPerUnit() {
 }
 
 void EMT::Ph3::SynchronGenerator4OrderPCM::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),
                          (**mIntfCurrent)(0, 0));
   Math::setVectorElement(rightVector, matrixNodeIndex(0, 1),

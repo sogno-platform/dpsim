@@ -55,7 +55,7 @@ void EMT::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 void EMT::Ph3::SeriesSwitch::mnaCompInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 }
 
 Bool EMT::Ph3::SeriesSwitch::mnaIsClosed() { return **mIsClosed; }

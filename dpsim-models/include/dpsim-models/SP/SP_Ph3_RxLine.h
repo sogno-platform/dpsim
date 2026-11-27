@@ -55,7 +55,7 @@ public:
   /// Stamps system matrix
   void mnaApplyInitialSystemMatrixStamp(SparseMatrixRow &systemMatrix);
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector);
   void mnaCompUpdateVoltage(const Matrix &leftVector);
   void mnaCompUpdateCurrent(const Matrix &leftVector);
 

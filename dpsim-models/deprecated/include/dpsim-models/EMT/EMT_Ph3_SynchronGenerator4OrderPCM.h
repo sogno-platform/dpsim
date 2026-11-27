@@ -61,7 +61,7 @@ public:
 
   // #### MNA Functions ####
   ///
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) final;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) final;
   ///
   void mnaCompPostStep(const Matrix &leftVector) final;
   ///

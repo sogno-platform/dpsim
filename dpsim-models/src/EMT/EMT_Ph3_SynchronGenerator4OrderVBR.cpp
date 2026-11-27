@@ -197,10 +197,11 @@ void EMT::Ph3::SynchronGenerator4OrderVBR::applyHipPreState(
   for (int col = 0; col < 3; ++col)
     for (int row = 0; row < 3; ++row)
       mConductanceMatrix(row, col) = state.conductanceAbc[col * 3 + row];
-  (**mRightVector).setZero();
+  Math::setVectorZero(**mRightVector);
   if (!state.grounded)
     for (int phase = 0; phase < 3; ++phase)
-      (**mRightVector)(state.busRows[phase], 0) = state.currentSourceAbc[phase];
+      (**mRightVector).coeffRef(state.busRows[phase], 0) =
+          state.currentSourceAbc[phase];
 }
 
 void EMT::Ph3::SynchronGenerator4OrderVBR::applyHipPostState(

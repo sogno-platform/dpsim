@@ -178,7 +178,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaParentApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {

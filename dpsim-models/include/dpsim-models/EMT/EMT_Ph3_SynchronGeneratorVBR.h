@@ -263,7 +263,7 @@ public:
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Accumulate the three active source entries without a network-sized copy.
   Bool mnaHasCompactRightSideVectorStamp() const override { return true; }
   void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;

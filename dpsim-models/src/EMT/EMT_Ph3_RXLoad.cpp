@@ -429,7 +429,8 @@ void EMT::Ph3::RXLoad::mnaParentApplySystemMatrixStamp(
   }
 }
 
-void EMT::Ph3::RXLoad::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph3::RXLoad::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (!mUseSubcomponents && terminalNotGrounded(0))
     for (UInt phase = 0; phase < 3; ++phase)
       Math::setVectorElement(

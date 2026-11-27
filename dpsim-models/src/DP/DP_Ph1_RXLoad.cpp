@@ -187,7 +187,8 @@ void DP::Ph1::RXLoad::mnaParentApplySystemMatrixStamp(
         mSLog, mNumFreqs, freq);
 }
 
-void DP::Ph1::RXLoad::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph1::RXLoad::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents || (!mDirectUseInductor && !mDirectUseCapacitor))
     return;
   for (UInt freq = 0; freq < mNumFreqs; ++freq) {

@@ -149,7 +149,7 @@ void SP::Ph1::NetworkInjection::initializeParentFromNodesAndTerminals(
 
 // #### MNA functions ####
 void SP::Ph1::NetworkInjection::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   SPDLOG_LOGGER_DEBUG(mSLog, "Right Side Vector: {:s}",
                       Logger::matrixToString(rightVector));
 }

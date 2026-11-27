@@ -40,14 +40,14 @@ The two boolean variables `hasPreStep` and `hasPostStep` can be used to control 
 If these tasks are created, the `mnaCompPreStep` / `mnaCompPostStep` and `mnaCompAddPreStepDependencies` / `mnaCompAddPostStepDependencies` methods will be called during the component's lifecycle.
 If the tasks are not created, these methods are superfluous and should not be implemented in the child class.
 
-Currently, the `MNASimPowerComp` base class only exhibits additional behavior over the `mnaComp...` methods in the `mnaInitialize` method. In this method, the list of MNA tasks is cleared, and the new tasks are added according to the `hasPreStep` and `hasPostStep` parameters. Additionally, the right vector attribute `mRightVector` required by `MNAInterface` is set to a zero-vector with its length equal to that of the system `leftVector`.
+Currently, the `MNASimPowerComp` base class only exhibits additional behavior over the `mnaComp...` methods in the `mnaInitialize` method. In this method, the list of MNA tasks is cleared, and the new tasks are added according to the `hasPreStep` and `hasPostStep` parameters. Additionally, the right vector attribute `mRightVector` required by `MNAInterface` is set to an empty sparse vector (`RhsVector`) with its length equal to that of the system `leftVector`. Only the rows a component writes are stored.
 If this behavior is not desired, e.g. for resistors which have no influence on the system right vector, the right vector can be re-set to have zero size in the `mnaCompInitialize` method:
 
 ```cpp
 void DP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
 
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
   //...
 }
 ```

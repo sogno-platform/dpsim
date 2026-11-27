@@ -195,7 +195,7 @@ void DP::Ph1::RXLoadSwitch::mnaParentInitialize(
 }
 
 void DP::Ph1::RXLoadSwitch::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents || (!mDirectUseInductor && !mDirectUseCapacitor))
     return;
   for (UInt freq = 0; freq < mNumFreqs; ++freq) {

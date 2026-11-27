@@ -65,7 +65,7 @@ void SP::Ph1::varResSwitch::mnaCompApplySwitchSystemMatrixStamp(
 }
 
 void SP::Ph1::varResSwitch::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {}
+    RhsVector &rightVector) {}
 
 void SP::Ph1::varResSwitch::mnaCompAddPostStepDependencies(
     AttributeBase::List &prevStepDependencies,

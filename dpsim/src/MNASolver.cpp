@@ -41,7 +41,7 @@ template <typename VarType>
 void MnaSolver<VarType>::addRightVectorStamp(
     const CPS::MNAInterface::Ptr &component) {
   auto rightVector = component->getRightVector();
-  const Matrix &stamp = rightVector->get();
+  const RhsVector &stamp = rightVector->get();
   if (stamp.size() == 0)
     return;
 
@@ -57,13 +57,13 @@ void MnaSolver<VarType>::addRightVectorStamps(Matrix &rightVector,
                                               Int stampColumn) const {
   for (std::size_t stampIdx = 0; stampIdx < mRightVectorStamps.size();
        ++stampIdx) {
-    const Matrix &stamp = mRightVectorStamps[stampIdx]->get();
+    const RhsVector &stamp = mRightVectorStamps[stampIdx]->get();
     if (mRightVectorStampUsesIndices[stampIdx]) {
       for (UInt row : mRightVectorStampIndices[stampIdx]) {
         if (stampColumn < 0)
-          rightVector(row) += stamp(row);
+          rightVector(row) += stamp.coeff(row, 0);
         else
-          rightVector(row) += stamp(row, stampColumn);
+          rightVector(row) += stamp.coeff(row, stampColumn);
       }
     } else if (stampColumn < 0) {
       rightVector += stamp;
@@ -368,7 +368,9 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
   // as not full pre-step is executed (not involving necessary electrical or signal
   // subcomp updates before right vector calculation)
   for (auto comp : mMNAComponents) {
-    comp->mnaApplyRightSideVectorStamp(mRightSideVector);
+    RhsVector stamp(mRightSideVector.rows(), mRightSideVector.cols());
+    comp->mnaApplyRightSideVectorStamp(stamp);
+    Math::setVectorElements(mRightSideVector, stamp);
     auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
     SPDLOG_LOGGER_DEBUG(mSLog, "Stamping {:s} {:s} into source vector",
                         idObj->type(), idObj->name());
@@ -395,7 +397,9 @@ void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
   // as not full pre-step is executed (not involving necessary electrical or signal
   // subcomp updates before right vector calculation)
   for (auto comp : mMNAComponents) {
-    comp->mnaApplyRightSideVectorStamp(mRightSideVector);
+    RhsVector stamp(mRightSideVector.rows(), mRightSideVector.cols());
+    comp->mnaApplyRightSideVectorStamp(stamp);
+    Math::setVectorElements(mRightSideVector, stamp);
     auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
     SPDLOG_LOGGER_DEBUG(mSLog, "Stamping {:s} {:s} into source vector",
                         idObj->type(), idObj->name());

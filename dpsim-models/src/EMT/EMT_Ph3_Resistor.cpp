@@ -65,7 +65,7 @@ void EMT::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep,
                                            Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
   mConductance = (**mResistance).inverse();
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 }
 
 void EMT::Ph3::Resistor::mnaCompApplySystemMatrixStamp(

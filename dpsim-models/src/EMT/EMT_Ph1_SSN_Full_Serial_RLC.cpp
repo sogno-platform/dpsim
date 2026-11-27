@@ -53,7 +53,7 @@ void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph1::SSN::Full_Serial_RLC::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (terminalNotGrounded(0))
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), mYHist(0, 0));
   if (terminalNotGrounded(1))
