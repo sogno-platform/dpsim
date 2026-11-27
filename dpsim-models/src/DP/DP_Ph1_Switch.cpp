@@ -226,7 +226,7 @@ void DP::Ph1::Switch::mnaCompInitialize(Real omega, Real timeStep,
                                         Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
   mTimeStep = timeStep;
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 
   // omega is the DP reference-frame angular frequency supplied by the solver.
   mShiftOmega = omega;

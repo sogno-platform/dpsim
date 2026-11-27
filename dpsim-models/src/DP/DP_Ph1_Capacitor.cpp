@@ -139,7 +139,7 @@ void DP::Ph1::Capacitor::mnaCompInitializeHarm(
 
   mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
   mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-  **mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+  **mRightVector = RhsVector(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStamp(

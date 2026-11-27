@@ -562,8 +562,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddCompactRightSideVectorStamp(
   const RhsVector &transformerStamp = **mConnectionTransformer->mRightVector;
   const RhsVector &sourceStamp = **mSubCtrledVoltageSource->mRightVector;
   for (UInt index : mDirectChildRightVectorIndices) {
-    rightVector(index, 0) += transformerStamp(index, 0);
-    rightVector(index, 0) += sourceStamp(index, 0);
+    rightVector(index, 0) += transformerStamp.coeff(index, 0);
+    rightVector(index, 0) += sourceStamp.coeff(index, 0);
   }
 }
 

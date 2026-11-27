@@ -374,7 +374,9 @@ template <typename VarType> void DiakopticsSolver<VarType>::initMatrices() {
     Matrix rInit = Matrix::Zero(net.sysSize, 1);
 
     for (auto comp : net.components) {
-      comp->mnaApplyRightSideVectorStamp(rInit);
+      RhsVector stamp(rInit.rows(), rInit.cols());
+      comp->mnaApplyRightSideVectorStamp(stamp);
+      Math::setVectorElements(rInit, stamp);
     }
     SPDLOG_LOGGER_INFO(mSLog, "Source block: \n{}", rInit);
   }

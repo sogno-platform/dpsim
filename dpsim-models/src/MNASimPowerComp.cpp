@@ -23,7 +23,7 @@ template <typename VarType>
 void MNASimPowerComp<VarType>::mnaInitialize(
     Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
   mMnaTasks.clear();
-  **this->mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+  **this->mRightVector = RhsVector(leftVector->get().rows(), 1);
 
   if (mHasPreStep) {
     this->mMnaTasks.push_back(

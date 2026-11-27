@@ -36,7 +36,6 @@ public:
   using List = std::vector<Ptr>;
 
   /// This component's contribution ("stamp") to the right-side vector.
-  /// TODO performance improvements from a sparse representation, at least during copying / summation?
   Attribute<RhsVector>::Ptr mRightVector;
 
 protected:

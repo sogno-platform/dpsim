@@ -239,7 +239,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::correctorStep() {
   **mEhMod += -Complex(0, mBase_Z * mIdpResistanceProduct(1, 0));
 
   // stamp currents
-  (**mRightVector).setZero();
+  Math::setVectorZero(**mRightVector);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 
   // store value currently at j-1 for later use

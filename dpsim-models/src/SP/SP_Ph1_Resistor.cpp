@@ -93,7 +93,7 @@ void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow &Y) {
 void SP::Ph1::Resistor::mnaCompInitialize(Real omega, Real timeStep,
                                           Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 
   SPDLOG_LOGGER_INFO(mSLog,
                      "\n--- MNA initialization ---"

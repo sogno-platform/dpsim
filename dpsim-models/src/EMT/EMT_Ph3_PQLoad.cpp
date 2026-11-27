@@ -270,7 +270,7 @@ void EMT::Ph3::PQLoad::mnaCompAddPostStepDependencies(
 void EMT::Ph3::PQLoad::correctorStep() {
   **mNumIter = **mNumIter + 1;
   **mIntfCurrent = calculateCurrent(**mIntfVoltage);
-  (**mRightVector).setZero();
+  Math::setVectorZero(**mRightVector);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 

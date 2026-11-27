@@ -115,7 +115,7 @@ void DP::Ph1::Inductor::mnaCompInitializeHarm(
 
   mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
   mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-  **mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
+  **mRightVector = RhsVector(leftVectors[0]->get().rows(), mNumFreqs);
 }
 
 void DP::Ph1::Inductor::mnaCompApplySystemMatrixStamp(

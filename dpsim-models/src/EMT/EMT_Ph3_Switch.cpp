@@ -243,7 +243,7 @@ void EMT::Ph3::Switch::mnaCompInitialize(Real omega, Real timeStep,
                                          Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
   mTimeStep = timeStep;
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 
   // setParameters() belongs to the shared base class. Synchronize here as a
   // final safeguard in case setSwitchingMode() was called before setParameters().

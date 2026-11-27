@@ -536,7 +536,7 @@ void Base::ReducedOrderSynchronGenerator<Complex>::mnaCompPreStep(
   stepInPerUnit();
 
   // stamp model specific right side vector after calculation of electrical vars
-  (**mRightVector).setZero();
+  Math::setVectorZero(**mRightVector);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
@@ -577,7 +577,7 @@ void Base::ReducedOrderSynchronGenerator<Real>::mnaCompPreStep(
   stepInPerUnit();
 
   // stamp model specific right side vector after calculation of electrical vars
-  (**mRightVector).setZero();
+  Math::setVectorZero(**mRightVector);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 
@@ -597,7 +597,7 @@ void Base::ReducedOrderSynchronGenerator<VarType>::mnaCompPreStep(
     return;
   mSimTime = time;
   stepInPerUnit();
-  (**mRightVector).setZero();
+  Math::setVectorZero(**mRightVector);
   mnaCompApplyRightSideVectorStamp(**mRightVector);
 }
 

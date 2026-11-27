@@ -165,7 +165,7 @@ void EMT::SSNComp::mnaCompInitialize(Real, Real timeStep,
 
 void EMT::SSNComp::mnaAddCompactRightSideVectorStamp(Matrix &rightVector) {
   for (UInt index : mRightVectorAffectedIndices)
-    rightVector(index, 0) += (*mRightVectorValue)(index, 0);
+    rightVector(index, 0) += mRightVectorValue->coeff(index, 0);
 }
 
 void EMT::SSNComp::mnaCompAddPreStepDependencies(

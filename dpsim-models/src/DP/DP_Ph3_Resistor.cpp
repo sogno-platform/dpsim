@@ -72,7 +72,7 @@ void DP::Ph3::Resistor::mnaCompInitialize(Real omega, Real timeStep,
                                           Attribute<Matrix>::Ptr leftVector) {
   updateMatrixNodeIndices();
   mConductance.real() = (**mResistance).inverse();
-  **mRightVector = Matrix::Zero(0, 0);
+  **mRightVector = RhsVector(0, 0);
 }
 
 void DP::Ph3::Resistor::mnaCompApplySystemMatrixStamp(

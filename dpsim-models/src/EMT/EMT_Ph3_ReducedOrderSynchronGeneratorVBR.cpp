@@ -254,7 +254,7 @@ void EMT::Ph3::ReducedOrderSynchronGeneratorVBR::
     const UInt index = mModelAsNortonSource
                            ? matrixNodeIndex(0, phase)
                            : mVirtualNodes[1]->matrixNodeIndex(phases[phase]);
-    rightVector(index, 0) += stamp(index, 0);
+    rightVector(index, 0) += stamp.coeff(index, 0);
   }
 }
 
