@@ -105,7 +105,7 @@ void DP::Ph3::NetworkInjection::mnaParentApplySystemMatrixStamp(
 
 // #### MNA functions ####
 void DP::Ph3::NetworkInjection::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!mUseSubcomponents) {
     const PhaseType phases[] = {PhaseType::A, PhaseType::B, PhaseType::C};
     for (UInt phase = 0; phase < 3; ++phase)

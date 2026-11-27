@@ -79,7 +79,8 @@ void EMT::Ph1::Switch::mnaCompApplySwitchSystemMatrixStamp(
                                   terminalNotGrounded(1), mSLog);
 }
 
-void EMT::Ph1::Switch::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {}
+void EMT::Ph1::Switch::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {}
 
 void EMT::Ph1::Switch::mnaCompAddPostStepDependencies(
     AttributeBase::List &prevStepDependencies,

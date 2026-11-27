@@ -104,7 +104,7 @@ public:
                            Attribute<Matrix>::Ptr leftVector) override;
 
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   void mnaParentPreStep(Real time, Int timeStepCount) override;
   void mnaParentAddPreStepDependencies(
       AttributeBase::List &prevStepDependencies,

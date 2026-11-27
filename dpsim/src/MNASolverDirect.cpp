@@ -517,7 +517,7 @@ void MnaSolverDirect<VarType>::updateHipSG4PostStep(const Matrix &leftVector) {
 
 template <typename VarType>
 void MnaSolverDirect<VarType>::prepareCompactRightVectorStamps() {
-  std::unordered_map<const Matrix *, CPS::MNAInterface *> compactStamps;
+  std::unordered_map<const RhsVector *, CPS::MNAInterface *> compactStamps;
   auto collect = [&compactStamps](const auto &components) {
     for (const auto &component : components) {
       if (!component->mnaHasCompactRightSideVectorStamp())
@@ -535,7 +535,7 @@ void MnaSolverDirect<VarType>::prepareCompactRightVectorStamps() {
   mRightVectorStampOperations.clear();
   mRightVectorStampOperations.reserve(mRightVectorStamps.size());
   for (const auto &stamp : mRightVectorStamps) {
-    const Matrix *stampMatrix = &stamp->get();
+    const RhsVector *stampMatrix = &stamp->get();
     const auto compact = compactStamps.find(stampMatrix);
     if (compact != compactStamps.end())
       mRightVectorStampOperations.push_back({nullptr, compact->second});

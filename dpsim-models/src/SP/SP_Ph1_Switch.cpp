@@ -71,7 +71,8 @@ void SP::Ph1::Switch::mnaCompApplySwitchSystemMatrixStamp(
                                  terminalNotGrounded(1), mSLog);
 }
 
-void SP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {}
+void SP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) {
+}
 
 void SP::Ph1::Switch::mnaCompUpdateVoltage(const Matrix &leftVector) {
   // Voltage across component is defined as V1 - V0

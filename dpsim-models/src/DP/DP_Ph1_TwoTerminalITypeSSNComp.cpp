@@ -41,7 +41,7 @@ void DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph1::TwoTerminalITypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   Complex iHist = -mYHist(0, 0) / mW(0, 0);
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     if (terminalNotGrounded(0))

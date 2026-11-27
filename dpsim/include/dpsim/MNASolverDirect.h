@@ -92,7 +92,7 @@ protected:
   /// RHS accumulation operations resolved once during solver setup. Each
   /// entry either adds a dense stamp or calls its component's compact path.
   struct RightVectorStamp {
-    const Matrix *dense = nullptr;
+    const RhsVector *dense = nullptr;
     CPS::MNAInterface *compact = nullptr;
   };
   std::vector<RightVectorStamp> mRightVectorStampOperations;

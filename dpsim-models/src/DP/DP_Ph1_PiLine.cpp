@@ -211,7 +211,8 @@ void DP::Ph1::PiLine::mnaParentApplySystemMatrixStamp(
   }
 }
 
-void DP::Ph1::PiLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph1::PiLine::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   const UInt terminal0 = matrixNodeIndex(0);

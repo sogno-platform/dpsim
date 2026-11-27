@@ -116,7 +116,7 @@ void DP::Ph1::PQLoadCS::mnaParentApplySystemMatrixStamp(
 }
 
 void DP::Ph1::PQLoadCS::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!mUseSubcomponents && terminalNotGrounded(0))
     Math::setVectorElement(rightVector, matrixNodeIndex(0), -mDirectCurrentRef,
                            mNumFreqs, 0);

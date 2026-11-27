@@ -116,7 +116,7 @@ void DP::Ph1::SynchronGenerator6OrderPCM::stepInPerUnit() {
 }
 
 void DP::Ph1::SynchronGenerator6OrderPCM::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),
                          (**mIntfCurrent)(0, 0));
 }

@@ -37,12 +37,12 @@ public:
 
   /// This component's contribution ("stamp") to the right-side vector.
   /// TODO performance improvements from a sparse representation, at least during copying / summation?
-  Attribute<Matrix>::Ptr mRightVector;
+  Attribute<RhsVector>::Ptr mRightVector;
 
 protected:
   // Cached payload used by per-step component code. The Attribute remains
   // available for dependency tracking and external inspection.
-  Matrix *mRightVectorValue;
+  RhsVector *mRightVectorValue;
 
 public:
   /// List of tasks that relate to using MNA for this component (usually pre-step and/or post-step)
@@ -53,7 +53,7 @@ public:
                   Logger::Level logLevel)
       : SimPowerComp<VarType>(uid, name, logLevel), mHasPreStep(hasPreStep),
         mHasPostStep(hasPostStep),
-        mRightVector(IdentifiedObject::mAttributes->createDynamic<Matrix>(
+        mRightVector(IdentifiedObject::mAttributes->createDynamic<RhsVector>(
             "right_vector")),
         mRightVectorValue(&mRightVector->get()){};
 
@@ -72,7 +72,7 @@ public:
   void mnaInitialize(Real omega, Real timeStep,
                      Attribute<Matrix>::Ptr leftVector) final;
   void mnaApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) final;
-  void mnaApplyRightSideVectorStamp(Matrix &rightVector) final;
+  void mnaApplyRightSideVectorStamp(RhsVector &rightVector) final;
   void mnaUpdateVoltage(const Matrix &leftVector) final;
   void mnaUpdateCurrent(const Matrix &leftVector) final;
   void mnaPreStep(Real time, Int timeStepCount) final;
@@ -89,7 +89,7 @@ public:
                          std::vector<Attribute<Matrix>::Ptr> leftVector) final;
   void mnaApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
                                      Int freqIdx) final;
-  void mnaApplyRightSideVectorStampHarm(Matrix &sourceVector) final;
+  void mnaApplyRightSideVectorStampHarm(RhsVector &sourceVector) final;
   void mnaApplyRightSideVectorStampHarm(Matrix &sourceVector,
                                         Int freqIdx) final;
 
@@ -97,7 +97,7 @@ public:
   virtual void mnaCompInitialize(Real omega, Real timeStep,
                                  Attribute<Matrix>::Ptr leftVector);
   virtual void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
-  virtual void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  virtual void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector);
   virtual void mnaCompUpdateVoltage(const Matrix &leftVector);
   virtual void mnaCompUpdateCurrent(const Matrix &leftVector);
   virtual void mnaCompPreStep(Real time, Int timeStepCount);
@@ -117,12 +117,12 @@ public:
                         std::vector<Attribute<Matrix>::Ptr> leftVector);
   virtual void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
                                                  Int freqIdx);
-  virtual void mnaCompApplyRightSideVectorStampHarm(Matrix &sourceVector);
+  virtual void mnaCompApplyRightSideVectorStampHarm(RhsVector &sourceVector);
   virtual void mnaCompApplyRightSideVectorStampHarm(Matrix &sourceVector,
                                                     Int freqIdx);
 
   const Task::List &mnaTasks() const final;
-  Attribute<Matrix>::Ptr getRightVector() const final;
+  Attribute<RhsVector>::Ptr getRightVector() const final;
 
   class MnaPreStep : public CPS::Task {
   public:

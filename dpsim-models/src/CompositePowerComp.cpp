@@ -145,7 +145,7 @@ void CompositePowerComp<VarType>::mnaCompApplySystemMatrixStamp(
 
 template <typename VarType>
 void CompositePowerComp<VarType>::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!mRightVectorStampIndicesInitialized) {
     rightVector.setZero();
     for (const auto &stamp : mRightVectorStamps) {
@@ -191,7 +191,7 @@ void CompositePowerComp<VarType>::mnaAddCompactRightSideVectorStamp(
     return;
   }
 
-  const Matrix &stamp = **this->mRightVector;
+  const RhsVector &stamp = **this->mRightVector;
   if constexpr (std::is_same_v<VarType, Complex>) {
     for (UInt freq = 0; freq < this->mNumFreqs; ++freq)
       for (UInt index : mRightVectorAffectedIndices)

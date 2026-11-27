@@ -165,7 +165,7 @@ void SP::Ph1::VoltageSource::mnaCompApplySystemMatrixStamp(
 }
 
 void SP::Ph1::VoltageSource::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   // TODO: Is this correct with two nodes not gnd?
   Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(),
                          (**mIntfVoltage)(0, 0), mNumFreqs);

@@ -92,7 +92,7 @@ void EMT::Ph3::HalfDecouplingLine::mnaParentApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::HalfDecouplingLine::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mUseSubcomponents || !terminalNotGrounded(0))
     return;
   for (UInt phase = 0; phase < 3; ++phase)

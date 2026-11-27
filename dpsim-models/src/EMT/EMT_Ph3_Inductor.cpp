@@ -98,7 +98,8 @@ void EMT::Ph3::Inductor::mnaCompApplySystemMatrixStamp(
                      Logger::matrixToString(mEquivCond));
 }
 
-void EMT::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph3::Inductor::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   // Update internal state
   mEquivCurrent = mEquivCond * **mIntfVoltage + **mIntfCurrent;
   if (terminalNotGrounded(0)) {

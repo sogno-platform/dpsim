@@ -89,7 +89,7 @@ protected:
   /// Parallel capacitor submodel at Terminal 1
   std::shared_ptr<Capacitor> mSubParallelCapacitor1;
   /// Right side vectors of subcomponents
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
 
 public:
   /// nodal active power injection

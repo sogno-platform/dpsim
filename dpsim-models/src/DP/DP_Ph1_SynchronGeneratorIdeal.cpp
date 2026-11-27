@@ -74,7 +74,7 @@ void DP::Ph1::SynchronGeneratorIdeal::mnaParentApplySystemMatrixStamp(
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!mUseSubcomponents)
     Math::setVectorElement(rightVector, virtualNode(0)->matrixNodeIndex(),
                            **mVoltageRef, mNumFreqs, 0);

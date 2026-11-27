@@ -179,7 +179,8 @@ void DP::Ph1::Inverter::mnaCompApplySystemMatrixStampHarm(
   }
 }
 
-void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   SPDLOG_LOGGER_DEBUG(mSLog, "Stamp harmonics into source vector");
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     if (terminalNotGrounded(0)) {
@@ -195,7 +196,7 @@ void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
 }
 
 void DP::Ph1::Inverter::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   SPDLOG_LOGGER_DEBUG(mSLog, "Stamp harmonics into source vector");
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     if (terminalNotGrounded(0)) {

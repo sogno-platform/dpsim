@@ -93,7 +93,7 @@ public:
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   Bool mnaHasCompactRightSideVectorStamp() const override;
   void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;
 

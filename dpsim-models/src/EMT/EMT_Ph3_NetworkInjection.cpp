@@ -151,7 +151,7 @@ void EMT::Ph3::NetworkInjection::initializeParentFromNodesAndTerminals(
 
 // #### MNA functions ####
 void EMT::Ph3::NetworkInjection::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!mUseSubcomponents) {
     for (UInt phase = 0; phase < 3; ++phase)
       Math::setVectorElement(

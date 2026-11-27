@@ -35,7 +35,7 @@ void EMT::Ph3::TwoTerminalVTypeSplitSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::TwoTerminalVTypeSplitSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (terminalNotGrounded(0)) {
     for (Int phase = 0; phase < 3; ++phase) {
       Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),

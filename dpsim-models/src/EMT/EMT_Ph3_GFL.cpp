@@ -594,7 +594,7 @@ void EMT::Ph3::GFL::mnaParentApplySystemMatrixStamp(
   }
 }
 
-void EMT::Ph3::GFL::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph3::GFL::mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
 

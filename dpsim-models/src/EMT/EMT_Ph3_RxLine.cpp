@@ -167,7 +167,8 @@ void EMT::Ph3::RxLine::cacheDirectMatrixIndices() {
         mVirtualNodes[0]->matrixNodeIndex(static_cast<PhaseType>(phase));
 }
 
-void EMT::Ph3::RxLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph3::RxLine::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   for (UInt phase = 0; phase < 3; ++phase) {

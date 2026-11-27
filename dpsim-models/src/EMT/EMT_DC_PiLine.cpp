@@ -201,7 +201,8 @@ void EMT::DC::PiLine::mnaParentApplySystemMatrixStamp(
         mDirectTerminalNotGrounded[terminal], false, mSLog);
 }
 
-void EMT::DC::PiLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::DC::PiLine::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
   if (mDirectTerminalNotGrounded[0])

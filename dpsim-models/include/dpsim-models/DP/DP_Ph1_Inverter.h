@@ -118,8 +118,8 @@ public:
   void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
                                          Int freqIdx) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
+  void mnaCompApplyRightSideVectorStampHarm(RhsVector &rightVector) override;
   void mnaCompApplyRightSideVectorStampHarm(Matrix &sourceVector,
                                             Int freqIdx) override;
   /// Add MNA pre step dependencies

@@ -94,7 +94,7 @@ public:
   // #### MNA Functions ####
 
   ///
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   ///
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
 

@@ -123,7 +123,7 @@ public:
   /// Initializes internal variables of the component
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Updates internal current variable of the component

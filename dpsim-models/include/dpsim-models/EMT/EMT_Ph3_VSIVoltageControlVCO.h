@@ -66,7 +66,7 @@ protected:
 
   // #### solver ####
   ///
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
   Matrix mDirectRf = Matrix::Zero(3, 3);
   Matrix mDirectLf = Matrix::Zero(3, 3);
   Matrix mDirectCf = Matrix::Zero(3, 3);
@@ -164,7 +164,7 @@ public:
   void mnaParentInitialize(Real omega, Real timeStep,
                            Attribute<Matrix>::Ptr leftVector) override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Updates current through the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// Updates voltage across component

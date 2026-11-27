@@ -54,7 +54,7 @@ public:
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Returns current through the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
 

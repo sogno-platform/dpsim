@@ -221,7 +221,8 @@ void EMT::Ph1::PiLine::mnaParentApplySystemMatrixStamp(
                              matrixNodeIndex(1), shuntAdmittance);
 }
 
-void EMT::Ph1::PiLine::mnaParentApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph1::PiLine::mnaParentApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (mUseSubcomponents)
     return;
 

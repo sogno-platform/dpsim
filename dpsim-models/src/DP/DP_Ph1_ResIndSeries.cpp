@@ -192,7 +192,7 @@ void DP::Ph1::ResIndSeries::mnaCompApplySystemMatrixStampHarm(
 }
 
 void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (Int freq = 0; freq < mNumFreqs; freq++) {
     // Calculate equivalent current source for next time step
     mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) +
@@ -219,7 +219,7 @@ void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStamp(
 }
 
 void DP::Ph1::ResIndSeries::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (Int freq = 0; freq < mNumFreqs; freq++) {
     // Calculate equivalent current source for next time step
     mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) +

@@ -62,7 +62,8 @@ void EMT::Ph1::Inductor::mnaCompApplySystemMatrixStamp(
                                   terminalNotGrounded(1), mSLog);
 }
 
-void EMT::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   // Update internal state
   mEquivCurrent = mEquivCond * (**mIntfVoltage)(0, 0) + (**mIntfCurrent)(0, 0);
   if (terminalNotGrounded(0))

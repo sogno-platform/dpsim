@@ -22,7 +22,7 @@ private:
   MNAInterface::List mSubcomponentsPostStepBeforeParent;
   MNAInterface::List mSubcomponentsPostStepAfterParent;
 
-  std::vector<CPS::Attribute<Matrix>::Ptr> mRightVectorStamps;
+  std::vector<CPS::Attribute<RhsVector>::Ptr> mRightVectorStamps;
   std::vector<typename SimPowerComp<VarType>::Ptr> mRightVectorStampComponents;
   std::vector<std::vector<UInt>> mRightVectorStampIndices;
   std::vector<UInt> mRightVectorAffectedIndices;
@@ -90,7 +90,7 @@ public:
   /// Stamps system matrix
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Composite stamps touch only their cached terminal and virtual-node rows.
   Bool mnaHasCompactRightSideVectorStamp() const override {
     return mRightVectorStampIndicesInitialized;
@@ -121,7 +121,7 @@ public:
   virtual void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix){
       // By default, the parent has no custom stamp on the system matrix, only the subcomponents are stamped
   };
-  virtual void mnaParentApplyRightSideVectorStamp(Matrix &rightVector){
+  virtual void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector){
       // By default, the parent has no custom stamp on the right vector, only the subcomponents are stamped
   };
   virtual void mnaParentPreStep(Real time, Int timeStepCount){

@@ -113,7 +113,7 @@ void EMT::Ph3::FourTerminalVTypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::FourTerminalVTypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt phase = 0; phase < 3; ++phase) {
     if (terminalNotGrounded(0))
       Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),

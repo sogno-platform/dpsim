@@ -23,7 +23,7 @@ protected:
 public:
   void
   mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override final;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override final;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override final;
   Bool getRightVectorStampIndices(std::vector<UInt> &indices) override final {
     appendTerminalRightVectorStampIndices(indices, 1);
     return true;

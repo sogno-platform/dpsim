@@ -107,7 +107,7 @@ void EMT::Ph3::VoltageSourceNorton::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::VoltageSourceNorton::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   // Apply matrix stamp for equivalent current source
   if (terminalNotGrounded(0)) {
     Math::setVectorElement(rightVector, matrixNodeIndex(0, 0),

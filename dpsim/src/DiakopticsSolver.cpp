@@ -300,7 +300,7 @@ template <typename VarType> void DiakopticsSolver<VarType>::initComponents() {
     for (auto comp : mSubnets[net].components) {
       comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep,
                           mSubnets[net].leftVector);
-      const Matrix &stamp = comp->getRightVector()->get();
+      const RhsVector &stamp = comp->getRightVector()->get();
       if (stamp.size() != 0) {
         mSubnets[net].rightVectorStamps.push_back(&stamp);
       }

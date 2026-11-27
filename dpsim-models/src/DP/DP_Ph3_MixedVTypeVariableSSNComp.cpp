@@ -323,7 +323,7 @@ void DP::Ph3::MixedVTypeVariableSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph3::MixedVTypeVariableSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (terminalNotGrounded(0)) {
     for (Int phase = 0; phase < mPhaseCount; ++phase)
       Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),

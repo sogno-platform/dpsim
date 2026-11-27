@@ -133,7 +133,7 @@ void EMT::Ph1::SSNTypeV2T::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph1::SSNTypeV2T::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mYHistC.rows() != (**mC).rows() || mYHistC.cols() != (**mC).cols() ||
       !(mYHistC.array() == (**mC).array()).all()) {
     mYHistC = **mC;

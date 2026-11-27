@@ -33,7 +33,7 @@ public:
   /// Stamps system matrix
   virtual void mnaApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) = 0;
   /// Stamps right side (source) vector
-  virtual void mnaApplyRightSideVectorStamp(Matrix &rightVector) = 0;
+  virtual void mnaApplyRightSideVectorStamp(RhsVector &rightVector) = 0;
   /// Return true when the direct MNA solver can accumulate this component's
   /// contribution row-wise instead of adding its full-size dense stamp.
   virtual Bool mnaHasCompactRightSideVectorStamp() const { return false; }
@@ -72,13 +72,13 @@ public:
   virtual void mnaApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
                                              Int freqIdx) = 0;
   /// Stamps right side (source) vector considering the frequency index
-  virtual void mnaApplyRightSideVectorStampHarm(Matrix &sourceVector) = 0;
+  virtual void mnaApplyRightSideVectorStampHarm(RhsVector &sourceVector) = 0;
   virtual void mnaApplyRightSideVectorStampHarm(Matrix &sourceVector,
                                                 Int freqIdx) = 0;
   /// Return list of MNA tasks
   virtual const Task::List &mnaTasks() const = 0;
   // Return right vector attribute
-  virtual Attribute<Matrix>::Ptr getRightVector() const = 0;
+  virtual Attribute<RhsVector>::Ptr getRightVector() const = 0;
 
   /// Return row indices touched by this component's sparse RHS stamp.
   virtual Bool getRightVectorStampIndices(std::vector<UInt> &indices) {

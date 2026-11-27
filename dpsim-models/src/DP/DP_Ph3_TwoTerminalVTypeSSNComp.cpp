@@ -33,7 +33,7 @@ void DP::Ph3::TwoTerminalVTypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph3::TwoTerminalVTypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (terminalNotGrounded(0)) {
     for (Int phase = 0; phase < 3; ++phase)
       Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),

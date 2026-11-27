@@ -275,7 +275,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaParentApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt phase = 0; phase < 3; ++phase)
     Math::addToVectorElement(rightVector, matrixNodeIndex(0, phase),
                              (**mIntfCurrent)(phase, 0));

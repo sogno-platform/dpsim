@@ -18,7 +18,7 @@ protected:
 
 public:
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
 };
 

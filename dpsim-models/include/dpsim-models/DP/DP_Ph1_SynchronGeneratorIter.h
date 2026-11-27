@@ -42,7 +42,7 @@ protected:
 
   // ### MNA Section ###
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix);
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector);
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector);
   void mnaCompPostStep(const Matrix &leftVector);
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector);

@@ -315,7 +315,8 @@ void EMT::Ph3::Switch::mnaCompApplySwitchSystemMatrixStamp(
                       Logger::matrixToString(conductance));
 }
 
-void EMT::Ph3::Switch::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {}
+void EMT::Ph3::Switch::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {}
 
 void EMT::Ph3::Switch::mnaCompAddPostStepDependencies(
     AttributeBase::List &prevStepDependencies,

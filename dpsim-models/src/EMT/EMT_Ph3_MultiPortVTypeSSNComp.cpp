@@ -46,7 +46,7 @@ void EMT::Ph3::MultiPortVTypeSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::MultiPortVTypeSSNComp::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt terminal = 0; terminal < 2; ++terminal) {
     if (!terminalNotGrounded(terminal))
       continue;

@@ -96,7 +96,7 @@ void DP::Ph1::VoltageSourceRamp::mnaParentApplySystemMatrixStamp(
 }
 
 void DP::Ph1::VoltageSourceRamp::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!mUseSubcomponents)
     Math::setVectorElement(rightVector, virtualNode(0)->matrixNodeIndex(),
                            (**mIntfVoltage)(0, 0), mNumFreqs, 0);

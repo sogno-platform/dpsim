@@ -136,7 +136,8 @@ void DP::Ph1::Inductor::mnaCompApplySystemMatrixStampHarm(
                                  mSLog);
 }
 
-void DP::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     // Calculate equivalent current source for next time step
     mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) +
@@ -163,7 +164,7 @@ void DP::Ph1::Inductor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
 }
 
 void DP::Ph1::Inductor::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     // Calculate equivalent current source for next time step
     mEquivCurrent(freq, 0) = mEquivCond(freq, 0) * (**mIntfVoltage)(0, freq) +

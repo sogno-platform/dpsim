@@ -118,7 +118,8 @@ void DP::Ph3::Capacitor::mnaCompApplySystemMatrixStamp(
       terminalNotGrounded(0), terminalNotGrounded(1), mSLog);
 }
 
-void DP::Ph3::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph3::Capacitor::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   mEquivCurrent = -**mIntfCurrent + -mPrevVoltCoeff * **mIntfVoltage;
 
   if (terminalNotGrounded(0)) {

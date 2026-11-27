@@ -47,7 +47,7 @@ public:
   void setParameters(Real resistance, Real inductance, Real capacitance);
 
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   Bool getRightVectorStampIndices(std::vector<UInt> &indices) override;
   void mnaCompUpdateVoltage(const Matrix &leftVector) override;
 

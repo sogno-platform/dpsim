@@ -97,8 +97,8 @@ public:
   void mnaCompApplySystemMatrixStampHarm(SparseMatrixRow &systemMatrix,
                                          Int freqIdx) override;
   /// Stamps right side (source) vector
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
-  void mnaCompApplyRightSideVectorStampHarm(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
+  void mnaCompApplyRightSideVectorStampHarm(RhsVector &rightVector) override;
   /// Returns current through the component
   void mnaCompUpdateCurrent(const Matrix &leftVector) override;
   /// MNA pre step operations

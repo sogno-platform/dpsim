@@ -108,7 +108,7 @@ void SP::Ph1::ReducedOrderSynchronGeneratorVBR::mnaCompApplySystemMatrixStamp(
 }
 
 void SP::Ph1::ReducedOrderSynchronGeneratorVBR::
-    mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+    mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) {
   if (mModelAsNortonSource) {
     // compute equivalent northon circuit in abc reference frame
     mIvbr = Complex(mConductanceMatrix(0, 0) * mEvbr.real() +

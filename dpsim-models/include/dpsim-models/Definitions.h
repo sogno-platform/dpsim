@@ -83,6 +83,8 @@ typedef Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>
 /// @brief Dense matrix for integers.
 typedef Eigen::Matrix<Int, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>
     MatrixInt;
+/// @brief Right-side vector contribution of one MNA component.
+typedef Matrix RhsVector;
 ///
 typedef Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
     MatrixRow;

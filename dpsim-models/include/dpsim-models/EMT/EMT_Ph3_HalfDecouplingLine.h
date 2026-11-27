@@ -83,7 +83,7 @@ public:
   /// Creates the terminating resistor and the history current source
   void createSubComponents() override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   /// Seeds the interface quantities and the sending attributes
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 

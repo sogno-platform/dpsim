@@ -59,7 +59,7 @@ protected:
   // ### MNA Section ###
   ///
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   void mnaCompPostStep(const Matrix &leftVector) override;
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;

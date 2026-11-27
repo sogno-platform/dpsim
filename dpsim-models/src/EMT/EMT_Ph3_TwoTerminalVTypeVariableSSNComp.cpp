@@ -33,7 +33,7 @@ void EMT::Ph3::TwoTerminalVTypeVariableSSNComp::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::Ph3::TwoTerminalVTypeVariableSSNComp::
-    mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+    mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) {
   if (terminalNotGrounded(0)) {
     for (Int phase = 0; phase < 3; ++phase) {
       Math::setVectorElement(rightVector, matrixNodeIndex(0, phase),

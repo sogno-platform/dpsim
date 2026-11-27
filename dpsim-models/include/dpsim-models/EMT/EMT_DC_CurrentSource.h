@@ -30,7 +30,7 @@ public:
   void mnaCompInitialize(Real omega, Real timeStep,
                          Attribute<Matrix>::Ptr leftVector) override;
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &) override final {}
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override final;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override final;
   void mnaCompUpdateVoltage(const Matrix &leftVector) override final;
   void mnaCompPreStep(Real time, Int timeStepCount) override final;
   void mnaCompPostStep(Real time, Int timeStepCount,

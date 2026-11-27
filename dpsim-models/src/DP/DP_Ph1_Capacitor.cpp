@@ -160,7 +160,8 @@ void DP::Ph1::Capacitor::mnaCompApplySystemMatrixStampHarm(
                                  mSLog);
 }
 
-void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     //mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
     //mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
@@ -190,7 +191,7 @@ void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
 }
 
 void DP::Ph1::Capacitor::mnaCompApplyRightSideVectorStampHarm(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   for (UInt freq = 0; freq < mNumFreqs; freq++) {
     //mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
     //mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;

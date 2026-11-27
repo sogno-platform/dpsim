@@ -197,7 +197,8 @@ void EMT::Ph3::PQLoad::mnaCompApplySystemMatrixStamp(
   // system-matrix stamp.
 }
 
-void EMT::Ph3::PQLoad::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {
+void EMT::Ph3::PQLoad::mnaCompApplyRightSideVectorStamp(
+    RhsVector &rightVector) {
   if (!terminalNotGrounded(0))
     return;
 

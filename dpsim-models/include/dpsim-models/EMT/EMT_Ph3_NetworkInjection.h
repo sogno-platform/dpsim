@@ -30,7 +30,7 @@ private:
 
   // #### solver ####
   /// Vector to collect subcomponent right vector stamps
-  std::vector<const Matrix *> mRightVectorStamps;
+  std::vector<const RhsVector *> mRightVectorStamps;
 
 public:
   const CPS::Attribute<MatrixComp>::Ptr mVoltageRef;
@@ -69,7 +69,7 @@ public:
 
   // #### MNA Section ####
   /// Stamps right side (source) vector
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
   Bool mnaHasCompactRightSideVectorStamp() const override;
   void mnaAddCompactRightSideVectorStamp(Matrix &rightVector) override;

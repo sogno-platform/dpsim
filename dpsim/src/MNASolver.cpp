@@ -41,7 +41,7 @@ template <typename VarType>
 void MnaSolver<VarType>::addRightVectorStamp(
     const CPS::MNAInterface::Ptr &component) {
   auto rightVector = component->getRightVector();
-  const Matrix &stamp = rightVector->get();
+  const RhsVector &stamp = rightVector->get();
   if (stamp.size() == 0)
     return;
 
@@ -57,7 +57,7 @@ void MnaSolver<VarType>::addRightVectorStamps(Matrix &rightVector,
                                               Int stampColumn) const {
   for (std::size_t stampIdx = 0; stampIdx < mRightVectorStamps.size();
        ++stampIdx) {
-    const Matrix &stamp = mRightVectorStamps[stampIdx]->get();
+    const RhsVector &stamp = mRightVectorStamps[stampIdx]->get();
     if (mRightVectorStampUsesIndices[stampIdx]) {
       for (UInt row : mRightVectorStampIndices[stampIdx]) {
         if (stampColumn < 0)

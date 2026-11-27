@@ -97,7 +97,7 @@ void DP::Ph3::SSN::ImpedanceLoad::mnaCompApplySystemMatrixStamp(
 }
 
 void DP::Ph3::SSN::ImpedanceLoad::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!terminalNotGrounded(0))
     return;
   for (UInt phase = 0; phase < 3; ++phase)

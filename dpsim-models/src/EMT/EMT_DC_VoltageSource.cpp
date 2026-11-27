@@ -74,7 +74,7 @@ void EMT::DC::VoltageSource::mnaCompApplySystemMatrixStamp(
 }
 
 void EMT::DC::VoltageSource::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   Math::setVectorElement(rightVector, mBranchMatrixIndex,
                          (**mIntfVoltage)(0, 0));
 }

@@ -104,7 +104,7 @@ public:
   /// Constructs and registers MNA subcomponents without emf value; idempotent.
   void createSubComponents() override;
   void mnaParentApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaParentApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaParentApplyRightSideVectorStamp(RhsVector &rightVector) override;
   ///
   void initializeParentFromNodesAndTerminals(Real frequency) override;
 

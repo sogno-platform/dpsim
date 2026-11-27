@@ -280,7 +280,8 @@ void DP::Ph1::Switch::mnaCompApplySwitchSystemMatrixStamp(
                                  terminalNotGrounded(1), mSLog);
 }
 
-void DP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(Matrix &rightVector) {}
+void DP::Ph1::Switch::mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) {
+}
 
 Bool DP::Ph1::Switch::mnaIsClosed() {
   if (mSwitchingMode == SwitchingMode::Ideal)

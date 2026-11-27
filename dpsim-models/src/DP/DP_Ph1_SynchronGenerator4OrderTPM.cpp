@@ -193,7 +193,7 @@ void DP::Ph1::SynchronGenerator4OrderTPM::stepInPerUnit() {
 }
 
 void DP::Ph1::SynchronGenerator4OrderTPM::mnaCompApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (mModelAsNortonSource) {
     // Determine equivalent Norton current
     mIhMod = Complex(mConductanceMatrixConst(0, 0) * (**mEhMod).real() +

@@ -29,7 +29,7 @@ public:
                          Attribute<Matrix>::Ptr leftVector) override;
   void mnaCompPreStep(Real time, Int timeStepCount) override;
   void mnaCompApplySystemMatrixStamp(SparseMatrixRow &systemMatrix) override;
-  void mnaCompApplyRightSideVectorStamp(Matrix &rightVector) override;
+  void mnaCompApplyRightSideVectorStamp(RhsVector &rightVector) override;
   void mnaCompPostStep(Real time, Int timeStepCount,
                        Attribute<Matrix>::Ptr &leftVector) override;
   Bool hasParameterChanged() override { return true; }

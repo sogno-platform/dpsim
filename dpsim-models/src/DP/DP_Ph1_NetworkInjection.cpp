@@ -167,7 +167,7 @@ void DP::Ph1::NetworkInjection::mnaParentApplySystemMatrixStamp(
 }
 
 void DP::Ph1::NetworkInjection::mnaParentApplyRightSideVectorStamp(
-    Matrix &rightVector) {
+    RhsVector &rightVector) {
   if (!mUseSubcomponents)
     Math::setVectorElement(rightVector, virtualNode(0)->matrixNodeIndex(),
                            mDirectVoltage, mNumFreqs);
